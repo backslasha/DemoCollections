@@ -10,11 +10,13 @@ import android.view.View;
 import android.widget.Toolbar;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 import yhb.dc.common.CommonAdapter;
 import yhb.dc.common.CommonViewHolder;
+import yhb.dc.demo.animation.AnimationMainActivity;
+import yhb.dc.demo.custom_view.CustomViewMainActivity;
 import yhb.dc.demo.launch_mode.LaunchModeMainActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,8 +30,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         List<Class<? extends Activity>> activities = new ArrayList<>();
-        activities.addAll(Collections.singletonList(
-                LaunchModeMainActivity.class
+        activities.addAll(Arrays.asList(
+                LaunchModeMainActivity.class,
+                CustomViewMainActivity.class,
+                AnimationMainActivity.class
         ));
 
         mRecyclerView = findViewById(R.id.recycler_view);
@@ -37,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(new CommonAdapter<Class<? extends Activity>>(R.layout.item_activity, activities) {
             @Override
             public void convert(CommonViewHolder holder, final Class<? extends Activity> entity) {
-                holder.setText(R.id.text_view_activity_name, entity.getName());
-                holder.bindOnClickListener(new View.OnClickListener(){
+                holder.setText(R.id.text_view_activity_name, entity.getSimpleName());
+                holder.bindOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {

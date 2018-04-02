@@ -6,9 +6,9 @@ import android.util.Log;
 import android.view.View;
 
 import yhb.dc.R;
-import yhb.dc.common.BaseDemoActivity;
+import yhb.dc.common.ToolbarActivity;
 
-public class LaunchModeMainActivity extends BaseDemoActivity implements View.OnClickListener {
+public class LaunchModeMainActivity extends ToolbarActivity implements View.OnClickListener {
 
     private static final String TAG = "MainActivity";
 
@@ -44,7 +44,7 @@ public class LaunchModeMainActivity extends BaseDemoActivity implements View.OnC
                 startActivity(intent);
                 break;
             case R.id.button_single_top:
-                intent = SingleTopActivity.newIntent(this);
+                intent = SingleTopBaseActivity.newIntent(this);
                 startActivity(intent);
                 break;
         }

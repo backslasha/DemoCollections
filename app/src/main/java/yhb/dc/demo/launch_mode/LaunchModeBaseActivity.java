@@ -7,13 +7,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import yhb.dc.R;
-import yhb.dc.common.BaseDemoActivity;
+import yhb.dc.common.ToolbarActivity;
 
 /**
  * Created by yhb on 18-3-15.
  */
 
-public abstract class LaunchModeBaseActivity extends BaseDemoActivity{
+public abstract class LaunchModeBaseActivity extends ToolbarActivity {
     private TextView mTextView, mTextViewInformation;
     private Button mButton;
 
@@ -37,7 +37,7 @@ public abstract class LaunchModeBaseActivity extends BaseDemoActivity{
 
     @Override
     public int getContentViewId() {
-        return R.layout.activity_launched;
+        return R.layout.activity_reviced_intent;
     }
 
     @Override

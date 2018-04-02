@@ -1,37 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="yhb.dc.common.ToolbarActivity"
-    tools:showIn="@layout/activity_launch_mode">
+    tools:context="yhb.dc.common.ToolbarActivity">
 
     <Button
-        android:id="@+id/button_single_task"
+        android:id="@+id/button_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="singleTask" />
+        tools:text="singleTask" />
 
     <Button
-        android:id="@+id/button_single_instance"
+        android:id="@+id/button_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="singleInstance" />
+        tools:text="singleInstance" />
 
     <Button
-        android:id="@+id/button_standard"
+        android:id="@+id/button_3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="standard" />
+        tools:text="standard" />
 
     <Button
-        android:id="@+id/button_single_top"
+        android:id="@+id/button_4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="singleTop" />
+        tools:text="singleTop" />
 
 </LinearLayout>

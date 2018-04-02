@@ -11,11 +11,12 @@
         android:layout_height="wrap_content">
 
         <android.support.design.widget.CollapsingToolbarLayout
-
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_collapseMode="parallax"
-            app:layout_scrollFlags="exitUntilCollapsed|enterAlwaysCollapsed">
+            app:layout_scrollFlags="exitUntilCollapsed|enterAlwaysCollapsed"
+            app:title="@string/app_name"
+            app:titleEnabled="true">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -27,9 +28,9 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v7.widget.RecyclerView
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </android.support.design.widget.CoordinatorLayout>

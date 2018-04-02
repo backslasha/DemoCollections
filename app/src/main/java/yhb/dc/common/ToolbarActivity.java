@@ -9,12 +9,15 @@ import android.view.View;
 
 import yhb.dc.R;
 
-public abstract class BaseDemoActivity extends AppCompatActivity {
+public abstract class ToolbarActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(getContentViewId());
+
+        if (-1 != getContentViewId()) {
+            setContentView(getContentViewId());
+        }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
