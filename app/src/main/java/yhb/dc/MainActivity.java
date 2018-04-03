@@ -15,6 +15,7 @@ import java.util.List;
 
 import yhb.dc.common.CommonAdapter;
 import yhb.dc.common.CommonViewHolder;
+import yhb.dc.demo.animated_vector.CommonButtonClickEffectActivity;
 import yhb.dc.demo.animation.AnimationMainActivity;
 import yhb.dc.demo.custom_view.CustomViewMainActivity;
 import yhb.dc.demo.launch_mode.LaunchModeMainActivity;
@@ -33,7 +34,8 @@ public class MainActivity extends AppCompatActivity {
         activities.addAll(Arrays.asList(
                 LaunchModeMainActivity.class,
                 CustomViewMainActivity.class,
-                AnimationMainActivity.class
+                AnimationMainActivity.class,
+                CommonButtonClickEffectActivity.class
         ));
 
         mRecyclerView = findViewById(R.id.recycler_view);

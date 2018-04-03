@@ -7,7 +7,7 @@
     android:layout_margin="4dp"
     android:clickable="true"
     android:focusable="true"
-    android:stateListAnimator="@animator/lift_on_touch"
+    android:stateListAnimator="@animator/animator_lift_on_touch"
     app:cardCornerRadius="@dimen/cardview_default_radius"
     app:cardElevation="@dimen/cardview_default_radius"
     tools:targetApi="lollipop">
@@ -17,6 +17,7 @@
         style="@style/TextAppearance.AppCompat.Title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="16dp"
         android:gravity="center"
         tools:text="@string/app_name" />
 

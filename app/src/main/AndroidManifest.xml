@@ -16,20 +16,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".demo.launch_mode.LaunchModeMainActivity"
             android:parentActivityName=".MainActivity" />
-
         <activity
             android:name=".demo.launch_mode.SingleInstanceActivity"
             android:launchMode="singleInstance"
             android:parentActivityName=".demo.launch_mode.LaunchModeMainActivity">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <action android:name="yhb.dc.SINGLEINSTANCE" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".demo.launch_mode.SingleTaskActivity"
@@ -37,6 +35,7 @@
             android:parentActivityName=".demo.launch_mode.LaunchModeMainActivity">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <action android:name="yhb.dc.SINGLETASK" />
             </intent-filter>
         </activity>
@@ -46,6 +45,7 @@
             android:parentActivityName=".demo.launch_mode.LaunchModeMainActivity">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <action android:name="yhb.dc.STANDARD" />
             </intent-filter>
         </activity>
@@ -55,20 +55,25 @@
             android:parentActivityName=".demo.launch_mode.LaunchModeMainActivity">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <action android:name="yhb.dc.SINGLETOP" />
             </intent-filter>
         </activity>
 
-        <!--demo of custom views -->
+        <!-- demo of custom views -->
         <activity
             android:name=".demo.custom_view.CustomViewMainActivity"
             android:parentActivityName=".MainActivity" />
 
-        <!--demo of animation-->
+        <!-- demo of animation -->
         <activity
             android:name=".demo.animation.AnimationMainActivity"
             android:parentActivityName=".MainActivity" />
 
+        <!-- demo od animated vector drawable -->
+        <activity
+            android:name=".demo.animated_vector.CommonButtonClickEffectActivity"
+            android:parentActivityName=".MainActivity"/>
     </application>
 
 </manifest>

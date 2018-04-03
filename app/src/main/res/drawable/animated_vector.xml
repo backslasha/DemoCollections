@@ -1,0 +1,12 @@
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:drawable="@drawable/vector"
+    tools:targetApi="lollipop">
+    <target
+        android:name="rotationGroup"
+        android:animation="@animator/animator_for_animated_vector_rotation" />
+    <target
+        android:name="v"
+        android:animation="@animator/animator_for_animated_vector_path_morph" />
+</animated-vector>
+ 

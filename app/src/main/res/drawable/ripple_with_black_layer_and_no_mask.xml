@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?><!-- A green ripple drawn atop a black rectangle. -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:color="#ff00ff00"
+    tools:targetApi="lollipop">
+    <item android:drawable="@android:color/black" />
+</ripple>
