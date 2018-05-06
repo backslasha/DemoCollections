@@ -3,5 +3,5 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:color="#ff00ff00"
     tools:targetApi="lollipop">
-    <item android:drawable="@android:color/black" />
+    <item android:drawable="@android:color/white" />
 </ripple>
