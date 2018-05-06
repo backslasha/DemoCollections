@@ -11,11 +11,11 @@ import android.view.View;
 
 import static android.graphics.Color.RED;
 
-public class ClipPathView extends View {
+public class ClipRectView extends View {
     private final Paint mPaint, mPaint0;
     private final Path mPath;
 
-    public ClipPathView(Context context, AttributeSet attrs) {
+    public ClipRectView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mPaint = new Paint();
         mPaint0 = new Paint();

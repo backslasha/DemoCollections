@@ -1,61 +1,86 @@
 package yhb.dc.demo.canvas;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapShader;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Shader;
+import android.graphics.Path;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.view.View;
-import android.widget.Toast;
 
-import yhb.dc.R;
+public class QuadToView extends View {
+    private Path mPath;// 路径对象
+    private Paint mPaint;// 画笔对象
+    private int mWidth, mHeight;// 控件宽高
+    private float mCtrX, mCtrY;// 控制点的xy坐标
+    private boolean isLeaking = true, toRight = true;// 判断控制点是该右移还是左移
 
-public class ShaderView extends View {
-    private static final int RECT_SIZE = 400;// 矩形尺寸的一半
-
-    private Paint mPaint;// 画笔
-
-    private int left, top, right, bottom;// 矩形坐上右下坐标
-
-    public ShaderView(Context context, AttributeSet attrs) {
+    public QuadToView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        // 获取屏幕尺寸数据
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-
-        // 获取屏幕中点坐标
-        int screenX = displayMetrics.widthPixels / 2;
-        int screenY = displayMetrics.heightPixels / 2;
-
-        // 计算矩形左上右下坐标值
-        left = screenX - RECT_SIZE;
-        top = screenY - RECT_SIZE;
-        right = screenX + RECT_SIZE;
-        bottom = screenY + RECT_SIZE;
-
-        // 实例化画笔
+        // 实例化画笔并设置参数
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
+        mPaint.setColor(0xFFA2D6AE);
 
+        // 实例化路径对象
+        mPath = new Path();
+    }
 
-        // 获取位图
-        Bitmap bitmap = Bitmap.createBitmap(80, 20, Bitmap.Config.ARGB_4444);
-        Canvas canvas = new Canvas();
-        canvas.setBitmap(bitmap);
-        canvas.drawColor(Color.YELLOW);
-        // 设置着色器
-        mPaint.setShader(new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        // 获取控件宽高
+        mWidth = w;
+        mHeight = h;
+
+        // 计算端点Y坐标
+        mCtrX = 0;
+        mCtrY = 0;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        // 绘制矩形
-        canvas.drawRect(left, top, right, bottom, mPaint);
+
+        if (mCtrX >= mWidth) {
+            toRight = false;
+        } else if (mCtrX < 0) {
+            toRight = true;
+        }
+
+        if (!toRight) {
+            mCtrX -= 32;
+        } else {
+            mCtrX += 32;
+        }
+
+        if (mCtrY >= mHeight) {
+            isLeaking = false;
+        } else if (mCtrY <= 0) {
+            isLeaking = true;
+        }
+
+        if (isLeaking) {
+            mCtrY += 4;
+        } else {
+            mCtrY -= 4;
+        }
+
+        final int startX = -(int) (1 / 8F * mWidth);
+        final int startY = (int) (mCtrY + (int) (1 / 8F * mHeight));
+        final int stopX = mWidth + (int) (1 / 8F * mWidth);
+        final int stopY = startY;
+
+        mPath.reset();
+        mPath.moveTo(startX, startY);
+        mPath.quadTo(mCtrX, mCtrY, stopX, stopY);
+        mPath.lineTo(stopX, mHeight);
+        mPath.lineTo(startX, mHeight);
+        mPath.close();
+        canvas.drawPath(mPath, mPaint);
+
+        postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                invalidate();
+            }
+        }, 16);
     }
 }

@@ -7,13 +7,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import yhb.dc.R;
+import yhb.dc.common.LifeCycleActivity;
 
-public class SingleFragmentActivity extends AppCompatActivity implements TabFragment.OnFragmentInteractionListener {
+public class TabFragmentActivity extends LifeCycleActivity implements TabFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_single_fragment);
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.container);
         if (fragment == null) {
@@ -24,6 +24,16 @@ public class SingleFragmentActivity extends AppCompatActivity implements TabFrag
             fragmentManager.executePendingTransactions();
         }
 
+    }
+
+    @Override
+    protected String getName() {
+        return "";
+    }
+
+    @Override
+    public int getContentViewId() {
+        return R.layout.activity_single_fragment;
     }
 
     @Override

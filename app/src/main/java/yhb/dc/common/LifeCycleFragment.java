@@ -1,4 +1,4 @@
-package yhb.dc.demo.fragment_nest;
+package yhb.dc.common;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,7 +14,7 @@ import android.view.ViewGroup;
  * Created by yhb on 18-4-21.
  */
 
-abstract class LifeCycleFragment extends Fragment {
+public abstract class LifeCycleFragment extends Fragment {
 
 
 

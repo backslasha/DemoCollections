@@ -17,13 +17,13 @@ import android.view.View;
 
 import yhb.dc.R;
 
-public class BrickView extends View {
+public class BitmapShaderView extends View {
     private Paint mFillPaint, mStrokePaint;// 填充和描边的画笔
     private BitmapShader mBitmapShader;// Bitmap着色器
 
     private float posX, posY;// 触摸点的XY坐标
 
-    public BrickView(Context context, AttributeSet attrs) {
+    public BitmapShaderView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         // 初始化画笔

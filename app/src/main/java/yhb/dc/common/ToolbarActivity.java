@@ -20,11 +20,18 @@ public abstract class ToolbarActivity extends AppCompatActivity {
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        if (toolbar != null) {
+            setupToolbar(toolbar);
+            setSupportActionBar(toolbar);
+        }
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    protected void setupToolbar(Toolbar toolbar) {
+
     }
 
     public abstract int getContentViewId();

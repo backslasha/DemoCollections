@@ -1,26 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<yhb.dc.demo.view_fields.FieldView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/button_add"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="+" />
 
-    <TextView
-        android:id="@+id/text_view_value"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="4" />
-
-    <Button
-        android:id="@+id/button_minus"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="-" />
-
-</LinearLayout>
+</yhb.dc.demo.view_fields.FieldView>

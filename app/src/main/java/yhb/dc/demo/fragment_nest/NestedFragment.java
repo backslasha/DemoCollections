@@ -1,17 +1,13 @@
-package yhb.dc.demo.tab_view_pager_fragment_nest;
+package yhb.dc.demo.fragment_nest;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import yhb.dc.R;
+import yhb.dc.common.LifeCycleFragment;
 
 public class NestedFragment extends LifeCycleFragment {
 

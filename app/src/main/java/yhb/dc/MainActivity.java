@@ -2,6 +2,9 @@ package yhb.dc;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,15 +13,10 @@ import android.view.View;
 import android.widget.Toolbar;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import yhb.dc.common.CommonAdapter;
 import yhb.dc.common.CommonViewHolder;
-import yhb.dc.demo.animated_vector.CommonButtonClickEffectActivity;
-import yhb.dc.demo.animation.AnimationMainActivity;
-import yhb.dc.demo.custom_view.CustomViewMainActivity;
-import yhb.dc.demo.launch_mode.LaunchModeMainActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,12 +29,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         List<Class<? extends Activity>> activities = new ArrayList<>();
-        activities.addAll(Arrays.asList(
-                LaunchModeMainActivity.class,
-                CustomViewMainActivity.class,
-                AnimationMainActivity.class,
-                CommonButtonClickEffectActivity.class
-        ));
+
+        try {
+            PackageManager packageManager = getPackageManager();
+            PackageInfo packageInfo = packageManager.getPackageInfo(
+                    this.getPackageName(), PackageManager.GET_ACTIVITIES
+            );
+            String className = packageManager.getLaunchIntentForPackage(getPackageName()).getComponent().getClassName();
+            for (ActivityInfo activity : packageInfo.activities) {
+                if (className.equals(activity.parentActivityName))
+                    activities.add((Class<? extends Activity>) Class.forName(activity.name));
+            }
+        } catch (PackageManager.NameNotFoundException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
         mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));

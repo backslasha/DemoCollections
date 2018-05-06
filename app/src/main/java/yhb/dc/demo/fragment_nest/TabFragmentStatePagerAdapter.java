@@ -1,4 +1,4 @@
-package yhb.dc.demo.tab_view_pager_fragment_nest;
+package yhb.dc.demo.fragment_nest;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

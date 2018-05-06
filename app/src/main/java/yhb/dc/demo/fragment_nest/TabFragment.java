@@ -1,4 +1,4 @@
-package yhb.dc.demo.tab_view_pager_fragment_nest;
+package yhb.dc.demo.fragment_nest;
 
 import android.content.Context;
 import android.net.Uri;
@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import yhb.dc.R;
+import yhb.dc.common.LifeCycleFragment;
 
 /**
  * A simple {@link Fragment} subclass.

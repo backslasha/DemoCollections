@@ -67,13 +67,35 @@
 
         <!-- demo of animation -->
         <activity
-            android:name=".demo.animation.AnimationMainActivity"
+            android:name=".demo.tranistion.AnimationMainActivity"
             android:parentActivityName=".MainActivity" />
 
         <!-- demo od animated vector drawable -->
         <activity
-            android:name=".demo.animated_vector.CommonButtonClickEffectActivity"
-            android:parentActivityName=".MainActivity"/>
+            android:name=".demo.click_effect.CommonButtonClickEffectActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".demo.canvas.CanvasActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".demo.handler_thread.HandlerThreadActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".demo.fragment_nest.TabFragmentActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".demo.fragment_commit.FragmentCommitActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".demo.aidl.ServiceHolderActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <service
+            android:name=".demo.aidl.LocalService"
+            android:process=":test" />
+
+        <activity android:name=".demo.view_fields.ViewFieldsActivity"
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>

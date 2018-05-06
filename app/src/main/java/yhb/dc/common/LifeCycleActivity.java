@@ -14,34 +14,7 @@ import android.view.ViewGroup;
  * Created by yhb on 18-4-21.
  */
 
-public abstract class LifeCycleFragment extends Fragment {
-
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        log("onCreateView(): " );
-        return super.onCreateView(inflater,container,savedInstanceState);
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        log("onHiddenChanged(hidden): " + hidden);
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        log("setUserVisibleHint(isVisibleToUser): " + isVisibleToUser);
-    }
-
-    @Override
-    public void onInflate(Context context, AttributeSet attrs, Bundle savedInstanceState) {
-        super.onInflate(context, attrs, savedInstanceState);
-        log("onInflate(context, attrs, savedInstanceState) ");
-    }
+public abstract class LifeCycleActivity extends ToolbarActivity {
 
     @Override
     public void onAttachFragment(Fragment childFragment) {
@@ -49,82 +22,48 @@ public abstract class LifeCycleFragment extends Fragment {
         log("onAttachFragment(childFragment): " + childFragment);
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        log("onAttach(context): " + context);
-    }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         log("onCreate(savedInstanceState): " + savedInstanceState);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        log("onViewCreated(view, savedInstanceState): ");
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        log("onActivityCreated(savedInstanceState): " + savedInstanceState);
-    }
-
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        log("onViewStateRestored(savedInstanceState): " + savedInstanceState);
-    }
-
-    @Override
-    public void onStart() {
+    protected void onStart() {
         super.onStart();
         log("onStart()");
     }
 
     @Override
-    public void onResume() {
+    protected void onResume() {
         super.onResume();
         log("onResume()");
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         log("onSaveInstanceState(outState): " + outState);
     }
 
     @Override
-    public void onPause() {
+    protected void onPause() {
         super.onPause();
         log("onPause();)");
     }
 
     @Override
-    public void onStop() {
+    protected void onStop() {
         super.onStop();
         log("onStop()");
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        log("onDestroyView()");
-    }
 
     @Override
-    public void onDestroy() {
+    protected void onDestroy() {
         super.onDestroy();
         log("onDestroy()");
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        log("onDetach()");
     }
 
     private void log(String msg) {

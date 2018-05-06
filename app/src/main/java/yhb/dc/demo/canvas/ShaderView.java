@@ -1,77 +1,61 @@
 package yhb.dc.demo.canvas;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.support.annotation.Nullable;
+import android.graphics.Shader;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.widget.Toast;
 
-/**
- * Created by yhb on 18-4-5.
- */
+import yhb.dc.R;
 
-public class CanvasView extends View {
-    private Paint mPaint;// 画笔对象
+public class ShaderView extends View {
+    private static final int RECT_SIZE = 400;// 矩形尺寸的一半
 
-    private int mViewWidth, mViewHeight;// 控件宽高
+    private Paint mPaint;// 画笔
 
-    public CanvasView(Context context) {
-        this(context, null);
-    }
+    private int left, top, right, bottom;// 矩形坐上右下坐标
 
-    public CanvasView(Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
+    public ShaderView(Context context, AttributeSet attrs) {
+        super(context, attrs);
 
-    public CanvasView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        // 获取屏幕尺寸数据
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+        // 获取屏幕中点坐标
+        int screenX = displayMetrics.widthPixels / 2;
+        int screenY = displayMetrics.heightPixels / 2;
+
+        // 计算矩形左上右下坐标值
+        left = screenX - RECT_SIZE;
+        top = screenY - RECT_SIZE;
+        right = screenX + RECT_SIZE;
+        bottom = screenY + RECT_SIZE;
+
+        // 实例化画笔
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
+
+
+        // 获取位图
+        Bitmap bitmap = Bitmap.createBitmap(80, 20, Bitmap.Config.ARGB_4444);
+        Canvas canvas = new Canvas();
+        canvas.setBitmap(bitmap);
+        canvas.drawColor(Color.YELLOW);
+        // 设置着色器
+        mPaint.setShader(new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-
-
-        mPaint.setColor(Color.RED);
-        canvas.drawRect(
-                mViewWidth / 2 - 200,
-                mViewHeight / 2 - 200,
-                mViewWidth / 2 + 200,
-                mViewHeight / 2 + 200,
-                mPaint
-        );
-
-        canvas.save();
-        canvas.rotate(30);
-        mPaint.setColor(Color.BLUE);
-        canvas.drawRect(
-                mViewWidth / 2 - 100,
-                mViewHeight / 2 - 100,
-                mViewWidth / 2 + 100,
-                mViewHeight / 2 + 100,
-                mPaint
-        );
-
-        canvas.restore();
-
-        mPaint.setColor(Color.YELLOW);
-        canvas.drawRect(
-                mViewWidth / 2 - 50,
-                mViewHeight / 2 - 50,
-                mViewWidth / 2 + 50,
-                mViewHeight / 2 + 50,
-                mPaint
-        );
-    }
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        /*
-         * 获取控件宽高
-         */
-        mViewWidth = w;
-        mViewHeight = h;
+        // 绘制矩形
+        canvas.drawRect(left, top, right, bottom, mPaint);
     }
 }

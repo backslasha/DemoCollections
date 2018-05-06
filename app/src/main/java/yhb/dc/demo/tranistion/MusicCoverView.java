@@ -1,13 +1,15 @@
-package yhb.chorus.widgets;
+package yhb.dc.demo.tranistion;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Path;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
-import yhb.chorus.R;
+import yhb.dc.R;
+
 
 /**
  * Created by yhb on 18-4-5.
@@ -15,9 +17,13 @@ import yhb.chorus.R;
 
 public class MusicCoverView extends android.support.v7.widget.AppCompatImageView {
 
+    public static final int SHAPE_RECTANGLE = 0;
+    public static final int SHAPE_CIRCLE = 1;
+
     private final Path mClipPath = new Path();
     private final Path mRectPath = new Path();
     private float mRadius;
+    private int mShape;
 
     public MusicCoverView(Context context) {
         super(context, null);
@@ -31,6 +37,7 @@ public class MusicCoverView extends android.support.v7.widget.AppCompatImageView
         super(context, attrs, defStyleAttr);
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.MusicCoverView);
         mRadius = array.getInteger(R.styleable.MusicCoverView_radius, -1);
+        mShape = array.getInt(R.styleable.MusicCoverView_shape, SHAPE_RECTANGLE);
         array.recycle();
     }
 
@@ -38,9 +45,17 @@ public class MusicCoverView extends android.support.v7.widget.AppCompatImageView
     protected void onDraw(Canvas canvas) {
         canvas.clipPath(mClipPath);
         super.onDraw(canvas);
+        canvas.drawPath(mClipPath,new Paint());
     }
 
-    private void resetPaths() {
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        mRadius = Math.min(w, h);
+        resetRoundPaths(mRadius);
+    }
+
+    private void resetRoundPaths(float radius) {
 
         final int w = getWidth();
         final int h = getHeight();
@@ -48,7 +63,7 @@ public class MusicCoverView extends android.support.v7.widget.AppCompatImageView
         final float centerY = h / 2f;
 
         mClipPath.reset();
-        mClipPath.addCircle(centerX, centerY, mRadius, Path.Direction.CW);
+        mClipPath.addCircle(centerX, centerY, radius, Path.Direction.CW);
     }
 
 }

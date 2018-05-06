@@ -12,7 +12,7 @@
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:showDividers="end"
-        tools:context="yhb.dc.demo.animated_vector.CommonButtonClickEffectActivity"
+        tools:context="yhb.dc.demo.click_effect.CommonButtonClickEffectActivity"
         tools:ignore="ContentDescription,HardcodedText">
 
         <LinearLayout
@@ -109,6 +109,28 @@
                 android:foreground="@drawable/ripple"
                 android:scaleType="centerInside" />
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:labelFor="@id/image_button_animated_vector_drawable"
+                android:text="ripple_with_radius" />
+
+            <ImageButton
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_margin="4dp"
+                android:background="@android:color/white"
+                android:foreground="@drawable/ripple_with_radius"
+                android:scaleType="centerInside" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -123,14 +145,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:labelFor="@id/image_button_animated_vector_drawable"
-                android:text="ripple_with_black_layer_and_no_mask" />
+                android:text="ripple_with_white_layer_and_no_mask" />
 
             <ImageButton
                 android:layout_width="90dp"
                 android:layout_height="90dp"
                 android:layout_margin="4dp"
                 android:background="@android:color/white"
-                android:foreground="@drawable/ripple_with_black_layer_and_no_mask"
+                android:foreground="@drawable/ripple_with_white_layer_and_no_mask"
                 android:scaleType="centerInside" />
         </LinearLayout>
 
@@ -147,14 +169,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:labelFor="@id/image_button_animated_vector_drawable"
-                android:text="ripple_with_no_layer_and_black_mask" />
+                android:text="ripple_with_no_layer_and_rectangle_mask" />
 
             <ImageButton
                 android:layout_width="90dp"
                 android:layout_height="90dp"
                 android:layout_margin="4dp"
                 android:background="@android:color/white"
-                android:foreground="@drawable/ripple_with_no_layer_and_black_mask"
+                android:foreground="@drawable/ripple_with_no_layer_and_rectangle_mask"
                 android:scaleType="centerInside" />
         </LinearLayout>
 
@@ -170,14 +192,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:labelFor="@id/image_button_animated_vector_drawable"
-                android:text="ripple_with_no_layer_and_green_mask" />
+                android:text="ripple_with_no_layer_and_oval_mask" />
 
             <ImageButton
                 android:layout_width="90dp"
                 android:layout_height="90dp"
                 android:layout_margin="4dp"
                 android:background="@android:color/white"
-                android:foreground="@drawable/ripple_with_no_layer_and_green_mask"
+                android:foreground="@drawable/ripple_with_no_layer_and_oval_mask"
                 android:scaleType="centerInside" />
         </LinearLayout>
     </LinearLayout>

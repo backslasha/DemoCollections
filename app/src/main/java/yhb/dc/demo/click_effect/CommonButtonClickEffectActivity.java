@@ -1,4 +1,4 @@
-package yhb.dc.demo.animated_vector;
+package yhb.dc.demo.click_effect;
 
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.support.v7.app.AppCompatActivity;

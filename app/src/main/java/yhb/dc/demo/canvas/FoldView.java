@@ -2,15 +2,17 @@ package yhb.dc.demo.canvas;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.RectF;
+import android.graphics.Region;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
+import static android.graphics.Color.BLACK;
 import static android.graphics.Color.WHITE;
 import static android.view.MotionEvent.ACTION_DOWN;
 import static android.view.MotionEvent.ACTION_MOVE;
@@ -20,108 +22,88 @@ import static android.view.MotionEvent.ACTION_UP;
  * Created by yhb on 18-4-10.
  */
 
-public class PageView extends View {
+public class FoldView extends View {
 
-    private int mViewWidth;
 
-    public Bitmap[] getBitmaps() {
-        return mBitmaps;
-    }
-
-    public void setBitmaps(Bitmap[] bitmaps) {
-        mBitmaps = bitmaps;
-        if (mBitmaps.length != 0) {
-            mCurrentPage = 0;
-        }
-    }
-
-    private Bitmap[] mBitmaps;
     private Paint mPaint;
+    private Path mPath;
 
-    public PageView(Context context) {
+    private int mW;
+    private int mH;
+    private int mY, mX;
+    private Region mRegion;
+
+    public FoldView(Context context) {
         this(context, null);
-        mPaint = new Paint();
-        restorePaint(mPaint);
     }
 
-    public PageView(Context context, @Nullable AttributeSet attrs) {
+    public FoldView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        mPaint = new Paint();
+        mPath = new Path();
+        mRegion = new Region();
+        restorePaint(mPaint);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (mBitmaps == null) {
-            return;
+        canvas.drawColor(WHITE);
+        canvas.drawCircle(mX, mY, 15, mPaint);
+        if (mW == mX) {
+            mX = mW - 1;
         }
-
-        for (int i = mBitmaps.length - 1; i >= 0; i--) {
-            if (i < mCurrentPage) {
-                break;
-            }
-
-            if (i == mCurrentPage) {
-                if (lastPage) {
-                    canvas.drawBitmap(mBitmaps[i], 0, 0, null);
-                    break;
-                }
-                canvas.save();
-                canvas.clipRect(0, 0, mPageX, getHeight());
-                canvas.drawBitmap(mBitmaps[i], 0, 0, null);
-                canvas.restore();
-                continue;
-            }
-            canvas.drawBitmap(mBitmaps[i], 0, 0, null);
+        if (mY == mH) {
+            mY = mH - 1;
         }
+        int x = ((mH - mY) * (mH - mY) + (mW - mX) * (mW - mX)) / (2 * (mW - mX));
+        int y = ((mW - mX) * (mW - mX) + (mY - mH) * (mY - mH)) / (-2 * (mY - mH));
+        mPath.reset();
+        mPath.moveTo(mX, mY);
+        mPath.lineTo(mW - x, mH);
+
+        if (y > mH) {
+            int k0 = -(y - mH) - mY / (mW - mX);
+            int b0 = mY - k0 * mX;
+            int x0 = -b0 / k0;
+            int y0 = 0;
+            int k1 = mH - -(y - mH) / (mW - x - mW);
+            int b1 = -(y - mH) - k1 * mW;
+            int x1 = -b1 / k1;
+            int y1 = 0;
+            mPath.lineTo(x1, y1);
+            mPath.lineTo(x0, y0);
+        } else {
+            mPath.lineTo(mW, mH - y);
+        }
+        mPath.close();
+        canvas.drawPath(mPath, mPaint);
+
+
     }
+
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        if (mPageX == -1) {
-            mPageX = w;
-        }
-
-        for (int i = 0; i < mBitmaps.length; i++) {
-            mBitmaps[i] = Bitmap.createScaledBitmap(mBitmaps[i], w, h, true);
-        }
-
-        mViewWidth = w;
-
-        leftBorder = mViewWidth * 1 / 5F;
-        rightBorder = mViewWidth * 4 / 5F;
+        mW = w;
+        mH = h;
     }
-
-    private float leftBorder, rightBorder;
-    private int mPageX = -1;
-    private int mCurrentPage = -1;
-    private boolean firstPage = true;
-    private boolean lastPage = true;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
-        firstPage = mCurrentPage == 0;
-        lastPage = mCurrentPage == mBitmaps.length - 1;
-
+        mX = (int) event.getX();
+        mY = (int) event.getY();
         switch (event.getAction()) {
             case ACTION_DOWN:
-                if (event.getX() < getMeasuredWidth() / 2) {
-                    if (!firstPage) {
-                        mCurrentPage--;
-                    } else {
-                        Toast.makeText(getContext(), "this is the first page.", Toast.LENGTH_SHORT).show();
-                        return false;
-                    }
-                } else {
-                    if (lastPage) {
-                        Toast.makeText(getContext(), "this is last page.", Toast.LENGTH_SHORT).show();
-                        return false;
-                    }
-                }
-                break;
             case ACTION_MOVE:
-                mPageX = (int) event.getX();
+                if ((mH - mY) * (mH - mY) + mX * mX > mW * mW) {
+                    // 如果不在则通过x坐标强行重算y坐标
+                    mY = (int) (-Math.sqrt(mW * mW - mX * mX) + mH);
+                }
+                if (mY >= mH - 30) {
+                    mY = mH - 30;
+                }
                 invalidate();
                 break;
             case ACTION_UP:
@@ -141,15 +123,11 @@ public class PageView extends View {
             postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mPageX -= 16;
+                    mX -= 16;
+                    mY += 16;
                     invalidate();
-                    if (mPageX > 0) {
+                    if (mX > -mW / 2 || mY < mH) {
                         judgeSlideAuto();
-                    } else {
-                        if (!lastPage) {
-                            mCurrentPage++;
-                        }
-                        mPageX = mViewWidth;
                     }
                 }
             }, 16);
@@ -158,12 +136,13 @@ public class PageView extends View {
             postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mPageX += 16;
+                    mX += 16;
+                    float i = mW - mX;
+                    float j = mH - mY;
+                    mY += (16f / i * j);
                     invalidate();
-                    if (mPageX < mViewWidth) {
+                    if (mX < mW || mY < mH) {
                         judgeSlideAuto();
-                    } else {
-                        mPageX = mViewWidth;
                     }
                 }
             }, 16);
@@ -171,11 +150,12 @@ public class PageView extends View {
     }
 
     private boolean stopAtLeft() {
-        return mPageX < getMeasuredWidth() / 2;
+        return mX < getMeasuredWidth() / 2;
     }
 
+
     private void restorePaint(Paint paint) {
-        paint.setColor(WHITE);
+        paint.setColor(BLACK);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(12);
         paint.setTextSize(42);

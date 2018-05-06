@@ -1,14 +1,14 @@
-package yhb.dc.demo.fragment_nest;
+package yhb.dc.common;
 
-import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
 import yhb.dc.R;
+import yhb.dc.demo.fragment_nest.TabFragment;
 
-public class SingleFragmentActivity extends AppCompatActivity implements TabFragment.OnFragmentInteractionListener {
+public abstract class SingleFragmentActivity extends AppCompatActivity implements TabFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,15 +19,12 @@ public class SingleFragmentActivity extends AppCompatActivity implements TabFrag
         if (fragment == null) {
             fragmentManager
                     .beginTransaction()
-                    .add(R.id.container,TabFragment.newInstance("1", "w"), null)
-                    .commitAllowingStateLoss();
-            fragmentManager.executePendingTransactions();
+                    .add(R.id.container, createFragment())
+                    .commit();
         }
 
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
+    protected abstract Fragment createFragment();
 
-    }
 }
