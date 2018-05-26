@@ -9,4 +9,5 @@ public class SingleInstanceActivity extends LaunchModeBaseActivity{
         intent.putExtra("LAUNCH_MODE", "SingleInstance");
         return intent;
     }
+
 }

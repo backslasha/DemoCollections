@@ -4,19 +4,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="yhb.dc.demo.view_fields.ViewFieldsActivity">
+    tools:context=".demo.demo_view.view_fields.ViewFieldsActivity">
 
     <FrameLayout
         android:id="@+id/frame_layout_view_parent"
         android:layout_width="match_parent"
         android:layout_height="240dp"
-        android:background="@color/colorAccent">
+        android:layout_margin="4dp"
+        android:background="@color/pink">
 
         <ImageView
             android:id="@+id/image_view"
             android:layout_width="160dp"
             android:layout_height="160dp"
-            android:src="@color/colorPrimary" />
+            android:src="@drawable/pic" />
     </FrameLayout>
 
     <android.support.v7.widget.RecyclerView

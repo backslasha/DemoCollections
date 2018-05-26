@@ -6,16 +6,16 @@ import android.util.Log;
 import android.view.View;
 
 import yhb.dc.R;
+import yhb.dc.common.LifeCycleActivity;
 import yhb.dc.common.ToolbarActivity;
 
-public class LaunchModeMainActivity extends ToolbarActivity implements View.OnClickListener {
+public class LaunchModeMainActivity extends LifeCycleActivity implements View.OnClickListener {
 
     private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate: ");
 
         findViewById(R.id.button_single_task).setOnClickListener(this);
         findViewById(R.id.button_single_instance).setOnClickListener(this);
@@ -48,5 +48,11 @@ public class LaunchModeMainActivity extends ToolbarActivity implements View.OnCl
                 startActivity(intent);
                 break;
         }
+    }
+
+
+    @Override
+    protected String getName() {
+        return this.getClass().getSimpleName();
     }
 }

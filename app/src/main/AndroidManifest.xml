@@ -62,7 +62,7 @@
 
         <!-- demo of custom views -->
         <activity
-            android:name=".demo.custom_view.CustomViewMainActivity"
+            android:name=".demo.demo_view.custom_view.CustomViewMainActivity"
             android:parentActivityName=".MainActivity" />
 
         <!-- demo of animation -->
@@ -72,19 +72,19 @@
 
         <!-- demo od animated vector drawable -->
         <activity
-            android:name=".demo.click_effect.CommonButtonClickEffectActivity"
+            android:name=".demo.demo_view.click_effect.CommonButtonClickEffectActivity"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".demo.canvas.CanvasActivity"
+            android:name=".demo.demo_view.canvas.CanvasActivity"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".demo.handler_thread.HandlerThreadActivity"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".demo.fragment_nest.TabFragmentActivity"
+            android:name=".demo.demo_fragment.fragment_nest.TabFragmentActivity"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".demo.fragment_commit.FragmentCommitActivity"
+            android:name=".demo.demo_fragment.fragment_commit.FragmentCommitActivity"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".demo.aidl.ServiceHolderActivity"
@@ -94,7 +94,11 @@
             android:name=".demo.aidl.LocalService"
             android:process=":test" />
 
-        <activity android:name=".demo.view_fields.ViewFieldsActivity"
+        <activity
+            android:name=".demo.demo_view.view_fields.ViewFieldsActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".demo.demo_fragment.fragment_callback.FragmentCallbackActivity"
             android:parentActivityName=".MainActivity" />
     </application>
 

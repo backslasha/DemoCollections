@@ -7,13 +7,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import yhb.dc.R;
+import yhb.dc.common.LifeCycleActivity;
 import yhb.dc.common.ToolbarActivity;
 
 /**
  * Created by yhb on 18-3-15.
  */
 
-public abstract class LaunchModeBaseActivity extends ToolbarActivity {
+public abstract class LaunchModeBaseActivity extends LifeCycleActivity {
     private TextView mTextView, mTextViewInformation;
     private Button mButton;
 
@@ -43,5 +44,11 @@ public abstract class LaunchModeBaseActivity extends ToolbarActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         mTextView.setText(String.format("%d:\n onNewIntent().", System.currentTimeMillis()));
+    }
+
+
+    @Override
+    protected String getName() {
+        return this.getClass().getSimpleName();
     }
 }

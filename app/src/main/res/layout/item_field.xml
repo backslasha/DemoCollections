@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<yhb.dc.demo.view_fields.FieldView xmlns:android="http://schemas.android.com/apk/res/android"
+<yhb.dc.demo.demo_view.view_fields.FieldView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
 
-</yhb.dc.demo.view_fields.FieldView>
+</yhb.dc.demo.demo_view.view_fields.FieldView>

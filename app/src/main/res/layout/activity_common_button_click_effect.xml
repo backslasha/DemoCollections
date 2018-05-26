@@ -12,7 +12,7 @@
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:showDividers="end"
-        tools:context="yhb.dc.demo.click_effect.CommonButtonClickEffectActivity"
+        tools:context=".demo.demo_view.click_effect.CommonButtonClickEffectActivity"
         tools:ignore="ContentDescription,HardcodedText">
 
         <LinearLayout

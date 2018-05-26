@@ -5,7 +5,7 @@
     android:background="@android:color/black"
     android:layout_height="match_parent">
 
-    <yhb.dc.demo.custom_view.widget.JournalView
+    <yhb.dc.demo.demo_view.custom_view.widget.JournalView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="5dp"
