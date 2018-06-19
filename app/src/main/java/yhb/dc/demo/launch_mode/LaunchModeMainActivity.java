@@ -1,9 +1,11 @@
 package yhb.dc.demo.launch_mode;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import yhb.dc.R;
 import yhb.dc.common.LifeCycleActivity;
@@ -40,8 +42,9 @@ public class LaunchModeMainActivity extends LifeCycleActivity implements View.On
                 startActivity(intent);
                 break;
             case R.id.button_standard:
-                 intent = StandardActivity.newIntent(this);
+                intent = StandardActivity.newIntent(this);
                 startActivity(intent);
+                Toast.makeText(this, test() + "", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.button_single_top:
                 intent = SingleTopBaseActivity.newIntent(this);
@@ -54,5 +57,15 @@ public class LaunchModeMainActivity extends LifeCycleActivity implements View.On
     @Override
     protected String getName() {
         return this.getClass().getSimpleName();
+    }
+
+    private static int test() {
+        int i = 2;
+        i = ++i * i;
+        return i;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(test());
     }
 }

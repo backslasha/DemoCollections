@@ -100,6 +100,11 @@
         <activity
             android:name=".demo.demo_fragment.fragment_callback.FragmentCallbackActivity"
             android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".demo.demo_fragment.fragment_dialog.DialogFragmentActivity"
+            android:parentActivityName=".MainActivity" />
+
     </application>
 
 </manifest>
