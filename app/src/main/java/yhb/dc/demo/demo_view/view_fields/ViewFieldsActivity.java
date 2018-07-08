@@ -18,8 +18,9 @@ import java.util.List;
 import yhb.dc.R;
 import yhb.dc.common.CommonAdapter;
 import yhb.dc.common.CommonViewHolder;
+import yhb.dc.common.Demo;
 
-public class ViewFieldsActivity extends AppCompatActivity implements FieldView.OnValueChangeListener {
+public class ViewFieldsActivity extends AppCompatActivity implements FieldView.OnValueChangeListener, Demo {
 
     private RecyclerView mRecyclerView;
     private ImageView mImageView;

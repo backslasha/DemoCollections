@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context="yhb.dc.common.ToolbarActivity">
+    tools:context="yhb.dc.common.HomeAsUpActivity">
 
     <Button
         android:id="@+id/button_1"

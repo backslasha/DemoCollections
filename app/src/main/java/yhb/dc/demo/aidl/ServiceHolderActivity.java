@@ -12,8 +12,9 @@ import android.widget.Button;
 import java.util.Locale;
 
 import yhb.dc.R;
+import yhb.dc.common.Demo;
 
-public class ServiceHolderActivity extends AppCompatActivity {
+public class ServiceHolderActivity extends AppCompatActivity implements Demo {
 
     private IBookManger mBookManger;
     private ServiceConnection mConnection = new ServiceConnection() {

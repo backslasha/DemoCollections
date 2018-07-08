@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import yhb.dc.R;
 import yhb.dc.common.LifeCycleActivity;
-import yhb.dc.common.ToolbarActivity;
 
 /**
  * Created by yhb on 18-3-15.
@@ -21,6 +20,7 @@ public abstract class LaunchModeBaseActivity extends LifeCycleActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_reviced_intent);
         mTextView = findViewById(R.id.text_view);
         mTextViewInformation = findViewById(R.id.text_view_information);
 
@@ -34,11 +34,6 @@ public abstract class LaunchModeBaseActivity extends LifeCycleActivity {
                 startActivity(intent);
             }
         });
-    }
-
-    @Override
-    public int getContentViewId() {
-        return R.layout.activity_reviced_intent;
     }
 
     @Override

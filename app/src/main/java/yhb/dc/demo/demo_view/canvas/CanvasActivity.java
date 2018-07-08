@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import yhb.dc.R;
-import yhb.dc.common.ToolbarActivity;
+import yhb.dc.common.Demo;
 
-public class CanvasActivity extends ToolbarActivity {
+public class CanvasActivity extends AppCompatActivity implements Demo {
 
     private android.support.v7.widget.Toolbar mToolbar;
     private Spinner mSpinner;
@@ -29,6 +30,7 @@ public class CanvasActivity extends ToolbarActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_canvas);
         mViews = new ArrayList<>();
         mViews.add(new BitmapMeshView(this, null));
         mViews.add(new BitmapShaderView(this, null));
@@ -85,7 +87,6 @@ public class CanvasActivity extends ToolbarActivity {
     }
 
 
-
     private int getScreenWidth() {
         DisplayMetrics outMetric = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(outMetric);
@@ -96,16 +97,6 @@ public class CanvasActivity extends ToolbarActivity {
         DisplayMetrics outMetric = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(outMetric);
         return outMetric.heightPixels;
-    }
-
-    @Override
-    protected void setupToolbar(android.support.v7.widget.Toolbar toolbar) {
-        mToolbar = toolbar;
-    }
-
-    @Override
-    public int getContentViewId() {
-        return R.layout.activity_canvas;
     }
 
     public static Bitmap loadBitmap(Context context, @DrawableRes int resId, int targetW, int targetH) {

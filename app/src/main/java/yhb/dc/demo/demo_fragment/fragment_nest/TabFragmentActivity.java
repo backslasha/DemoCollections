@@ -6,19 +6,21 @@ import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 
 import yhb.dc.R;
+import yhb.dc.common.Demo;
 import yhb.dc.common.LifeCycleActivity;
 
-public class TabFragmentActivity extends LifeCycleActivity implements TabFragment.OnFragmentInteractionListener {
+public class TabFragmentActivity extends LifeCycleActivity implements TabFragment.OnFragmentInteractionListener, Demo {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_single_fragment);
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.container);
         if (fragment == null) {
             fragmentManager
                     .beginTransaction()
-                    .add(R.id.container,TabFragment.newInstance("1", "w"), null)
+                    .add(R.id.container, TabFragment.newInstance("1", "w"), null)
                     .commitAllowingStateLoss();
             fragmentManager.executePendingTransactions();
         }
@@ -28,11 +30,6 @@ public class TabFragmentActivity extends LifeCycleActivity implements TabFragmen
     @Override
     protected String getName() {
         return "";
-    }
-
-    @Override
-    public int getContentViewId() {
-        return R.layout.activity_single_fragment;
     }
 
     @Override

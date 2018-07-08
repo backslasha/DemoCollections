@@ -16,9 +16,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".demo.launch_mode.LaunchModeMainActivity"
-            android:parentActivityName=".MainActivity" />
+        <activity android:name=".demo.launch_mode.LaunchModeMainActivity" />
         <activity
             android:name=".demo.launch_mode.SingleInstanceActivity"
             android:launchMode="singleInstance"
@@ -61,49 +59,26 @@
         </activity>
 
         <!-- demo of custom views -->
-        <activity
-            android:name=".demo.demo_view.custom_view.CustomViewMainActivity"
-            android:parentActivityName=".MainActivity" />
+        <activity android:name=".demo.demo_view.custom_view.CustomViewMainActivity" />
 
         <!-- demo of animation -->
-        <activity
-            android:name=".demo.tranistion.AnimationMainActivity"
-            android:parentActivityName=".MainActivity" />
+        <activity android:name=".demo.tranistion.AnimationMainActivity" />
 
         <!-- demo od animated vector drawable -->
-        <activity
-            android:name=".demo.demo_view.click_effect.CommonButtonClickEffectActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".demo.demo_view.canvas.CanvasActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".demo.handler_thread.HandlerThreadActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".demo.demo_fragment.fragment_nest.TabFragmentActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".demo.demo_fragment.fragment_commit.FragmentCommitActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".demo.aidl.ServiceHolderActivity"
-            android:parentActivityName=".MainActivity" />
+        <activity android:name=".demo.demo_view.click_effect.CommonButtonClickEffectActivity" />
+        <activity android:name=".demo.demo_view.canvas.CanvasActivity" />
+        <activity android:name=".demo.handler_thread.HandlerThreadActivity" />
+        <activity android:name=".demo.demo_fragment.fragment_nest.TabFragmentActivity" />
+        <activity android:name=".demo.demo_fragment.fragment_commit.FragmentCommitActivity" />
+        <activity android:name=".demo.aidl.ServiceHolderActivity" />
 
         <service
             android:name=".demo.aidl.LocalService"
             android:process=":test" />
 
-        <activity
-            android:name=".demo.demo_view.view_fields.ViewFieldsActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".demo.demo_fragment.fragment_callback.FragmentCallbackActivity"
-            android:parentActivityName=".MainActivity" />
-
-        <activity
-            android:name=".demo.demo_fragment.fragment_dialog.DialogFragmentActivity"
-            android:parentActivityName=".MainActivity" />
+        <activity android:name=".demo.demo_view.view_fields.ViewFieldsActivity" />
+        <activity android:name=".demo.demo_fragment.fragment_callback.FragmentCallbackActivity" />
+        <activity android:name=".demo.demo_fragment.fragment_dialog.DialogFragmentActivity" />
 
     </application>
 

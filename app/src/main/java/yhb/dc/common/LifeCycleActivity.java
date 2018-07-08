@@ -3,6 +3,7 @@ package yhb.dc.common;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 /**
@@ -10,7 +11,7 @@ import android.util.Log;
  * 继承此类的的 Fragment 会自动打印 log
  */
 
-public abstract class LifeCycleActivity extends ToolbarActivity {
+public abstract class LifeCycleActivity extends AppCompatActivity {
 
     @Override
     public void onAttachFragment(Fragment childFragment) {
