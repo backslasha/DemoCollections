@@ -27,6 +27,7 @@ public class CustomDialogFragment extends DialogFragment {
         fragment.setArguments(args);
         return fragment;
     }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -42,4 +43,8 @@ public class CustomDialogFragment extends DialogFragment {
                 .setMessage("Stupid")
                 .create();
     }
+
+    /* Note：
+     * onCreateDialog 和 onCreateView 方法不能同时返回非 null 实例，否则会报错
+     */
 }

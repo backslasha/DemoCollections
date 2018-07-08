@@ -9,6 +9,10 @@ import android.view.View;
 
 import yhb.dc.R;
 
+/**
+ * 如果子类布局文件中存在 toolbar，那么 enable HomeAsUp 功能
+ * 需要对 toolbar 进行设置时，重写 setupToolbar(Toolbar toolbar) 即可
+ */
 public abstract class ToolbarActivity extends AppCompatActivity {
 
     @Override

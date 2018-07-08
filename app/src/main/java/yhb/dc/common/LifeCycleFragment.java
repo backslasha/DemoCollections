@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * Created by yhb on 18-4-21.
+ * 继承此类的的 Fragment 会自动打印 log
  */
 
 public abstract class LifeCycleFragment extends Fragment {
