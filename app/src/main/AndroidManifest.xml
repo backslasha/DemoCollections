@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="yhb.dc">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -75,13 +78,16 @@
         <service
             android:name=".demo.aidl.LocalService"
             android:process=":test" />
+        <service android:name=".demo.slient_upgrade.SilentUpgradeActivity$DownloadIntentService" />
 
         <activity android:name=".demo.demo_view.view_fields.ViewFieldsActivity" />
         <activity android:name=".demo.demo_fragment.fragment_callback.FragmentCallbackActivity" />
         <activity android:name=".demo.demo_fragment.fragment_dialog.DialogFragmentActivity" />
-        <activity android:name=".demo.notification.NotificationActivity"/>
+        <activity android:name=".demo.notification.NotificationActivity" />
 
         <receiver android:name=".demo.notification.EchoBroadcastReceiver" />
+
+        <activity android:name=".demo.slient_upgrade.SilentUpgradeActivity"></activity>
     </application>
 
 </manifest>
