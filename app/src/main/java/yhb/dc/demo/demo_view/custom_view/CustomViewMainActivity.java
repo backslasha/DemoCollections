@@ -46,6 +46,6 @@ public class CustomViewMainActivity extends AppCompatActivity implements Demo {
     }
 
     public void clearOverlap(View view) {
-        mBubbleLayout.clearOverlap();
+        mBubbleLayout.clearOverlap(view);
     }
 }

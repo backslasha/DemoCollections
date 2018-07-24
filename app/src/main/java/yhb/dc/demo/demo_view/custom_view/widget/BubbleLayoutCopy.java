@@ -173,13 +173,13 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
 
     public void random() {
         int childCount = getChildCount();
-        for (int i = 0; i < childCount; i++) {
+        for (int i = 0; i < 10; i++) {
             View child = getChildAt(i);
             MarginLayoutParams layoutParams = (MarginLayoutParams) child.getLayoutParams();
-            layoutParams.bottomMargin = (int) (/*Math.random() **/ 10);
-            layoutParams.leftMargin = (int) (/*Math.random() **/ 10);
-            layoutParams.rightMargin = (int) (/*Math.random() **/ 10);
-            layoutParams.topMargin = (int) (/*Math.random() * */10);
+//            layoutParams.bottomMargin = (int) (Math.random() * 20);
+            layoutParams.leftMargin = (int) (/*Math.random() **/ 0);
+            layoutParams.rightMargin = (int) (/*Math.random() **/ 0);
+            layoutParams.topMargin = (int) (Math.random() * 100);
 
             if (i == 0 || i == 20) {
                 layoutParams.leftMargin = (int) (Math.random() * 200 + 100);
@@ -191,82 +191,61 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
 
     public void clearOverlap() {
         int childCount = getChildCount();
-        for (int i = 0; i < childCount - 10; i++) {
-            View child = getChildAt(i);
-            View childBottomLeft = getChildAt(i + 9);
-            View childBottomRight = getChildAt(i + 11);
-
-            if (childBottomLeft != null) {
-                int offset = checkOverlap(child, childBottomLeft);
-                LayoutParams layoutParams = (LayoutParams) childBottomLeft.getLayoutParams();
-                if (offset > 0) {
+        for (int i = 0; i < childCount; i++) {
+            for (int j = i + 1; j < childCount; j++) {
+                View child = getChildAt(i);
+                View other = getChildAt(j);
+                if (other != null) {
+                    Vector2D offset = checkOverlap(child, other);
+                    LayoutParams layoutParams = (LayoutParams) other.getLayoutParams();
                     // 重叠了 offset 像素点，我们把下面的 view 下移 offset-MIN_PADDING 像素
-                    layoutParams.topMargin += (offset - MIN_PADDING);
-                } else if (offset < 0) {
-                    // 间距是 offset 像素点，我们把下面的 view 上移 offset-MIN_PADDING 像素
-                    layoutParams.topMargin -= (offset - MIN_PADDING);
+                    layoutParams.leftMargin += offset.componentX();
+                    layoutParams.topMargin += offset.componentY();
+                    other.setLayoutParams(layoutParams);
                 }
-                layoutParams.topMargin = Math.max(layoutParams.topMargin, 0);
-                childBottomLeft.setLayoutParams(layoutParams);
             }
-
-            if (childBottomRight != null) {
-                int offset = checkOverlap(child, childBottomRight);
-                LayoutParams layoutParams = (LayoutParams) childBottomRight.getLayoutParams();
-                if (offset > 0) {
-                    // 重叠了 offset 像素点，我们把下面的 view 下移 offset-MIN_PADDING 像素
-                    layoutParams.topMargin += (offset - MIN_PADDING);
-                } else if (offset < 0) {
-                    // 间距是 offset 像素点，我们把下面的 view 上移 offset-MIN_PADDING 像素
-                    layoutParams.topMargin -= (offset - MIN_PADDING);
-                }
-                layoutParams.topMargin = Math.max(layoutParams.topMargin, 0);
-                childBottomRight.setLayoutParams(layoutParams);
-            }
-
         }
     }
 
-    private int checkOverlap(View child, View bottomChild) {
+    public void clearOverlap(View child) {
+        int childCount = getChildCount();
+        for (int j = 0; j < childCount; j++) {
+            View other = getChildAt(j);
+            if (other != child && other != null) {
+                Vector2D offset = checkOverlap(child, other);
+                LayoutParams layoutParams = (LayoutParams) other.getLayoutParams();
+                // 重叠了 offset 像素点，我们把下面的 view 下移 offset-MIN_PADDING 像素
+                layoutParams.leftMargin += offset.componentX();
+                layoutParams.topMargin += offset.componentY();
+                other.setLayoutParams(layoutParams);
+            }
+        }
+    }
+
+    private Vector2D checkOverlap(View child, View bottomChild) {
 
         if (bottomChild == null || child == null) {
-            return 0;
+            return new Vector2D(0, 0, 0, 0);
         }
-
         Rect rect1 = getRect(child);
         Rect rect2 = getRect(bottomChild);
-
-        if (!rect1.intersect(rect2)) {
-            return 0;
+        Circle c1 = new Circle(rect1.centerX(), rect1.centerY(), rect1.height() / 2, Spec.getColor());
+        Circle c2 = new Circle(rect2.centerX(), rect2.centerY(), rect2.height() / 2, Spec.getColor());
+        if (c1 != c2) {
+            float dx = c2.x - c1.x;
+            float dy = c2.y - c1.y;
+            float r = c1.radius + c2.radius;
+            float d = (dx * dx) + (dy * dy);
+            if (d < (r * r) - 0.01) {// - 0.01 why?
+                double sqrt_d = Math.sqrt(d);
+                float x = (float) (r * dx / sqrt_d - dx);
+                float y = (float) (r * dy / sqrt_d - dy);
+                return new Vector2D(0, x, 0, y);
+            }
         }
-
-        return rect1.bottom - rect2.top;
+        return new Vector2D(0, 0, 0, 0);
     }
 
-
-    public void sinkSpace() {
-        int childCount = getChildCount();
-        for (int i = 0; i < childCount - 10; i++) {
-            View child = getChildAt(i);
-            View childBottomLeft = getChildAt(i + 9);
-            View childBottomRight = getChildAt(i + 11);
-
-            if (childBottomLeft != null) {
-                int offset = checkOverlap(child, childBottomLeft);
-                LayoutParams layoutParams = (LayoutParams) childBottomLeft.getLayoutParams();
-                layoutParams.topMargin += offset;
-                childBottomLeft.setLayoutParams(layoutParams);
-            }
-
-            if (childBottomRight != null) {
-                int offset = checkOverlap(child, childBottomRight);
-                LayoutParams layoutParams = (LayoutParams) childBottomRight.getLayoutParams();
-                layoutParams.topMargin += offset;
-                childBottomRight.setLayoutParams(layoutParams);
-            }
-
-        }
-    }
 
     public Rect getRect(View child) {
         return new Rect(child.getLeft(), child.getTop(), child.getRight(), child.getBottom());
@@ -351,7 +330,6 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
             }
             return result;
         }
-
 
 
     }
