@@ -1,4 +1,4 @@
-package yhb.dc.demo.demo_view.canvas;
+package yhb.dc.demo.demo_view.custom_view.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -14,20 +14,20 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class BubbleView extends View {
+public class BubbleView2 extends View {
 
     private List<Circle> allCircles;
     private Paint mPaint;
 
-    public BubbleView(Context context) {
+    public BubbleView2(Context context) {
         this(context, null);
     }
 
-    public BubbleView(Context context, @Nullable AttributeSet attrs) {
+    public BubbleView2(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public BubbleView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public BubbleView2(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         int circleCount = 30;
         int circleMin = dp(80);
@@ -37,7 +37,7 @@ public class BubbleView extends View {
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.FILL);
         allCircles = createRandomCircles(circleCount, circleMin, circleMax);
-        flatCircles();
+        flatCircles(allCircles);
     }
 
     private List<Circle> createRandomCircles(int circleCount, int circleMin, int circleMax) {
@@ -53,7 +53,7 @@ public class BubbleView extends View {
         return result;
     }
 
-    public void flatCircles() {
+    public void flatCircles(List<Circle> allCircles) {
 
         final PointF center = new PointF(getWidth() / 2, getHeight() / 2);
 
@@ -65,7 +65,7 @@ public class BubbleView extends View {
             }
         });
 
-        List<Circle> sortedCircles = allCircles;
+        List<Circle> sortedCircles = this.allCircles;
 
         // Cycle through circles for collision detection
         for (Circle c1 : sortedCircles) {
@@ -101,32 +101,6 @@ public class BubbleView extends View {
     }
 
 
-    public void drawCircles(Canvas canvas) {
-        for (int i = 0; i < allCircles.size(); i++) {
-            Circle c = allCircles.get(i);
-            canvas.drawCircle(c.x, c.y, c.radius, mPaint);
-
-//            if (i < HostCanvas.Children.Count) {
-//                var e = ((Ellipse) HostCanvas.Children[i]);
-//                e.Width = e.Height = (c.radius * 2) - 2;
-//                e.Fill = new SolidColorBrush(c.circleColor);
-//                Canvas.SetLeft(e, c.x - c.radius);
-//                Canvas.SetTop(e, c.y - c.radius);
-//            } else {
-//                Ellipse e = new Ellipse();
-//                e.Width = e.Height = (c.radius * 2) - 2;
-//                e.Fill = new SolidColorBrush(c.circleColor);
-//                Canvas.SetLeft(e, c.x - c.radius);
-//                Canvas.SetTop(e, c.y - c.radius);
-//                HostCanvas.Children.Add(e);
-//            }
-        }
-
-        // in case the number of circles have dropped
-//        for (int i = allCircles.size(); i < HostCanvas.Children.Count; i++) {
-//            HostCanvas.Children.RemoveAt(AllCircles.Count);
-//        }
-    }
 
     private int dp(int x) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
@@ -135,8 +109,11 @@ public class BubbleView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
         drawCircles(canvas);
+    }
+
+    private void drawCircles(Canvas canvas) {
+
     }
 
     private class Circle {

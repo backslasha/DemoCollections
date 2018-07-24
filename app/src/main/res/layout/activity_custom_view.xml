@@ -2,14 +2,63 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:background="@android:color/black"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
 
-    <yhb.dc.demo.demo_view.custom_view.widget.JournalView
+    <!--<yhb.dc.demo.demo_view.custom_view.widget.JournalView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:padding="5dp"-->
+    <!--app:default_paper_height="65dp"-->
+    <!--app:frame_color="@color/colorAccent"-->
+    <!--app:frame_height="32dp" />-->
+    <HorizontalScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <yhb.dc.demo.demo_view.custom_view.widget.BubbleLayoutCopy
+            android:id="@+id/bubble_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+        </yhb.dc.demo.demo_view.custom_view.widget.BubbleLayoutCopy>
+    </HorizontalScrollView>
+
+        <yhb.dc.demo.demo_view.custom_view.widget.BubbleView
+            android:layout_width="200dp"
+            android:layout_height="200dp" />
+
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="5dp"
-        app:default_paper_height="65dp"
-        app:frame_color="@color/colorAccent"
-        app:frame_height="32dp" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/c"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:onClick="animate" />
+
+        <Button
+            android:id="@+id/b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@id/c"
+            android:onClick="random" />
+
+        <Button
+            android:id="@+id/a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/b"
+            android:onClick="clearOverlap" />
+
+    </RelativeLayout>
+
 </FrameLayout>

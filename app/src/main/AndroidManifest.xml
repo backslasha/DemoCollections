@@ -78,8 +78,6 @@
         <service
             android:name=".demo.aidl.LocalService"
             android:process=":test" />
-        <service android:name=".demo.slient_upgrade.SilentUpgradeActivity$DownloadIntentService" />
-
         <activity android:name=".demo.demo_view.view_fields.ViewFieldsActivity" />
         <activity android:name=".demo.demo_fragment.fragment_callback.FragmentCallbackActivity" />
         <activity android:name=".demo.demo_fragment.fragment_dialog.DialogFragmentActivity" />
@@ -87,7 +85,6 @@
 
         <receiver android:name=".demo.notification.EchoBroadcastReceiver" />
 
-        <activity android:name=".demo.slient_upgrade.SilentUpgradeActivity"></activity>
     </application>
 
 </manifest>
