@@ -1,10 +1,7 @@
 package yhb.dc.demo.demo_view.custom_view.widget;
 
-import android.animation.IntEvaluator;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.PointF;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,7 +9,6 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
@@ -25,9 +21,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import dalvik.annotation.TestTarget;
 import yhb.dc.R;
-import yhb.dc.demo.demo_view.custom_view.CustomViewMainActivity;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
@@ -69,7 +63,7 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-//                randomMarginTop(50);
+//                randomMargin(50);
                 clearAllOverlap();
                 getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
@@ -132,6 +126,7 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
 
     /**
      * 对所有 ImageView 进行一次的去重叠（将每个重叠的 ImageView 往右下角挤），注意，该过程完不能保证所有 ImageView 之间互相不重叠
+     *
      * @return 本次调用是否用做出重叠调整，若无，说明所有 ImageView 之间都互不重叠
      */
     private boolean clearOverlap() {
@@ -147,6 +142,7 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
 
     /**
      * 清除单个 ImageView 的重叠（将每个重叠的 ImageView 往右下角挤）
+     *
      * @return 本次调用是否用做出重叠调整，若无，说明该 ImageView 不和任何其他 ImageView 重叠
      */
     private boolean clearOverlap(View child) {
@@ -173,11 +169,18 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
     /**
      * 给第一行的 ImageView 随机添加 marginTop 达到轻微打乱布局的目的
      */
-    private void randomMarginTop(int max) {
+    private void randomMargin(int max) {
         List<ImageView> imageViews = mBubbleRows.get(0);
         for (ImageView child : imageViews) {
             MarginLayoutParams layoutParams = (MarginLayoutParams) child.getLayoutParams();
             layoutParams.topMargin = (int) (Math.random() * max);
+            child.setLayoutParams(layoutParams);
+        }
+
+        for (List<ImageView> bubbleRow : mBubbleRows) {
+            ImageView child = bubbleRow.get(0);
+            MarginLayoutParams layoutParams = (MarginLayoutParams) child.getLayoutParams();
+            layoutParams.leftMargin = (int) (Math.random() * 100);
             child.setLayoutParams(layoutParams);
         }
         isOverlap = true;
@@ -212,6 +215,7 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
                 if (i != 0) {/* top first row's children, with no top anchor */
                     layoutParams.addRule(BELOW, mBubbleRows.get(i - 1).get(j).getId());
                 }
+
                 int id = ID_BASE + ++itemCount;
 
                 Bubble bubble = SPEC.nextBubble();
@@ -228,7 +232,7 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
                 imageView.setTextSize(16);
                 imageView.setTextColor(bubble.selected ? bubble.selectedTextColor : bubble.unselectedTextColor);
                 imageView.setBorderOverlay(false);
-                imageView.setBorderWidth(5);
+                imageView.setBorderWidth(0);
                 imageView.setText(bubble.label);
                 addView(imageView, layoutParams);
                 mBubbleRows.get(i).add(imageView);
@@ -257,7 +261,7 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                randomMarginTop(50);
+                randomMargin(0);
                 clearAllOverlap();
                 getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
