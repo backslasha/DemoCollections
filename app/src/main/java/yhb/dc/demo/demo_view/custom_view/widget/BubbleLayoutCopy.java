@@ -12,6 +12,10 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -46,6 +50,7 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
     public BubbleLayoutCopy(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setGravity(Gravity.CENTER_VERTICAL);
+
         mBubbleRows = new ArrayList<>();
 
         for (int i = 0; i < SPEC.rowCount; i++) {
@@ -53,6 +58,13 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
         }
 
         createRandomCircles();
+
+        Animation animation = AnimationUtils.loadAnimation(this.getContext(), R.anim.bubble_show);
+        LayoutAnimationController controller = new LayoutAnimationController(animation);
+        controller.setOrder(LayoutAnimationController.ORDER_RANDOM);
+        controller.setInterpolator(new OvershootInterpolator());
+        controller.setDelay(0.1f);
+        setLayoutAnimation(controller);
 
     }
 
@@ -88,8 +100,10 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
                 imageView.setId(id);
                 imageView.setImageResource(bubble.selected ? bubble.selectedRes : bubble.unselectedRes);
                 imageView.setBorderColor(Color.TRANSPARENT);
+                imageView.setTextSize(16);
+                imageView.setTextColor(bubble.selected ? bubble.selectedTextColor : bubble.unselectedTextColor);
                 imageView.setBorderOverlay(false);
-                imageView.setBorderWidth(3);
+                imageView.setBorderWidth(5);
                 imageView.setText(bubble.label);
                 addView(imageView, layoutParams);
                 mBubbleRows.get(i).add(imageView);
@@ -108,35 +122,9 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
         clearOverlap(v);
     }
 
-    public void bubble() {
-        for (int i = 10; i < 20; i++) {
-            final View viewById = getChildAt(i);
-            ValueAnimator animator = new ValueAnimator();
-            double upper = Math.random() * 50;
-            double lower = Math.random() * -50;
-            double duration = (long) (1000 + Math.random() * 1000);
-            animator.setIntValues((int) lower, (int) upper);
-            animator.setDuration((long) duration);
-            animator.setInterpolator(new AccelerateDecelerateInterpolator());
-            animator.setRepeatCount(-1);
-            animator.setRepeatMode(ValueAnimator.REVERSE);
-            animator.setEvaluator(new IntEvaluator());
-            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    MarginLayoutParams layoutParams = (MarginLayoutParams) viewById.getLayoutParams();
-                    if (layoutParams != null) {
-                        int animatedValue = (int) animation.getAnimatedValue();
-                        layoutParams.bottomMargin = animatedValue;
-                        layoutParams.leftMargin = animatedValue;
-                        layoutParams.rightMargin = animatedValue;
-                        layoutParams.topMargin = animatedValue;
-                        viewById.setLayoutParams(layoutParams);
-                    }
-                }
-            });
-            animator.start();
-        }
+    public void showBubbleAnim() {
+        hideAllViews();
+        showAllViews();
     }
 
     public void randomMarginTop() {
@@ -145,6 +133,22 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
             MarginLayoutParams layoutParams = (MarginLayoutParams) child.getLayoutParams();
             layoutParams.topMargin = (int) (Math.random() * 50);
             child.setLayoutParams(layoutParams);
+        }
+    }
+
+    public void hideAllViews() {
+        int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            getChildAt(i).setVisibility(INVISIBLE);
+        }
+    }
+
+
+    public void showAllViews() {
+        startLayoutAnimation();
+        int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            getChildAt(i).setVisibility(VISIBLE);
         }
     }
 
@@ -157,26 +161,6 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
             }
         }
         return adjusted;
-    }
-
-    private void clearOverlap(int i, int j) {
-
-        if (i < 0 || i > mBubbleRows.size() - 1 || j < 0 || j >= mBubbleRows.get(0).size() - 1)
-            return;
-
-        View child = mBubbleRows.get(i).get(j);
-        for (int k = 0; k < SPEC.rowCount; k++) {
-            View right = mBubbleRows.get(k).get(j + 1);
-            if (right != child && right != null) {
-                Vector2D offset = getOffsetVector(child, right);
-                LayoutParams layoutParams = (LayoutParams) right.getLayoutParams();
-                // 重叠了 offset 像素点，我们把下面的 view 右下角移动 offset 像素
-                layoutParams.leftMargin += offset.componentX();
-                layoutParams.topMargin += offset.componentY();
-                right.setLayoutParams(layoutParams);
-            }
-        }
-
     }
 
     public boolean clearOverlap(View child) {
@@ -206,20 +190,19 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
         }
         Rect rect1 = getRect(child);
         Rect rect2 = getRect(bottomChild);
-        Circle c1 = new Circle(rect1.centerX(), rect1.centerY(), rect1.height() / 2);
-        Circle c2 = new Circle(rect2.centerX(), rect2.centerY(), rect2.height() / 2);
-        if (c1 != c2) {
-            float dx = c2.x - c1.x;
-            float dy = c2.y - c1.y;
-            float r = c1.radius + c2.radius;
-            float d = (dx * dx) + (dy * dy);
-            if (d < r * r) {
-                double sqrt_d = Math.sqrt(d);
-                float x = (float) (r * dx / sqrt_d - dx);
-                float y = (float) (r * dy / sqrt_d - dy);
-                return new Vector2D(0, x, 0, y);
-            }
+
+        float dx = rect2.centerX() - rect1.centerX();
+        float dy = rect2.centerY() - rect1.centerY();
+        float r = rect2.height() / 2 + rect1.height() / 2;
+        float d = (dx * dx) + (dy * dy);
+
+        if (d < r * r) {
+            double sqrt_d = Math.sqrt(d);
+            float x = (float) (r * dx / sqrt_d - dx);
+            float y = (float) (r * dy / sqrt_d - dy);
+            return new Vector2D(0, x, 0, y);
         }
+
         return new Vector2D(0, 0, 0, 0);
     }
 
@@ -238,16 +221,24 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
         boolean selected;
         int level;
         String label;
-        int selectedRes;
-        int unselectedRes;
+        int textSize;
+        int selectedTextColor;
 
-        Bubble(boolean selected, int level, String label, int selectedRes, int unselectedRes) {
+        Bubble(boolean selected, int level, String label, int textSize, int selectedTextColor, int unselectedTextColor, int selectedRes, int unselectedRes) {
             this.selected = selected;
             this.level = level;
             this.label = label;
+            this.textSize = textSize;
+            this.selectedTextColor = selectedTextColor;
+            this.unselectedTextColor = unselectedTextColor;
             this.selectedRes = selectedRes;
             this.unselectedRes = unselectedRes;
         }
+
+        int unselectedTextColor;
+        int selectedRes;
+        int unselectedRes;
+
 
     }
 
@@ -273,43 +264,40 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
         private void initBubble() {
 
             for (int i = 0; i < mRepeatCount; i++) {
-                mBubbles.add(new Bubble(false, 1, "科幻", R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
-                mBubbles.add(new Bubble(true, 1, "动作", R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
-                mBubbles.add(new Bubble(false, 1, "喜剧", R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
-                mBubbles.add(new Bubble(false, 1, "恐怖", R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
-                mBubbles.add(new Bubble(true, 1, "动漫", R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
-                mBubbles.add(new Bubble(false, 1, "美剧", R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
-                mBubbles.add(new Bubble(true, 1, "韩剧", R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
-                mBubbles.add(new Bubble(false, 1, "偶像剧", R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
-                mBubbles.add(new Bubble(false, 1, "宫斗剧", R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
-
-                mBubbles.add(new Bubble(false, 2, "战争", R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
-                mBubbles.add(new Bubble(false, 2, "犯罪", R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
-                mBubbles.add(new Bubble(false, 2, "爱情", R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
-                mBubbles.add(new Bubble(false, 2, "惊悚", R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
-                mBubbles.add(new Bubble(true, 2, "悬疑", R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
-                mBubbles.add(new Bubble(false, 2, "文艺", R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
-                mBubbles.add(new Bubble(false, 2, "老电影", R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
-                mBubbles.add(new Bubble(false, 2, "日剧", R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
-                mBubbles.add(new Bubble(false, 2, "TVB", R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
-                mBubbles.add(new Bubble(false, 2, "泰剧", R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
-
-                mBubbles.add(new Bubble(false, 3, "冒险", R.drawable.bubble3_red_2x, R.drawable.bubble3_2x));
-                mBubbles.add(new Bubble(false, 3, "青春", R.drawable.bubble3_red_2x, R.drawable.bubble3_2x));
-                mBubbles.add(new Bubble(false, 3, "小众片", R.drawable.bubble3_red_2x, R.drawable.bubble3_2x));
-                mBubbles.add(new Bubble(true, 3, "英剧", R.drawable.bubble3_red_2x, R.drawable.bubble3_2x));
-                mBubbles.add(new Bubble(false, 3, "破案剧", R.drawable.bubble3_red_2x, R.drawable.bubble3_2x));
-                mBubbles.add(new Bubble(false, 3, "穿越剧", R.drawable.bubble3_red_2x, R.drawable.bubble3_2x));
-
-                mBubbles.add(new Bubble(false, 4, "奇幻", R.drawable.bubble4_red_2x, R.drawable.bubble4_2x));
-                mBubbles.add(new Bubble(false, 4, "剧情", R.drawable.bubble4_red_2x, R.drawable.bubble4_2x));
-                mBubbles.add(new Bubble(true, 4, "伦理", R.drawable.bubble4_red_2x, R.drawable.bubble4_2x));
-                mBubbles.add(new Bubble(false, 4, "武侠", R.drawable.bubble4_red_2x, R.drawable.bubble4_2x));
-                mBubbles.add(new Bubble(false, 4, "谍战剧", R.drawable.bubble4_red_2x, R.drawable.bubble4_2x));
+                mBubbles.add(new Bubble(false, 1, "科幻", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+                mBubbles.add(new Bubble(true, 1, "动作", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+                mBubbles.add(new Bubble(false, 1, "喜剧", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+                mBubbles.add(new Bubble(false, 1, "恐怖", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+                mBubbles.add(new Bubble(true, 1, "动漫", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+                mBubbles.add(new Bubble(false, 1, "美剧", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+                mBubbles.add(new Bubble(true, 1, "韩剧", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+                mBubbles.add(new Bubble(false, 1, "偶像剧", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+                mBubbles.add(new Bubble(false, 1, "宫斗剧", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+                mBubbles.add(new Bubble(false, 2, "战争", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(false, 2, "犯罪", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(false, 2, "爱情", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(false, 2, "惊悚", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(true, 2, "悬疑", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(false, 2, "文艺", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(false, 2, "老电影", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(false, 2, "日剧", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(false, 2, "TVB", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(false, 2, "泰剧", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(false, 3, "冒险", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble3_red_2x, R.drawable.bubble3_2x));
+                mBubbles.add(new Bubble(false, 3, "青春", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble3_red_2x, R.drawable.bubble3_2x));
+                mBubbles.add(new Bubble(false, 3, "小众片", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble3_red_2x, R.drawable.bubble3_2x));
+                mBubbles.add(new Bubble(true, 3, "英剧", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble3_red_2x, R.drawable.bubble3_2x));
+                mBubbles.add(new Bubble(false, 3, "破案剧", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble3_red_2x, R.drawable.bubble3_2x));
+                mBubbles.add(new Bubble(false, 3, "穿越剧", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble3_red_2x, R.drawable.bubble3_2x));
+                mBubbles.add(new Bubble(false, 4, "奇幻", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble4_red_2x, R.drawable.bubble4_2x));
+                mBubbles.add(new Bubble(false, 4, "剧情", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble4_red_2x, R.drawable.bubble4_2x));
+                mBubbles.add(new Bubble(true, 4, "伦理", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble4_red_2x, R.drawable.bubble4_2x));
+                mBubbles.add(new Bubble(false, 4, "武侠", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble4_red_2x, R.drawable.bubble4_2x));
+                mBubbles.add(new Bubble(false, 4, "谍战剧", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble4_red_2x, R.drawable.bubble4_2x));
 
             }
 
-            columnCount = mBubbles.size() / BubbleLayoutCopy.SPEC.rowCount;
+            columnCount = mBubbles.size() / rowCount;
 
         }
 
@@ -328,23 +316,6 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
             mBubbles.clear();
             mBufferJar.clear();
             initBubble();
-        }
-    }
-
-    static class Circle {
-        public float x, y, radius;
-
-        Circle(float x, float y, float radius) {
-            this.x = x;
-            this.y = y;
-            this.radius = radius;
-        }
-
-
-        float d2Point(PointF center) {
-            float dx = x - center.x;
-            float dy = y - center.y;
-            return (int) Math.sqrt(dx * dx + dy * dy);
         }
     }
 

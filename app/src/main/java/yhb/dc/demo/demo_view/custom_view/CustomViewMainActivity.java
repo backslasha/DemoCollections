@@ -26,7 +26,7 @@ public class CustomViewMainActivity extends AppCompatActivity implements Demo {
     }
 
     public void animate(final View view) {
-        mBubbleLayout.bubble();
+        mBubbleLayout.showBubbleAnim();
     }
 
     public void randomMarginTop(View view) {
@@ -46,6 +46,7 @@ public class CustomViewMainActivity extends AppCompatActivity implements Demo {
                     clearOverlapCount++;
                     isOverlap = mBubbleLayout.clearOverlap();
                 } else {
+                    mBubbleLayout.showAllViews();
                     mBubbleLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     Toast.makeText(CustomViewMainActivity.this, "clear overlap count:" + clearOverlapCount + ".", Toast.LENGTH_SHORT).show();
                 }
@@ -53,6 +54,7 @@ public class CustomViewMainActivity extends AppCompatActivity implements Demo {
         });
 
         if (isOverlap) {
+            mBubbleLayout.hideAllViews();
             isOverlap = mBubbleLayout.clearOverlap();
             clearOverlapCount++;
         }

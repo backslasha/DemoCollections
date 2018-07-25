@@ -81,9 +81,11 @@ public class CircleImageView extends android.support.v7.widget.AppCompatImageVie
     private boolean mReady;
     private boolean mSetupPending;
     private boolean mBorderOverlay;
-    private boolean mDisableCircularTransformation;
+
     private Paint mTextPaint;
     private String mText;
+    private float mTextSize = sp(16);
+    private int mTextColor = Color.WHITE;
 
     public CircleImageView(Context context) {
         super(context);
@@ -152,12 +154,22 @@ public class CircleImageView extends android.support.v7.widget.AppCompatImageVie
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
-        if (mDisableCircularTransformation) {
-            super.onDraw(canvas);
-            return;
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        if (!mBorderOverlay) {
+            int width = MeasureSpec.getSize(widthMeasureSpec);
+            int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+            int height = MeasureSpec.getSize(heightMeasureSpec);
+            int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+            width += mBorderWidth * 2;
+            height += mBorderWidth * 2;
+            widthMeasureSpec = MeasureSpec.makeMeasureSpec(width, widthMode);
+            heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, heightMode);
         }
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
 
+    @Override
+    protected void onDraw(Canvas canvas) {
         if (mBitmap == null) {
             return;
         }
@@ -171,21 +183,48 @@ public class CircleImageView extends android.support.v7.widget.AppCompatImageVie
         }
 
         if (mText != null && mText.length() != 0) {
-            canvas.drawText(mText, (getWidth() - mTextPaint.measureText(mText)) / 2, getHeight() / 2, mTextPaint);
+            int textHeight = (int) (mTextPaint.getFontMetrics().bottom - mTextPaint.getFontMetrics().top);
+            int textWidth = (int) mTextPaint.measureText(mText);
+            canvas.drawText(mText, (getWidth() - textWidth) / 2, (getHeight() + textHeight) / 2- mTextPaint.getFontMetrics().descent, mTextPaint);
         }
+    }
+
+    public void setTextSize(int textSize) {
+        this.mTextSize = sp(textSize);
+        if (mTextPaint == null) {
+            mTextPaint = new Paint();
+            mTextPaint.setColor(mTextColor);
+        }
+        mTextPaint.setTextSize(mTextSize);
+        invalidate();
     }
 
     public void setText(String text) {
         this.mText = text;
         if (mTextPaint == null) {
             mTextPaint = new Paint();
-            mTextPaint.setColor(Color.WHITE);
-            mTextPaint.setTextSize(dp(20));
+            mTextPaint.setColor(mTextColor);
+            mTextPaint.setTextSize(mTextSize);
         }
+        invalidate();
     }
 
-    private int dp(int x) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+    public void setTextColor(int textColor) {
+        mTextColor = textColor;
+        if (mTextPaint == null) {
+            mTextPaint = new Paint();
+            mTextPaint.setTextSize(mTextSize);
+        }
+        mTextPaint.setColor(mTextColor);
+        invalidate();
+    }
+
+    public int getTextColor() {
+        return mTextColor;
+    }
+
+    private int sp(int x) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
                 x, getContext().getResources().getDisplayMetrics());
     }
 
@@ -221,14 +260,6 @@ public class CircleImageView extends android.support.v7.widget.AppCompatImageVie
         invalidate();
     }
 
-    /**
-     * @deprecated Use {@link #setBorderColor(int)} instead
-     */
-    @Deprecated
-    public void setBorderColorResource(@ColorRes int borderColorRes) {
-        setBorderColor(getContext().getResources().getColor(borderColorRes));
-    }
-
     public int getCircleBackgroundColor() {
         return mCircleBackgroundColor;
     }
@@ -245,42 +276,6 @@ public class CircleImageView extends android.support.v7.widget.AppCompatImageVie
 
     public void setCircleBackgroundColorResource(@ColorRes int circleBackgroundRes) {
         setCircleBackgroundColor(getContext().getResources().getColor(circleBackgroundRes));
-    }
-
-    /**
-     * Return the color drawn behind the circle-shaped drawable.
-     *
-     * @return The color drawn behind the drawable
-     * @deprecated Use {@link #getCircleBackgroundColor()} instead.
-     */
-    @Deprecated
-    public int getFillColor() {
-        return getCircleBackgroundColor();
-    }
-
-    /**
-     * Set a color to be drawn behind the circle-shaped drawable. Note that
-     * this has no effect if the drawable is opaque or no drawable is set.
-     *
-     * @param fillColor The color to be drawn behind the drawable
-     * @deprecated Use {@link #setCircleBackgroundColor(int)} instead.
-     */
-    @Deprecated
-    public void setFillColor(@ColorInt int fillColor) {
-        setCircleBackgroundColor(fillColor);
-    }
-
-    /**
-     * Set a color to be drawn behind the circle-shaped drawable. Note that
-     * this has no effect if the drawable is opaque or no drawable is set.
-     *
-     * @param fillColorRes The color resource to be resolved to a color and
-     *                     drawn behind the drawable
-     * @deprecated Use {@link #setCircleBackgroundColorResource(int)} instead.
-     */
-    @Deprecated
-    public void setFillColorResource(@ColorRes int fillColorRes) {
-        setCircleBackgroundColorResource(fillColorRes);
     }
 
     public int getBorderWidth() {
@@ -307,19 +302,6 @@ public class CircleImageView extends android.support.v7.widget.AppCompatImageVie
 
         mBorderOverlay = borderOverlay;
         setup();
-    }
-
-    public boolean isDisableCircularTransformation() {
-        return mDisableCircularTransformation;
-    }
-
-    public void setDisableCircularTransformation(boolean disableCircularTransformation) {
-        if (mDisableCircularTransformation == disableCircularTransformation) {
-            return;
-        }
-
-        mDisableCircularTransformation = disableCircularTransformation;
-        initializeBitmap();
     }
 
     @Override
@@ -397,11 +379,7 @@ public class CircleImageView extends android.support.v7.widget.AppCompatImageVie
     }
 
     private void initializeBitmap() {
-        if (mDisableCircularTransformation) {
-            mBitmap = null;
-        } else {
-            mBitmap = getBitmapFromDrawable(getDrawable());
-        }
+        mBitmap = getBitmapFromDrawable(getDrawable());
         setup();
     }
 

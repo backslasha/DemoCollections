@@ -27,20 +27,9 @@
         </yhb.dc.demo.demo_view.custom_view.widget.BubbleLayoutCopy>
     </HorizontalScrollView>
 
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:gravity="center">
-
-        <Button
-            android:id="@+id/c"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="animate"
-            android:text="动画" />
+        android:layout_height="wrap_content">
 
         <Button
             android:id="@+id/b"
@@ -57,6 +46,21 @@
             android:layout_weight="1"
             android:onClick="clearOverlap"
             android:text="清除覆盖" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/c"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="animate"
+            android:text="动画" />
 
         <Button
             android:id="@+id/d"
