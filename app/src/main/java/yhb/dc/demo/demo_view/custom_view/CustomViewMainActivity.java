@@ -3,6 +3,7 @@ package yhb.dc.demo.demo_view.custom_view;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
@@ -27,15 +28,7 @@ public class CustomViewMainActivity extends AppCompatActivity implements Demo {
     }
 
     public void animate(final View view) {
-//        mBubbleLayout.showBubbleAnim();
-    }
-
-    public void randomMarginTop(View view) {
-
-    }
-
-    public void clearOverlap(final View view) {
-
+        mBubbleLayout.showBubbleAnim();
     }
 
     public void repaint(View view) {
@@ -43,6 +36,18 @@ public class CustomViewMainActivity extends AppCompatActivity implements Demo {
     }
 
     public void doubleBubble(View view) {
-//        mBubbleLayout.doubleBubbles();
+        mBubbleLayout.doubleBubbles();
+    }
+
+    public void increaseHeight(View view) {
+        ViewGroup.LayoutParams layoutParams = mBubbleLayout.getLayoutParams();
+        layoutParams.height += 20;
+        mBubbleLayout.setLayoutParams(layoutParams);
+    }
+
+    public void decreaseHeight(View view) {
+        ViewGroup.LayoutParams layoutParams = mBubbleLayout.getLayoutParams();
+        layoutParams.height -= 20;
+        mBubbleLayout.setLayoutParams(layoutParams);
     }
 }

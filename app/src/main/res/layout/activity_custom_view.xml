@@ -48,16 +48,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="randomMarginTop"
-            android:text="随机微居中" />
+            android:onClick="increaseHeight"
+            android:text="高度加" />
 
         <Button
             android:id="@+id/a"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="clearOverlap"
-            android:text="清除覆盖" />
+            android:onClick="decreaseHeight"
+            android:text="高度减" />
     </LinearLayout>
 
     <LinearLayout

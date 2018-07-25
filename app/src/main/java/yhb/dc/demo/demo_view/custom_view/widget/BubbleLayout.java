@@ -6,8 +6,13 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.support.annotation.VisibleForTesting;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
+import android.view.animation.OvershootInterpolator;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -26,7 +31,11 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 public class BubbleLayout extends ViewGroup {
 
     private BubbleProvider mBubbleProvider;
-    private int maxChildWidth = 0, maxChildHeight = 0;
+    private int maxChildWidth = Integer.MIN_VALUE, maxChildHeight = Integer.MIN_VALUE;
+    private int minChildWidth = Integer.MAX_VALUE;
+    private int minChildHeight = Integer.MAX_VALUE;
+
+    private int scanStep = 3;
 
     public BubbleLayout(Context context) {
         this(context, null);
@@ -40,6 +49,16 @@ public class BubbleLayout extends ViewGroup {
         super(context, attrs, defStyleAttr);
         mBubbleProvider = new BubbleProviderImpl();
         fillBubbles();
+        setupAnimation();
+    }
+
+    private void setupAnimation() {
+        Animation animation = AnimationUtils.loadAnimation(this.getContext(), R.anim.bubble_show);
+        LayoutAnimationController controller = new LayoutAnimationController(animation);
+        controller.setOrder(LayoutAnimationController.ORDER_RANDOM);
+        controller.setInterpolator(new OvershootInterpolator());
+        controller.setDelay(0.1f);
+        setLayoutAnimation(controller);
     }
 
     private void fillBubbles() {
@@ -60,16 +79,15 @@ public class BubbleLayout extends ViewGroup {
 
         measureChildren(widthMeasureSpec, heightMeasureSpec);
 
-        maxChildHeight = 0;
-        maxChildWidth = 0;
-
         int childCount = getChildCount();
         int totalChildrenWidth = 0;
         for (int i = 0; i < childCount; i++) {
             int measuredHeight = getChildAt(i).getMeasuredHeight();
             int measuredWidth = getChildAt(i).getMeasuredWidth();
             maxChildHeight = measuredHeight > maxChildHeight ? measuredHeight : maxChildHeight;
+            minChildHeight = measuredHeight < minChildHeight ? measuredHeight : minChildHeight;
             maxChildWidth = measuredWidth > maxChildWidth ? measuredWidth : maxChildWidth;
+            minChildWidth = measuredWidth < minChildWidth ? measuredWidth : minChildWidth;
             totalChildrenWidth += measuredWidth;
         }
 
@@ -114,6 +132,12 @@ public class BubbleLayout extends ViewGroup {
         }
     }
 
+    @VisibleForTesting
+    public void showBubbleAnim() {
+        startLayoutAnimation();
+    }
+
+    @VisibleForTesting
     public void repaint() {
         removeAllViews();
         mBubbleProvider.reset();
@@ -121,17 +145,27 @@ public class BubbleLayout extends ViewGroup {
         invalidate();
     }
 
+    @VisibleForTesting
+    public void doubleBubbles() {
+        ((BubbleProviderImpl) mBubbleProvider).doubleBubbles();
+        fillBubbles();
+        invalidate();
+    }
+
+
+
     /*------------------ 辅助计算 -------------------------------*/
+
     private int x = 0, y = 0;
 
     private Point availableCenter(int radius) {
         while (true) {
             if (y >= getMeasuredHeight() - maxChildHeight / 2) {
-                x += 3;
+                x += scanStep;
                 y = maxChildHeight / 2;
             }
             if (checkOverlap(x, y, radius)) {
-                y += 3;
+                y += scanStep;
             } else {
                 mBufferPoint.set(x, y);
                 return mBufferPoint;
@@ -141,7 +175,10 @@ public class BubbleLayout extends ViewGroup {
 
     private boolean checkOverlap(int x, int y, int radius) {
         Rect rect = new Rect(x - radius, y - radius, x + radius, y + radius);
-        for (View other : mBufferJar) {
+        if (mBufferJar.isEmpty()) return false;
+        int maxChildCountVertical = getMeasuredHeight() / minChildHeight;
+        for (int i = mBufferJar.size() - 1; i >= Math.max(mBufferJar.size() - maxChildCountVertical, 0); i--) {
+            View other = mBufferJar.get(i);
             if (checkOverlap(rect, other)) return true;
         }
         return false;
@@ -274,7 +311,7 @@ public class BubbleLayout extends ViewGroup {
             imageView.setTextSize(16);
             imageView.setTextColor(bubble.selected ? bubble.selectedTextColor : bubble.unselectedTextColor);
             imageView.setBorderOverlay(false);
-            imageView.setBorderWidth(0);
+            imageView.setBorderWidth(4);
             imageView.setText(bubble.label);
             imageView.setLayoutParams(new LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
             return imageView;
