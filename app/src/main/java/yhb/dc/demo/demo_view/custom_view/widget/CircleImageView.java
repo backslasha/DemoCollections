@@ -37,6 +37,7 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewOutlineProvider;
@@ -170,7 +171,7 @@ public class CircleImageView extends android.support.v7.widget.AppCompatImageVie
         }
 
         if (mText != null && mText.length() != 0) {
-            canvas.drawText(mText, getPaddingLeft(), getBottom(), mTextPaint);
+            canvas.drawText(mText, (getWidth() - mTextPaint.measureText(mText)) / 2, getHeight() / 2, mTextPaint);
         }
     }
 
@@ -179,8 +180,13 @@ public class CircleImageView extends android.support.v7.widget.AppCompatImageVie
         if (mTextPaint == null) {
             mTextPaint = new Paint();
             mTextPaint.setColor(Color.WHITE);
-            mTextPaint.setTextSize(32);
+            mTextPaint.setTextSize(dp(20));
         }
+    }
+
+    private int dp(int x) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                x, getContext().getResources().getDisplayMetrics());
     }
 
     @Override

@@ -1,25 +1,13 @@
 package yhb.dc.demo.demo_view.custom_view;
 
-import android.animation.FloatEvaluator;
-import android.animation.IntEvaluator;
-import android.animation.ValueAnimator;
-import android.graphics.Rect;
-import android.graphics.Region;
 import android.os.Bundle;
-import android.support.v4.media.session.PlaybackStateCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.view.ViewPropertyAnimatorListener;
-import android.support.v4.view.ViewPropertyAnimatorUpdateListener;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.RelativeLayout;
+import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import yhb.dc.R;
 import yhb.dc.common.Demo;
-import yhb.dc.demo.demo_view.custom_view.widget.BubbleLayout;
 import yhb.dc.demo.demo_view.custom_view.widget.BubbleLayoutCopy;
 
 /**
@@ -41,11 +29,45 @@ public class CustomViewMainActivity extends AppCompatActivity implements Demo {
         mBubbleLayout.bubble();
     }
 
-    public void random(View view) {
-        mBubbleLayout.random();
+    public void randomMarginTop(View view) {
+        mBubbleLayout.randomMarginTop();
+        isOverlap = true;
+        clearOverlapCount = 0;
     }
 
-    public void clearOverlap(View view) {
-        mBubbleLayout.clearOverlap(view);
+    private boolean isOverlap = true;
+    private int clearOverlapCount = 0;
+
+    public void clearOverlap(final View view) {
+        mBubbleLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (isOverlap) {
+                    clearOverlapCount++;
+                    isOverlap = mBubbleLayout.clearOverlap();
+                } else {
+                    mBubbleLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    Toast.makeText(CustomViewMainActivity.this, "clear overlap count:" + clearOverlapCount + ".", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        if (isOverlap) {
+            isOverlap = mBubbleLayout.clearOverlap();
+            clearOverlapCount++;
+        }
+    }
+
+    public void invalidate(View view) {
+        mBubbleLayout.createRandomCircles();
+        mBubbleLayout.invalidate();
+        isOverlap = true;
+        clearOverlapCount = 0;
+    }
+
+    public void doubleBubble(View view) {
+        mBubbleLayout.doubleBubbles();
+        isOverlap = true;
+        clearOverlapCount = 0;
     }
 }

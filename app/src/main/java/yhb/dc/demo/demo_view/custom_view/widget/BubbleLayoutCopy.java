@@ -3,13 +3,9 @@ package yhb.dc.demo.demo_view.custom_view.widget;
 import android.animation.IntEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
-import android.support.annotation.ColorInt;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -20,16 +16,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import yhb.dc.R;
 
-import static android.graphics.Color.BLACK;
-import static android.graphics.Color.BLUE;
-import static android.graphics.Color.CYAN;
-import static android.graphics.Color.GREEN;
-import static android.graphics.Color.RED;
-import static android.graphics.Color.YELLOW;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
@@ -38,9 +29,11 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickListener {
 
-    private static final int MIN_PADDING = 0;
-    private final ArrayList<View> mChildren;
-    private ArrayList<ImageView> mBubbleRow1, mBubbleRow2, mBubbleRow3;
+    private static final Spec SPEC = new Spec();
+    private static final int ID_BASE = 0x5078;
+
+
+    private List<List<ImageView>> mBubbleRows;
 
     public BubbleLayoutCopy(@NonNull Context context) {
         this(context, null);
@@ -52,95 +45,70 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
 
     public BubbleLayoutCopy(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        setWillNotDraw(false);
-        setBackgroundColor(Color.WHITE);
         setGravity(Gravity.CENTER_VERTICAL);
-        mBubbleRow1 = new ArrayList<>();
-        mBubbleRow2 = new ArrayList<>();
-        mBubbleRow3 = new ArrayList<>();
+        mBubbleRows = new ArrayList<>();
 
-        int num = 0;
-        int base = 0x5078;
-        int size;
-        for (int j = 0; j < 10; j++) {
-            size = Spec.getSize();
-            int id = base++;
-            LayoutParams layoutParams = new LayoutParams(size, size);
-            if (j != 0) {
-                layoutParams.addRule(END_OF, id - 1);
-            }
-
-            CircleImageView imageView = new CircleImageView(getContext());
-            imageView.setOnClickListener(this);
-            imageView.setId(id);
-            imageView.setImageResource(Spec.getSRC());
-            imageView.setText(String.valueOf(++num));
-            addView(imageView, layoutParams);
+        for (int i = 0; i < SPEC.rowCount; i++) {
+            mBubbleRows.add(new ArrayList<ImageView>());
         }
 
-        for (int j = 0; j < 10; j++) {
-            int id = base++;
-            size = Spec.getSize();
-            LayoutParams layoutParams = new LayoutParams(size, size);
-            if (j != 0) {
-                layoutParams.addRule(END_OF, id - 1);
-            }
-            layoutParams.addRule(BELOW, id - 10);
-            CircleImageView imageView = new CircleImageView(getContext());
-            imageView.setId(id);
-            imageView.setImageResource(Spec.getSRC());
-            imageView.setOnClickListener(this);
-            imageView.setText(String.valueOf(++num));
-            addView(imageView, layoutParams);
-        }
-        for (int j = 0; j < 10; j++) {
-            int id = base++;
-            size = Spec.getSize();
-            LayoutParams layoutParams = new LayoutParams(size, size);
-            if (j != 0) {
-                layoutParams.addRule(END_OF, id - 1);
-            }
-            layoutParams.addRule(BELOW, id - 10);
-            CircleImageView imageView = new CircleImageView(getContext());
-            imageView.setId(id);
-            imageView.setOnClickListener(this);
-            imageView.setImageResource(Spec.getSRC());
-            imageView.setText(String.valueOf(++num));
-            addView(imageView, layoutParams);
-        }
+        createRandomCircles();
 
-        mChildren = new ArrayList<>();
-        int childCount = getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            mChildren.add(getChildAt(i));
+    }
+
+    public void createRandomCircles() {
+
+        for (int i = 0; i < SPEC.rowCount; i++) {
+            mBubbleRows.get(i).clear();
+        }
+        removeAllViews();
+        SPEC.reset();
+
+
+        int itemCount = 0;
+        for (int i = 0; i < SPEC.rowCount; i++) {
+            for (int j = 0; j < SPEC.columnCount; j++) {
+                LayoutParams layoutParams = new LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
+                if (j != 0) {/* left first child, with no left anchor */
+                    layoutParams.addRule(END_OF, mBubbleRows.get(i).get(j - 1).getId());
+                }
+                if (i != 0) {/* top first row's children, with no top anchor */
+                    layoutParams.addRule(BELOW, mBubbleRows.get(i - 1).get(j).getId());
+                }
+                int id = ID_BASE + ++itemCount;
+
+                Bubble bubble = SPEC.nextBubble();
+
+                if (bubble == null) {
+                    return;
+                }
+
+                CircleImageView imageView = new CircleImageView(getContext());
+                imageView.setOnClickListener(this);
+                imageView.setId(id);
+                imageView.setImageResource(bubble.selected ? bubble.selectedRes : bubble.unselectedRes);
+                imageView.setBorderColor(Color.TRANSPARENT);
+                imageView.setBorderOverlay(false);
+                imageView.setBorderWidth(3);
+                imageView.setText(bubble.label);
+                addView(imageView, layoutParams);
+                mBubbleRows.get(i).add(imageView);
+            }
         }
     }
 
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int childCount = getChildCount();
-        int width = 0;
-        for (int i = 0; i < childCount; i++) {
-            View child = getChildAt(i);
-            width += child.getMeasuredWidth();
-        }
-
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+        super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(142 * 6, MeasureSpec.EXACTLY));
     }
 
     @Override
     public void onClick(View v) {
-        clearOverlap();
+        clearOverlap(v);
     }
 
     public void bubble() {
-
         for (int i = 10; i < 20; i++) {
             final View viewById = getChildAt(i);
             ValueAnimator animator = new ValueAnimator();
@@ -171,72 +139,81 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
         }
     }
 
-    public void random() {
-        int childCount = getChildCount();
-        for (int i = 0; i < 10; i++) {
-            View child = getChildAt(i);
+    public void randomMarginTop() {
+        List<ImageView> imageViews = mBubbleRows.get(0);
+        for (ImageView child : imageViews) {
             MarginLayoutParams layoutParams = (MarginLayoutParams) child.getLayoutParams();
-//            layoutParams.bottomMargin = (int) (Math.random() * 20);
-            layoutParams.leftMargin = (int) (/*Math.random() **/ 0);
-            layoutParams.rightMargin = (int) (/*Math.random() **/ 0);
-            layoutParams.topMargin = (int) (Math.random() * 100);
-
-            if (i == 0 || i == 20) {
-                layoutParams.leftMargin = (int) (Math.random() * 200 + 100);
-            }
-
+            layoutParams.topMargin = (int) (Math.random() * 50);
             child.setLayoutParams(layoutParams);
         }
     }
 
-    public void clearOverlap() {
-        int childCount = getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            for (int j = i + 1; j < childCount; j++) {
-                View child = getChildAt(i);
-                View other = getChildAt(j);
-                if (other != null) {
-                    Vector2D offset = checkOverlap(child, other);
-                    LayoutParams layoutParams = (LayoutParams) other.getLayoutParams();
-                    // 重叠了 offset 像素点，我们把下面的 view 下移 offset-MIN_PADDING 像素
-                    layoutParams.leftMargin += offset.componentX();
-                    layoutParams.topMargin += offset.componentY();
-                    other.setLayoutParams(layoutParams);
-                }
+    public boolean clearOverlap() {
+        boolean adjusted = false;
+        for (int j = 0; j < SPEC.columnCount; j++) {
+            for (int i = 0; i < SPEC.rowCount; i++) {
+                if (!adjusted) adjusted = clearOverlap(mBubbleRows.get(i).get(j));
+                else clearOverlap(mBubbleRows.get(i).get(j));
             }
         }
+        return adjusted;
     }
 
-    public void clearOverlap(View child) {
+    private void clearOverlap(int i, int j) {
+
+        if (i < 0 || i > mBubbleRows.size() - 1 || j < 0 || j >= mBubbleRows.get(0).size() - 1)
+            return;
+
+        View child = mBubbleRows.get(i).get(j);
+        for (int k = 0; k < SPEC.rowCount; k++) {
+            View right = mBubbleRows.get(k).get(j + 1);
+            if (right != child && right != null) {
+                Vector2D offset = getOffsetVector(child, right);
+                LayoutParams layoutParams = (LayoutParams) right.getLayoutParams();
+                // 重叠了 offset 像素点，我们把下面的 view 右下角移动 offset 像素
+                layoutParams.leftMargin += offset.componentX();
+                layoutParams.topMargin += offset.componentY();
+                right.setLayoutParams(layoutParams);
+            }
+        }
+
+    }
+
+    public boolean clearOverlap(View child) {
+        boolean adjusted = false;
         int childCount = getChildCount();
         for (int j = 0; j < childCount; j++) {
             View other = getChildAt(j);
             if (other != child && other != null) {
-                Vector2D offset = checkOverlap(child, other);
+                Vector2D offset = getOffsetVector(child, other);
                 LayoutParams layoutParams = (LayoutParams) other.getLayoutParams();
-                // 重叠了 offset 像素点，我们把下面的 view 下移 offset-MIN_PADDING 像素
-                layoutParams.leftMargin += offset.componentX();
-                layoutParams.topMargin += offset.componentY();
+                // 重叠了 offset 像素点，我们把下面的 view 右下角移动 offset 像素
+                layoutParams.leftMargin += Math.max(0, offset.componentX());
+                layoutParams.topMargin += Math.max(0, offset.componentY());
+
+                if (Math.max(0, offset.componentX()) > 1f || Math.max(0, offset.componentY()) > 1f) {
+                    adjusted = true;
+                }
                 other.setLayoutParams(layoutParams);
             }
         }
+        return adjusted;
     }
 
-    private Vector2D checkOverlap(View child, View bottomChild) {
-
+    private Vector2D getOffsetVector(View child, View bottomChild) {
         if (bottomChild == null || child == null) {
             return new Vector2D(0, 0, 0, 0);
         }
         Rect rect1 = getRect(child);
         Rect rect2 = getRect(bottomChild);
-        Circle c1 = new Circle(rect1.centerX(), rect1.centerY(), rect1.height() / 2, Spec.getColor());
-        Circle c2 = new Circle(rect2.centerX(), rect2.centerY(), rect2.height() / 2, Spec.getColor());
+        Circle c1 = new Circle(rect1.centerX(), rect1.centerY(), rect1.height() / 2);
+        Circle c2 = new Circle(rect2.centerX(), rect2.centerY(), rect2.height() / 2);
         if (c1 != c2) {
             float dx = c2.x - c1.x;
             float dy = c2.y - c1.y;
             float r = c1.radius + c2.radius;
             float d = (dx * dx) + (dy * dy);
-            if (d < (r * r) - 0.01) {// - 0.01 why?
+            if (d < r * r) {
                 double sqrt_d = Math.sqrt(d);
                 float x = (float) (r * dx / sqrt_d - dx);
                 float y = (float) (r * dy / sqrt_d - dy);
@@ -246,104 +223,123 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
         return new Vector2D(0, 0, 0, 0);
     }
 
-
     public Rect getRect(View child) {
         return new Rect(child.getLeft(), child.getTop(), child.getRight(), child.getBottom());
     }
 
-
-    static class Spec {
-        private static final int SIZE_1 = 100 * 2;
-        private static final int SIZE_2 = 115 * 2;
-        private static final int SIZE_3 = 128 * 2;
-        private static final int SIZE_4 = 142 * 2;
-        private static final int[] SPEC = {SIZE_1, SIZE_2, SIZE_3, SIZE_4};
-        private static final int[] COLOR = {BLUE, RED, GREEN, YELLOW, CYAN, BLACK, BLUE, RED, GREEN, YELLOW,};
-        public static final int[] SRC = {
-                R.drawable.bubble1_2x,
-                R.drawable.bubble2_2x,
-                R.drawable.bubble3_2x,
-                R.drawable.bubble4_2x,
-                R.drawable.bubble1_red_2x,
-                R.drawable.bubble2_red_2x,
-                R.drawable.bubble3_red_2x,
-                R.drawable.bubble4_red_2x
-        };
-
-        private static int getSize() {
-            return WRAP_CONTENT;
-        }
-
-        static int index = 0;
-
-        private static @ColorInt
-        int getColor() {
-            return COLOR[(++index) % COLOR.length];
-        }
-
-        private static @DrawableRes
-        int getSRC() {
-            return SRC[(int) (Math.random() * SRC.length)];
-        }
+    public void doubleBubbles() {
+        SPEC.doubleBubbles();
+        createRandomCircles();
+        invalidate();
     }
 
-    static class BubbleLayoutAdapter {
 
-        private List<Circle> allCircles = new ArrayList<>();
+    static class Bubble {
+        boolean selected;
+        int level;
+        String label;
+        int selectedRes;
+        int unselectedRes;
 
-        public BubbleLayoutAdapter() {
-            allCircles = createRandomCircles(30);
+        Bubble(boolean selected, int level, String label, int selectedRes, int unselectedRes) {
+            this.selected = selected;
+            this.level = level;
+            this.label = label;
+            this.selectedRes = selectedRes;
+            this.unselectedRes = unselectedRes;
         }
 
-        public void flatCircles(List<Circle> allCircles) {
+    }
 
-            List<Circle> sortedCircles = this.allCircles;
+    static class Spec {
 
-            // Cycle through circles for collision detection
-            for (int i = 0; i < sortedCircles.size(); i++) {
-                for (int j = i; j < sortedCircles.size(); j++) {
-                    Circle c1 = sortedCircles.get(i);
-                    Circle c2 = sortedCircles.get(j);
-                    if (c1 != c2) {
-                        float dx = c2.x - c1.x;
-                        float dy = c2.y - c1.y;
-                        float r = c1.radius + c2.radius;
-                        float d = (dx * dx) + (dy * dy);
-                        if (d < (r * r) - 0.01) {// - 0.01 why?
-                            double sqrt_d = Math.sqrt(d);
-                            float x = (float) (r * dx / sqrt_d - dx);
-                            float y = (float) (r * dy / sqrt_d - dy);
-                            c2.y += y;
-                            c2.x += x;
-                        }
-                    }
-                }
+        final List<Bubble> mBubbles = new LinkedList<>();
+        final List<Bubble> mBufferJar = new LinkedList<>();
+
+        int rowCount = 3;
+        int columnCount = 0;
+
+        private int mRepeatCount = 1;
+
+        Spec() {
+            initBubble();
+        }
+
+        void doubleBubbles() {
+            mRepeatCount++;
+            reset();
+        }
+
+        private void initBubble() {
+
+            for (int i = 0; i < mRepeatCount; i++) {
+                mBubbles.add(new Bubble(false, 1, "科幻", R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+                mBubbles.add(new Bubble(true, 1, "动作", R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+                mBubbles.add(new Bubble(false, 1, "喜剧", R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+                mBubbles.add(new Bubble(false, 1, "恐怖", R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+                mBubbles.add(new Bubble(true, 1, "动漫", R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+                mBubbles.add(new Bubble(false, 1, "美剧", R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+                mBubbles.add(new Bubble(true, 1, "韩剧", R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+                mBubbles.add(new Bubble(false, 1, "偶像剧", R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+                mBubbles.add(new Bubble(false, 1, "宫斗剧", R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+
+                mBubbles.add(new Bubble(false, 2, "战争", R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(false, 2, "犯罪", R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(false, 2, "爱情", R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(false, 2, "惊悚", R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(true, 2, "悬疑", R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(false, 2, "文艺", R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(false, 2, "老电影", R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(false, 2, "日剧", R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(false, 2, "TVB", R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(false, 2, "泰剧", R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+
+                mBubbles.add(new Bubble(false, 3, "冒险", R.drawable.bubble3_red_2x, R.drawable.bubble3_2x));
+                mBubbles.add(new Bubble(false, 3, "青春", R.drawable.bubble3_red_2x, R.drawable.bubble3_2x));
+                mBubbles.add(new Bubble(false, 3, "小众片", R.drawable.bubble3_red_2x, R.drawable.bubble3_2x));
+                mBubbles.add(new Bubble(true, 3, "英剧", R.drawable.bubble3_red_2x, R.drawable.bubble3_2x));
+                mBubbles.add(new Bubble(false, 3, "破案剧", R.drawable.bubble3_red_2x, R.drawable.bubble3_2x));
+                mBubbles.add(new Bubble(false, 3, "穿越剧", R.drawable.bubble3_red_2x, R.drawable.bubble3_2x));
+
+                mBubbles.add(new Bubble(false, 4, "奇幻", R.drawable.bubble4_red_2x, R.drawable.bubble4_2x));
+                mBubbles.add(new Bubble(false, 4, "剧情", R.drawable.bubble4_red_2x, R.drawable.bubble4_2x));
+                mBubbles.add(new Bubble(true, 4, "伦理", R.drawable.bubble4_red_2x, R.drawable.bubble4_2x));
+                mBubbles.add(new Bubble(false, 4, "武侠", R.drawable.bubble4_red_2x, R.drawable.bubble4_2x));
+                mBubbles.add(new Bubble(false, 4, "谍战剧", R.drawable.bubble4_red_2x, R.drawable.bubble4_2x));
+
             }
+
+            columnCount = mBubbles.size() / BubbleLayoutCopy.SPEC.rowCount;
+
         }
 
-        private List<Circle> createRandomCircles(int circleCount) {
-            List<Circle> result = new ArrayList<>();
-            int size = Spec.getSize();
-            for (int i = 0; i < circleCount; i++) {
-                Circle circle = new Circle(size, size, size, Spec.getColor());
-                result.add(circle);
+        Bubble nextBubble() {
+            if (mBubbles.isEmpty()) {
+                return null;
             }
-            return result;
+            int index = (int) (Math.random() * mBubbles.size());
+            Bubble bubble = mBubbles.remove(index);
+            mBufferJar.add(bubble);
+            return bubble;
         }
 
 
+        void reset() {
+            mBubbles.clear();
+            mBufferJar.clear();
+            initBubble();
+        }
     }
 
     static class Circle {
-        public final int color;
         public float x, y, radius;
 
-        Circle(float x, float y, float radius, int color) {
+        Circle(float x, float y, float radius) {
             this.x = x;
             this.y = y;
             this.radius = radius;
-            this.color = color;
         }
+
 
         float d2Point(PointF center) {
             float dx = x - center.x;
