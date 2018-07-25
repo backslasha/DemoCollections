@@ -30,46 +30,18 @@ public class CustomViewMainActivity extends AppCompatActivity implements Demo {
     }
 
     public void randomMarginTop(View view) {
-        mBubbleLayout.randomMarginTop();
-        isOverlap = true;
-        clearOverlapCount = 0;
+
     }
 
-    private boolean isOverlap = true;
-    private int clearOverlapCount = 0;
-
     public void clearOverlap(final View view) {
-        mBubbleLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (isOverlap) {
-                    clearOverlapCount++;
-                    isOverlap = mBubbleLayout.clearOverlap();
-                } else {
-                    mBubbleLayout.showAllViews();
-                    mBubbleLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    Toast.makeText(CustomViewMainActivity.this, "clear overlap count:" + clearOverlapCount + ".", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
 
-        if (isOverlap) {
-            mBubbleLayout.hideAllViews();
-            isOverlap = mBubbleLayout.clearOverlap();
-            clearOverlapCount++;
-        }
     }
 
     public void invalidate(View view) {
-        mBubbleLayout.createRandomCircles();
         mBubbleLayout.invalidate();
-        isOverlap = true;
-        clearOverlapCount = 0;
     }
 
     public void doubleBubble(View view) {
         mBubbleLayout.doubleBubbles();
-        isOverlap = true;
-        clearOverlapCount = 0;
     }
 }

@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -18,12 +19,15 @@ import android.view.animation.LayoutAnimationController;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import dalvik.annotation.TestTarget;
 import yhb.dc.R;
+import yhb.dc.demo.demo_view.custom_view.CustomViewMainActivity;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
@@ -59,23 +63,144 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
 
         createRandomCircles();
 
+        setupAnimation();
+
+        // 布局结束之后清除重叠
+        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+//                randomMarginTop(50);
+                clearAllOverlap();
+                getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
+
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(142 * 6, MeasureSpec.EXACTLY));
+    }
+
+    @Override
+    public void onClick(View v) {
+        clearOverlap(v);
+    }
+
+    private void setupAnimation() {
         Animation animation = AnimationUtils.loadAnimation(this.getContext(), R.anim.bubble_show);
         LayoutAnimationController controller = new LayoutAnimationController(animation);
         controller.setOrder(LayoutAnimationController.ORDER_RANDOM);
         controller.setInterpolator(new OvershootInterpolator());
         controller.setDelay(0.1f);
         setLayoutAnimation(controller);
-
     }
 
-    public void createRandomCircles() {
+    public void showBubbleAnim() {
+        hideAllViews();
+        showAllViews();
+    }
+
+    /*------------ clear overlap ----------------*/
+    private boolean isOverlap = true;
+    private int clearOverlapCount = 0;
+
+    /**
+     * 反复调用 clearOverlap()（由于每次将重叠的 ImageView 往右下角挤，因此这个过程很快会结束，30 个 ImageView 时一般会调用 3~5 次），直至所有 ImageView 都不重叠
+     */
+    private void clearAllOverlap() {
+        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (isOverlap) {
+                    clearOverlapCount++;
+                    isOverlap = clearOverlap();
+                } else {
+                    showAllViews();
+                    getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    Toast.makeText(getContext(), "clear overlap count:" + clearOverlapCount + ".", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        if (isOverlap) {
+            hideAllViews();
+            isOverlap = clearOverlap();
+            clearOverlapCount++;
+        }
+    }
+
+    /**
+     * 对所有 ImageView 进行一次的去重叠（将每个重叠的 ImageView 往右下角挤），注意，该过程完不能保证所有 ImageView 之间互相不重叠
+     * @return 本次调用是否用做出重叠调整，若无，说明所有 ImageView 之间都互不重叠
+     */
+    private boolean clearOverlap() {
+        boolean adjusted = false;
+        for (int j = 0; j < SPEC.columnCount; j++) {
+            for (int i = 0; i < SPEC.rowCount; i++) {
+                if (!adjusted) adjusted = clearOverlap(mBubbleRows.get(i).get(j));
+                else clearOverlap(mBubbleRows.get(i).get(j));
+            }
+        }
+        return adjusted;
+    }
+
+    /**
+     * 清除单个 ImageView 的重叠（将每个重叠的 ImageView 往右下角挤）
+     * @return 本次调用是否用做出重叠调整，若无，说明该 ImageView 不和任何其他 ImageView 重叠
+     */
+    private boolean clearOverlap(View child) {
+        boolean adjusted = false;
+        int childCount = getChildCount();
+        for (int j = 0; j < childCount; j++) {
+            View other = getChildAt(j);
+            if (other != child && other != null) {
+                Vector2D offset = getOffsetVector(child, other);
+                LayoutParams layoutParams = (LayoutParams) other.getLayoutParams();
+                // 重叠了 offset 像素点，我们把下面的 view 右下角移动 offset 像素
+                layoutParams.leftMargin += Math.max(0, offset.componentX());
+                layoutParams.topMargin += Math.max(0, offset.componentY());
+
+                if (Math.max(0, offset.componentX()) > 1f || Math.max(0, offset.componentY()) > 1f) {
+                    adjusted = true;
+                }
+                other.setLayoutParams(layoutParams);
+            }
+        }
+        return adjusted;
+    }
+
+    /**
+     * 给第一行的 ImageView 随机添加 marginTop 达到轻微打乱布局的目的
+     */
+    private void randomMarginTop(int max) {
+        List<ImageView> imageViews = mBubbleRows.get(0);
+        for (ImageView child : imageViews) {
+            MarginLayoutParams layoutParams = (MarginLayoutParams) child.getLayoutParams();
+            layoutParams.topMargin = (int) (Math.random() * max);
+            child.setLayoutParams(layoutParams);
+        }
+        isOverlap = true;
+        clearOverlapCount = 0;
+    }
+
+    /*--------------- invalidate -----------------------*/
+
+    public void doubleBubbles() {
+        SPEC.doubleBubbles();
+        invalidate();
+    }
+
+    /**
+     * 根据 SPEC 重新生成及添加若干个 ImageView 并添加相应的布局规则
+     */
+    private void createRandomCircles() {
 
         for (int i = 0; i < SPEC.rowCount; i++) {
             mBubbleRows.get(i).clear();
         }
         removeAllViews();
         SPEC.reset();
-
 
         int itemCount = 0;
         for (int i = 0; i < SPEC.rowCount; i++) {
@@ -111,40 +236,14 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
         }
     }
 
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(142 * 6, MeasureSpec.EXACTLY));
-    }
-
-    @Override
-    public void onClick(View v) {
-        clearOverlap(v);
-    }
-
-    public void showBubbleAnim() {
-        hideAllViews();
-        showAllViews();
-    }
-
-    public void randomMarginTop() {
-        List<ImageView> imageViews = mBubbleRows.get(0);
-        for (ImageView child : imageViews) {
-            MarginLayoutParams layoutParams = (MarginLayoutParams) child.getLayoutParams();
-            layoutParams.topMargin = (int) (Math.random() * 50);
-            child.setLayoutParams(layoutParams);
-        }
-    }
-
-    public void hideAllViews() {
+    private void hideAllViews() {
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             getChildAt(i).setVisibility(INVISIBLE);
         }
     }
 
-
-    public void showAllViews() {
+    private void showAllViews() {
         startLayoutAnimation();
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
@@ -152,37 +251,22 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
         }
     }
 
-    public boolean clearOverlap() {
-        boolean adjusted = false;
-        for (int j = 0; j < SPEC.columnCount; j++) {
-            for (int i = 0; i < SPEC.rowCount; i++) {
-                if (!adjusted) adjusted = clearOverlap(mBubbleRows.get(i).get(j));
-                else clearOverlap(mBubbleRows.get(i).get(j));
+    @Override
+    public void invalidate() {
+        // 布局结束之后清除重叠
+        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                randomMarginTop(50);
+                clearAllOverlap();
+                getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
-        }
-        return adjusted;
+        });
+        createRandomCircles();
+        super.invalidate();
     }
 
-    public boolean clearOverlap(View child) {
-        boolean adjusted = false;
-        int childCount = getChildCount();
-        for (int j = 0; j < childCount; j++) {
-            View other = getChildAt(j);
-            if (other != child && other != null) {
-                Vector2D offset = getOffsetVector(child, other);
-                LayoutParams layoutParams = (LayoutParams) other.getLayoutParams();
-                // 重叠了 offset 像素点，我们把下面的 view 右下角移动 offset 像素
-                layoutParams.leftMargin += Math.max(0, offset.componentX());
-                layoutParams.topMargin += Math.max(0, offset.componentY());
-
-                if (Math.max(0, offset.componentX()) > 1f || Math.max(0, offset.componentY()) > 1f) {
-                    adjusted = true;
-                }
-                other.setLayoutParams(layoutParams);
-            }
-        }
-        return adjusted;
-    }
+    /*------------------ 辅助计算 -------------------------------*/
 
     private Vector2D getOffsetVector(View child, View bottomChild) {
         if (bottomChild == null || child == null) {
@@ -206,18 +290,11 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
         return new Vector2D(0, 0, 0, 0);
     }
 
-    public Rect getRect(View child) {
+    private Rect getRect(View child) {
         return new Rect(child.getLeft(), child.getTop(), child.getRight(), child.getBottom());
     }
 
-    public void doubleBubbles() {
-        SPEC.doubleBubbles();
-        createRandomCircles();
-        invalidate();
-    }
-
-
-    static class Bubble {
+    private static class Bubble {
         boolean selected;
         int level;
         String label;
@@ -242,7 +319,7 @@ public class BubbleLayoutCopy extends RelativeLayout implements View.OnClickList
 
     }
 
-    static class Spec {
+    private static class Spec {
 
         final List<Bubble> mBubbles = new LinkedList<>();
         final List<Bubble> mBufferJar = new LinkedList<>();
