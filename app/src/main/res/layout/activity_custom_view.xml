@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black">
+    android:background="@android:color/white">
 
     <!--<yhb.dc.demo.demo_view.custom_view.widget.JournalView-->
     <!--android:layout_width="match_parent"-->
@@ -12,19 +12,31 @@
     <!--app:default_paper_height="65dp"-->
     <!--app:frame_color="@color/colorAccent"-->
     <!--app:frame_height="32dp" />-->
+    <!--<HorizontalScrollView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center">-->
+
+    <!--<yhb.dc.demo.demo_view.custom_view.widget.BubbleLayoutCopy-->
+    <!--android:id="@+id/bubble_layout"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="#27273A"-->
+    <!--android:gravity="center">-->
+
+    <!--</yhb.dc.demo.demo_view.custom_view.widget.BubbleLayoutCopy>-->
+    <!--</HorizontalScrollView>-->
+
     <HorizontalScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center">
 
-        <yhb.dc.demo.demo_view.custom_view.widget.BubbleLayoutCopy
+        <yhb.dc.demo.demo_view.custom_view.widget.BubbleLayout
             android:id="@+id/bubble_layout"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#27273A"
-            android:gravity="center">
-
-        </yhb.dc.demo.demo_view.custom_view.widget.BubbleLayoutCopy>
+            android:layout_height="260dp"
+            android:background="#27273A" />
     </HorizontalScrollView>
 
     <LinearLayout
@@ -67,7 +79,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="invalidate"
+            android:onClick="repaint"
             android:text="重绘" />
 
         <Button

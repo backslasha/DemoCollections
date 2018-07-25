@@ -1,214 +1,309 @@
 package yhb.dc.demo.demo_view.custom_view.widget;
 
-import android.animation.IntEvaluator;
-import android.animation.ValueAnimator;
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
-import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.view.ViewPropertyAnimatorListener;
+import android.support.annotation.VisibleForTesting;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
-import static android.graphics.Color.*;
+import yhb.dc.R;
+
+import static android.view.View.MeasureSpec.AT_MOST;
+import static android.view.View.MeasureSpec.EXACTLY;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * Created by yhb on 18-7-21.
  */
 
-public class BubbleLayout extends RelativeLayout implements View.OnClickListener {
+public class BubbleLayout extends ViewGroup {
 
-    private ArrayList<ImageView> mBubbleRow1, mBubbleRow2, mBubbleRow3;
+    private BubbleProvider mBubbleProvider;
+    private int maxChildWidth = 0, maxChildHeight = 0;
 
-    public BubbleLayout(@NonNull Context context) {
+    public BubbleLayout(Context context) {
         this(context, null);
     }
 
-    public BubbleLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public BubbleLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public BubbleLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public BubbleLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        setWillNotDraw(false);
-        setBackgroundColor(Color.WHITE);
-        mBubbleRow1 = new ArrayList<>();
-        mBubbleRow2 = new ArrayList<>();
-        mBubbleRow3 = new ArrayList<>();
-
-        int base = 0x5078;
-        for (int i = 0; i < 30; i++) {
-            int id = base++;
-            CircleImageView imageView = new CircleImageView(getContext());
-            imageView.setOnClickListener(this);
-            imageView.setId(id);
-            imageView.setImageDrawable(new ColorDrawable(Spec.getColor()));
-            addView(imageView);
-
-            if (mBubbleRow1.size() < 10) {
-                mBubbleRow1.add(imageView);
-            } else if (mBubbleRow2.size() < 10) {
-                mBubbleRow2.add(imageView);
-            } else if (mBubbleRow3.size() < 10) {
-                mBubbleRow3.add(imageView);
-            } else {
-                throw new IllegalStateException();
-            }
-        }
-
-
-        int size = mBubbleRow1.size();
-        ImageView leftPtr = null;
-        ImageView upPtr = null;
-        for (int i = 0; i < size; i++) {
-            ImageView imageView = mBubbleRow1.get(i);
-            int widgetSize = Spec.getSize();
-            LayoutParams layoutParams = new LayoutParams(widgetSize, widgetSize);
-
-            if (leftPtr != null) {
-                layoutParams.addRule(END_OF, leftPtr.getId());
-            }
-
-            leftPtr = imageView;
-        }
-
-        upPtr = mBubbleRow1.get(0);
-        leftPtr = null;
-        for (int i = 0; i < size; i++) {
-            ImageView imageView = mBubbleRow2.get(i);
-            int widgetSize = Spec.getSize();
-            LayoutParams layoutParams = new LayoutParams(widgetSize, widgetSize);
-
-            if (leftPtr != null) {
-                layoutParams.addRule(END_OF, leftPtr.getId());
-            }
-
-            if (upPtr != null) {
-                layoutParams.addRule(ABOVE, upPtr.getId());
-            }
-
-            leftPtr = imageView;
-        }
-
+        mBubbleProvider = new BubbleProviderImpl();
+        fillBubbles();
     }
 
+    private void fillBubbles() {
+        int count = mBubbleProvider.getCount();
+        for (int i = 0; i < count; i++) {
+            View bubble = mBubbleProvider.getView(mBubbleProvider.nextBubble(), getContext());
+            bubble.setId(mBubbleProvider.getId(i));
+            addView(bubble);
+        }
+    }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        final int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        final int sizeWidth = MeasureSpec.getSize(widthMeasureSpec);
+        final int sizeHeight = MeasureSpec.getSize(heightMeasureSpec);
+
+        measureChildren(widthMeasureSpec, heightMeasureSpec);
+
+        maxChildHeight = 0;
+        maxChildWidth = 0;
+
         int childCount = getChildCount();
-        int width = 0;
+        int totalChildrenWidth = 0;
         for (int i = 0; i < childCount; i++) {
-            View child = getChildAt(i);
-            width += child.getMeasuredWidth();
+            int measuredHeight = getChildAt(i).getMeasuredHeight();
+            int measuredWidth = getChildAt(i).getMeasuredWidth();
+            maxChildHeight = measuredHeight > maxChildHeight ? measuredHeight : maxChildHeight;
+            maxChildWidth = measuredWidth > maxChildWidth ? measuredWidth : maxChildWidth;
+            totalChildrenWidth += measuredWidth;
         }
 
+        int resultWidth, resultHeight;
+        int room = maxChildHeight * totalChildrenWidth;
+
+        resultHeight = (heightMode == EXACTLY) ? sizeHeight : maxChildHeight;
+        resultWidth = room / resultHeight + maxChildWidth;
+
+        setMeasuredDimension(resultWidth, resultHeight); // 由于布局 width 目前是不确定的，因此在 onLayout 需要进行调整
     }
+
+    private final List<View> mBufferJar = new ArrayList<>();
+    private final Point mBufferPoint = new Point();
 
     @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-    }
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
 
-    @Override
-    public void onClick(View v) {
-        Toast.makeText(getContext(), v.getId() + "", Toast.LENGTH_SHORT).show();
-    }
-
-    public void bubble() {
-
-        for (int i = 10; i < 20; i++) {
-            final View viewById = getChildAt(i);
-            ValueAnimator animator = new ValueAnimator();
-            double upper = Math.random() * 50;
-            double lower = Math.random() * -50;
-            double duration = (long) (1000 + Math.random() * 1000);
-            animator.setIntValues((int) lower, (int) upper);
-            animator.setDuration((long) duration);
-            animator.setInterpolator(new AccelerateDecelerateInterpolator());
-            animator.setRepeatCount(-1);
-            animator.setRepeatMode(ValueAnimator.REVERSE);
-            animator.setEvaluator(new IntEvaluator());
-            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) viewById.getLayoutParams();
-                    if (layoutParams != null) {
-                        int animatedValue = (int) animation.getAnimatedValue();
-                        layoutParams.bottomMargin = animatedValue;
-                        layoutParams.leftMargin = animatedValue;
-                        layoutParams.rightMargin = animatedValue;
-                        layoutParams.topMargin = animatedValue;
-                        viewById.setLayoutParams(layoutParams);
-                    }
-                }
-            });
-            animator.start();
-        }
-    }
-
-    public void random() {
+        mBufferJar.clear();
+        x = maxChildWidth / 2;
+        y = maxChildHeight / 2;
         int childCount = getChildCount();
+        int borderRight = 0;
         for (int i = 0; i < childCount; i++) {
-            View child = getChildAt(i);
-            ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) child.getLayoutParams();
-            layoutParams.bottomMargin = (int) (Math.random() * 10 + 3);
-            layoutParams.leftMargin = (int) (Math.random() * 10 + 3);
-            layoutParams.rightMargin = (int) (Math.random() * 10 + 3);
-            layoutParams.topMargin = (int) (Math.random() * 10 + 3);
+            View childView = getChildAt(i);
+            Point point = availableCenter(childView.getMeasuredHeight() / 2);
+            int left = point.x - childView.getMeasuredWidth() / 2;
+            int top = point.y - childView.getMeasuredHeight() / 2;
+            int right = point.x + childView.getMeasuredWidth() / 2;
+            int bottom = point.y + childView.getMeasuredHeight() / 2;
+            childView.layout(left, top, right, bottom);
+            if (right > borderRight) {
+                borderRight = right;
+            }
+            mBufferJar.add(childView);
+        }
 
-            if (i == 0 || i == 20) {
-                layoutParams.leftMargin = (int) (Math.random() * 200 + 100);
+        int offset = borderRight - r;
+        if (offset != 0) {
+            setMeasuredDimension(getMeasuredWidth() + offset, getMeasuredHeight());
+            layout(l, t, r + offset, b);
+        }
+    }
+
+    public void repaint() {
+        removeAllViews();
+        mBubbleProvider.reset();
+        fillBubbles();
+        invalidate();
+    }
+
+    /*------------------ 辅助计算 -------------------------------*/
+    private int x = 0, y = 0;
+
+    private Point availableCenter(int radius) {
+        while (true) {
+            if (y >= getMeasuredHeight() - maxChildHeight / 2) {
+                x += 3;
+                y = maxChildHeight / 2;
+            }
+            if (checkOverlap(x, y, radius)) {
+                y += 3;
+            } else {
+                mBufferPoint.set(x, y);
+                return mBufferPoint;
+            }
+        }
+    }
+
+    private boolean checkOverlap(int x, int y, int radius) {
+        Rect rect = new Rect(x - radius, y - radius, x + radius, y + radius);
+        for (View other : mBufferJar) {
+            if (checkOverlap(rect, other)) return true;
+        }
+        return false;
+    }
+
+    private boolean checkOverlap(Rect rect, View child) {
+        if (child == null || rect == null) {
+            return false;
+        }
+        Rect rect0 = new Rect(child.getLeft(), child.getTop(), child.getRight(), child.getBottom());
+
+        float dx = rect0.centerX() - rect.centerX();
+        float dy = rect0.centerY() - rect.centerY();
+        float r = rect0.height() / 2 + rect.height() / 2;
+        float d = (dx * dx) + (dy * dy);
+
+        return d < r * r;
+    }
+
+    /*---------------------- 提供数据 ---------------------------------*/
+
+    private static class Bubble {
+        boolean selected;
+        int level;
+        String label;
+        int textSize;
+        int selectedTextColor;
+
+        Bubble(boolean selected, int level, String label, int textSize, int selectedTextColor, int unselectedTextColor, int selectedRes, int unselectedRes) {
+            this.selected = selected;
+            this.level = level;
+            this.label = label;
+            this.textSize = textSize;
+            this.selectedTextColor = selectedTextColor;
+            this.unselectedTextColor = unselectedTextColor;
+            this.selectedRes = selectedRes;
+            this.unselectedRes = unselectedRes;
+        }
+
+        int unselectedTextColor;
+        int selectedRes;
+        int unselectedRes;
+
+
+    }
+
+    private static class BubbleProviderImpl implements BubbleProvider {
+
+        private final static int ID_PREFIX = 0x5078;
+
+        final List<Bubble> mBubbles = new LinkedList<>();
+        final List<Bubble> mBufferJar = new LinkedList<>();
+
+        private int rowCount = 3;
+        private int columnCount = 0;
+        private int mRepeatCount = 1;
+
+        BubbleProviderImpl() {
+            initBubble();
+        }
+
+        private void initBubble() {
+
+            for (int i = 0; i < mRepeatCount; i++) {
+                mBubbles.add(new Bubble(false, 1, "科幻", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+                mBubbles.add(new Bubble(true, 1, "动作", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+                mBubbles.add(new Bubble(false, 1, "喜剧", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+                mBubbles.add(new Bubble(false, 1, "恐怖", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+                mBubbles.add(new Bubble(true, 1, "动漫", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+                mBubbles.add(new Bubble(false, 1, "美剧", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+                mBubbles.add(new Bubble(true, 1, "韩剧", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+                mBubbles.add(new Bubble(false, 1, "偶像剧", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+                mBubbles.add(new Bubble(false, 1, "宫斗剧", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble1_red_2x, R.drawable.bubble1_2x));
+                mBubbles.add(new Bubble(false, 2, "战争", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(false, 2, "犯罪", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(false, 2, "爱情", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(false, 2, "惊悚", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(true, 2, "悬疑", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(false, 2, "文艺", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(false, 2, "老电影", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(false, 2, "日剧", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(false, 2, "TVB", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(false, 2, "泰剧", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble2_red_2x, R.drawable.bubble2_2x));
+                mBubbles.add(new Bubble(false, 3, "冒险", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble3_red_2x, R.drawable.bubble3_2x));
+                mBubbles.add(new Bubble(false, 3, "青春", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble3_red_2x, R.drawable.bubble3_2x));
+                mBubbles.add(new Bubble(false, 3, "小众片", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble3_red_2x, R.drawable.bubble3_2x));
+                mBubbles.add(new Bubble(true, 3, "英剧", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble3_red_2x, R.drawable.bubble3_2x));
+                mBubbles.add(new Bubble(false, 3, "破案剧", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble3_red_2x, R.drawable.bubble3_2x));
+                mBubbles.add(new Bubble(false, 3, "穿越剧", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble3_red_2x, R.drawable.bubble3_2x));
+                mBubbles.add(new Bubble(false, 4, "奇幻", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble4_red_2x, R.drawable.bubble4_2x));
+                mBubbles.add(new Bubble(false, 4, "剧情", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble4_red_2x, R.drawable.bubble4_2x));
+                mBubbles.add(new Bubble(true, 4, "伦理", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble4_red_2x, R.drawable.bubble4_2x));
+                mBubbles.add(new Bubble(false, 4, "武侠", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble4_red_2x, R.drawable.bubble4_2x));
+                mBubbles.add(new Bubble(false, 4, "谍战剧", 16, Color.WHITE, Color.parseColor("#FF2B50"), R.drawable.bubble4_red_2x, R.drawable.bubble4_2x));
+
             }
 
-            if (i != 0) {
-                View upLeft = getChildAt(i - 1);
+            columnCount = mBubbles.size() / rowCount;
+
+        }
+
+        @Override
+        public Bubble nextBubble() {
+            if (mBubbles.isEmpty()) {
+                return null;
             }
-
-            child.setLayoutParams(layoutParams);
-        }
-    }
-
-
-    class Circle {
-        int x, y, r;
-    }
-
-    static class Spec {
-        private static final int SIZE_1 = 100 * 2;
-        private static final int SIZE_2 = 115 * 2;
-        private static final int SIZE_3 = 128 * 2;
-        private static final int SIZE_4 = 142 * 2;
-        private static final int[] SPEC = {SIZE_1, SIZE_2, SIZE_3, SIZE_4};
-        private static final int[] COLOR = {BLUE, RED, GREEN, YELLOW, CYAN, BLACK,};
-
-
-        private static int getSize() {
-            return SPEC[(int) (Math.random() * 4)];
+            int index = (int) (Math.random() * mBubbles.size());
+            Bubble bubble = mBubbles.remove(index);
+            mBufferJar.add(bubble);
+            return bubble;
         }
 
-        static int index = 0;
-
-        private static @ColorInt
-        int getColor() {
-            return COLOR[(++index) % COLOR.length];
+        @Override
+        public void reset() {
+            mBubbles.clear();
+            mBufferJar.clear();
+            initBubble();
         }
+
+        @Override
+        public int getCount() {
+            return columnCount * rowCount;
+        }
+
+        @Override
+        public View getView(Bubble bubble, Context context) {
+            CircleImageView imageView = new CircleImageView(context);
+            imageView.setImageResource(bubble.selected ? bubble.selectedRes : bubble.unselectedRes);
+            imageView.setBorderColor(Color.TRANSPARENT);
+            imageView.setTextSize(16);
+            imageView.setTextColor(bubble.selected ? bubble.selectedTextColor : bubble.unselectedTextColor);
+            imageView.setBorderOverlay(false);
+            imageView.setBorderWidth(0);
+            imageView.setText(bubble.label);
+            imageView.setLayoutParams(new LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+            return imageView;
+        }
+
+        @Override
+        public int getId(int index) {
+            return ID_PREFIX + index;
+        }
+
+        @VisibleForTesting
+        public void doubleBubbles() {
+            mRepeatCount++;
+            reset();
+        }
+
     }
+
+    public interface BubbleProvider {
+
+        int getCount();
+
+        Bubble nextBubble();
+
+        void reset();
+
+        View getView(Bubble bubble, Context context);
+
+        int getId(int index);
+    }
+
 }

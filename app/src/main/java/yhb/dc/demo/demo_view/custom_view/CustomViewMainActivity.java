@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import yhb.dc.R;
 import yhb.dc.common.Demo;
+import yhb.dc.demo.demo_view.custom_view.widget.BubbleLayout;
 import yhb.dc.demo.demo_view.custom_view.widget.BubbleLayoutCopy;
 
 /**
@@ -16,7 +17,7 @@ import yhb.dc.demo.demo_view.custom_view.widget.BubbleLayoutCopy;
 
 public class CustomViewMainActivity extends AppCompatActivity implements Demo {
 
-    private BubbleLayoutCopy mBubbleLayout;
+    private BubbleLayout mBubbleLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +27,7 @@ public class CustomViewMainActivity extends AppCompatActivity implements Demo {
     }
 
     public void animate(final View view) {
-        mBubbleLayout.showBubbleAnim();
+//        mBubbleLayout.showBubbleAnim();
     }
 
     public void randomMarginTop(View view) {
@@ -37,11 +38,11 @@ public class CustomViewMainActivity extends AppCompatActivity implements Demo {
 
     }
 
-    public void invalidate(View view) {
-        mBubbleLayout.invalidate();
+    public void repaint(View view) {
+        mBubbleLayout.repaint();
     }
 
     public void doubleBubble(View view) {
-        mBubbleLayout.doubleBubbles();
+//        mBubbleLayout.doubleBubbles();
     }
 }

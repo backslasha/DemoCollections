@@ -184,7 +184,7 @@ public class BubbleLayoutCopy1 extends RelativeLayout implements View.OnClickLis
         clearOverlapCount = 0;
     }
 
-    /*--------------- invalidate -----------------------*/
+    /*--------------- repaint -----------------------*/
 
     public void doubleBubbles() {
         SPEC.doubleBubbles();
