@@ -6,6 +6,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.support.annotation.VisibleForTesting;
 import android.util.AttributeSet;
+import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,6 @@ import java.util.List;
 
 import yhb.dc.R;
 
-import static android.view.View.MeasureSpec.AT_MOST;
 import static android.view.View.MeasureSpec.EXACTLY;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
@@ -50,7 +50,14 @@ public class BubbleLayout extends ViewGroup {
         mBubbleProvider = new BubbleProviderImpl();
         fillBubbles();
         setupAnimation();
+//        scanStep = dp(3,context);
     }
+
+    private static int dp(int x, Context context) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                x, context.getResources().getDisplayMetrics());
+    }
+
 
     private void setupAnimation() {
         Animation animation = AnimationUtils.loadAnimation(this.getContext(), R.anim.bubble_show);
@@ -94,7 +101,8 @@ public class BubbleLayout extends ViewGroup {
         int resultWidth, resultHeight;
         int room = maxChildHeight * totalChildrenWidth;
 
-        resultHeight = (heightMode == EXACTLY) ? sizeHeight : maxChildHeight;
+//        resultHeight = (heightMode == EXACTLY) ? sizeHeight : maxChildHeight;
+        resultHeight = sizeHeight;
         resultWidth = room / resultHeight + maxChildWidth;
 
         setMeasuredDimension(resultWidth, resultHeight); // 由于布局 width 目前是不确定的，因此在 onLayout 需要进行调整
@@ -177,7 +185,7 @@ public class BubbleLayout extends ViewGroup {
         Rect rect = new Rect(x - radius, y - radius, x + radius, y + radius);
         if (mBufferJar.isEmpty()) return false;
         int maxChildCountVertical = getMeasuredHeight() / minChildHeight;
-        for (int i = mBufferJar.size() - 1; i >= Math.max(mBufferJar.size() - maxChildCountVertical, 0); i--) {
+        for (int i = mBufferJar.size() - 1; i >= Math.max(mBufferJar.size() - maxChildCountVertical * 2 - 1, 0); i--) {
             View other = mBufferJar.get(i);
             if (checkOverlap(rect, other)) return true;
         }
@@ -231,6 +239,7 @@ public class BubbleLayout extends ViewGroup {
 
         final List<Bubble> mBubbles = new LinkedList<>();
         final List<Bubble> mBufferJar = new LinkedList<>();
+        final List<BubbleGroup> mBubbleGroups = new ArrayList<>();
 
         private int rowCount = 3;
         private int columnCount = 0;
@@ -278,18 +287,52 @@ public class BubbleLayout extends ViewGroup {
 
             columnCount = mBubbles.size() / rowCount;
 
+
+            int minLevel = Integer.MAX_VALUE, maxLevel = Integer.MIN_VALUE;
+            final SparseArray<List<Bubble>> levelGroup = new SparseArray<>();
+            for (Bubble bubble : mBubbles) {
+                List<Bubble> bubbles = levelGroup.get(bubble.level);
+                if (bubbles == null) {
+                    bubbles = new ArrayList<>();
+                    minLevel = minLevel > bubble.level ? bubble.level : minLevel;
+                    maxLevel = maxLevel < bubble.level ? bubble.level : maxLevel;
+                    levelGroup.put(bubble.level, bubbles);
+                }
+                bubbles.add(bubble);
+            }
+
+            for (int i = minLevel; i <= maxLevel; i++) {
+                List<Bubble> bubbles = levelGroup.get(i);
+                if (bubbles != null) {
+                    mBubbleGroups.add(new BubbleGroup(i, bubbles, mBubbles.size()));
+                }
+            }
+
         }
 
         @Override
         public Bubble nextBubble() {
-            if (mBubbles.isEmpty()) {
+            if (mBubbles.size() == mBufferJar.size()) {
                 return null;
             }
-            int index = (int) (Math.random() * mBubbles.size());
-            Bubble bubble = mBubbles.remove(index);
+            float maxIncreaseSpeed = Integer.MIN_VALUE;
+            int select = -1;
+            for (int i = mBubbleGroups.size() - 1; i >= 0; i--) {
+                if (mBubbleGroups.get(i).getRatioIncreaseSpeed() > maxIncreaseSpeed) {
+                    select = i;
+                    maxIncreaseSpeed = mBubbleGroups.get(i).getRatioIncreaseSpeed();
+                }
+            }
+            Bubble bubble = mBubbleGroups.get(select).bubbles.remove(0);
             mBufferJar.add(bubble);
+
+            for (BubbleGroup bubbleGroup : mBubbleGroups) {
+                bubbleGroup.updateRatio(mBubbles.size() - mBufferJar.size());
+            }
             return bubble;
         }
+
+
 
         @Override
         public void reset() {
@@ -307,13 +350,13 @@ public class BubbleLayout extends ViewGroup {
         public View getView(Bubble bubble, Context context) {
             CircleImageView imageView = new CircleImageView(context);
             imageView.setImageResource(bubble.selected ? bubble.selectedRes : bubble.unselectedRes);
-            imageView.setBorderColor(Color.TRANSPARENT);
+            imageView.setBorderColor(Color.WHITE);
             imageView.setTextSize(16);
             imageView.setTextColor(bubble.selected ? bubble.selectedTextColor : bubble.unselectedTextColor);
             imageView.setBorderOverlay(false);
-            imageView.setBorderWidth(4);
+            imageView.setBorderWidth(0);
             imageView.setText(bubble.label);
-            imageView.setLayoutParams(new LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+            imageView.setLayoutParams(new MarginLayoutParams(WRAP_CONTENT, WRAP_CONTENT));
             return imageView;
         }
 
@@ -330,6 +373,29 @@ public class BubbleLayout extends ViewGroup {
 
     }
 
+    static class BubbleGroup {
+        int level;
+        List<Bubble> bubbles;
+        float ratio1, ratio2;
+
+        BubbleGroup(int level, List<Bubble> bubbles, int currentTotalBubbleCount) {
+            this.level = level;
+            this.bubbles = bubbles;
+            this.ratio1 = ((float) bubbles.size()) / ((float) currentTotalBubbleCount);
+            this.ratio2 = ratio1;
+        }
+
+        void updateRatio(int currentTotalBubbleCount) {
+            ratio2 = ratio1;
+            ratio1 = ((float) bubbles.size()) / ((float) currentTotalBubbleCount);
+        }
+
+        float getRatioIncreaseSpeed() {
+            return ratio1 - ratio2;
+        }
+
+    }
+
     public interface BubbleProvider {
 
         int getCount();
@@ -342,5 +408,6 @@ public class BubbleLayout extends ViewGroup {
 
         int getId(int index);
     }
+
 
 }

@@ -160,8 +160,10 @@ public class CircleImageView extends android.support.v7.widget.AppCompatImageVie
             int widthMode = MeasureSpec.getMode(widthMeasureSpec);
             int height = MeasureSpec.getSize(heightMeasureSpec);
             int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-            width += mBorderWidth * 2;
-            height += mBorderWidth * 2;
+            int margin = dp(4);
+            width += margin * 2;
+            height += margin * 2;
+            setPadding(margin, margin, margin, margin);
             widthMeasureSpec = MeasureSpec.makeMeasureSpec(width, widthMode);
             heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, heightMode);
         }
@@ -185,7 +187,7 @@ public class CircleImageView extends android.support.v7.widget.AppCompatImageVie
         if (mText != null && mText.length() != 0) {
             int textHeight = (int) (mTextPaint.getFontMetrics().bottom - mTextPaint.getFontMetrics().top);
             int textWidth = (int) mTextPaint.measureText(mText);
-            canvas.drawText(mText, (getWidth() - textWidth) / 2, (getHeight() + textHeight) / 2- mTextPaint.getFontMetrics().descent, mTextPaint);
+            canvas.drawText(mText, (getWidth() - textWidth) / 2, (getHeight() + textHeight) / 2 - mTextPaint.getFontMetrics().descent, mTextPaint);
         }
     }
 
@@ -225,6 +227,11 @@ public class CircleImageView extends android.support.v7.widget.AppCompatImageVie
 
     private int sp(int x) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+                x, getContext().getResources().getDisplayMetrics());
+    }
+
+    private int dp(int x) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 x, getContext().getResources().getDisplayMetrics());
     }
 

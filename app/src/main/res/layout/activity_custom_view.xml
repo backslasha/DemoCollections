@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="#27273A">
 
     <!--<yhb.dc.demo.demo_view.custom_view.widget.JournalView-->
     <!--android:layout_width="match_parent"-->
@@ -35,8 +35,9 @@
         <yhb.dc.demo.demo_view.custom_view.widget.BubbleLayout
             android:id="@+id/bubble_layout"
             android:layout_width="wrap_content"
-            android:layout_height="260dp"
-            android:background="#27273A" />
+            android:layout_height="match_parent"
+            android:layout_marginBottom="159dp"
+            android:layout_marginTop="191dp" />
     </HorizontalScrollView>
 
     <LinearLayout
