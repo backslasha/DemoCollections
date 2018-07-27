@@ -12,6 +12,7 @@ import android.widget.Toast;
 import yhb.dc.R;
 import yhb.dc.common.Demo;
 import yhb.dc.demo.demo_view.custom_view.widget.BubbleLayout;
+import yhb.dc.demo.demo_view.custom_view.widget.BubbleLayout1;
 import yhb.dc.demo.demo_view.custom_view.widget.BubbleLayoutCopy;
 
 /**
