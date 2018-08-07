@@ -2,10 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="yhb.dc">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".common.DcApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -78,6 +79,7 @@
         <service
             android:name=".demo.aidl.LocalService"
             android:process=":test" />
+
         <activity android:name=".demo.demo_view.view_fields.ViewFieldsActivity" />
         <activity android:name=".demo.demo_fragment.fragment_callback.FragmentCallbackActivity" />
         <activity android:name=".demo.demo_fragment.fragment_dialog.DialogFragmentActivity" />
@@ -85,6 +87,10 @@
 
         <receiver android:name=".demo.notification.EchoBroadcastReceiver" />
 
+        <activity
+            android:name=".demo.network.fresco.FrescoActivity"
+            android:label="@string/title_activity_fresco"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
