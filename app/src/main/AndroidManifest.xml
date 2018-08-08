@@ -90,7 +90,9 @@
         <activity
             android:name=".demo.network.fresco.FrescoActivity"
             android:label="@string/title_activity_fresco"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".demo.network.webview.WebViewActivity"/>
+        <activity android:name=".demo.network.webview.WebViewMainActivity" />
     </application>
 
 </manifest>

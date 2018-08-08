@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="48dp"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radio_new"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="new" />
+
+        <RadioButton
+            android:id="@+id/radio_reuse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="reuse" />
+
+        <RadioButton
+            android:id="@+id/radio_stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="stop" />
+    </RadioGroup>
+
+    <Button
+        android:onClick="onClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:capitalize="none"
+        android:text="启动 WebView Activity" />
+
+    <TextView
+        android:id="@+id/text_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

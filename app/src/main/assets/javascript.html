@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Carson_Ho</title>
+
+     <!--JS代码-->
+    <script>
+        <!--Android需要调用的方法-->
+        function callJS(){
+            alert("Android调用了JS的callJS方法");
+        }
+
+
+        <!--由于对象映射，所以调用test对象等于调用Android映射的对象-->
+        function callAndroid(){
+            test.hello("js调用了android中的hello方法");
+        }
+    </script>
+
+</head>
+<body>
+    <!--点击按钮则调用callAndroid函数-->
+    <input type="button" id="button1" onclick="callAndroid()"/>
+</body>
+</html>
