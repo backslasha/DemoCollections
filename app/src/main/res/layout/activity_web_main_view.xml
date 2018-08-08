@@ -39,6 +39,13 @@
         android:capitalize="none"
         android:text="启动 WebView Activity" />
 
+    <Button
+        android:onClick="onClick0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:capitalize="none"
+        android:text="填充内存" />
+
     <TextView
         android:id="@+id/text_view"
         android:layout_width="match_parent"

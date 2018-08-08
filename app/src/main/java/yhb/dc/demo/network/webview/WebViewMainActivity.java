@@ -27,6 +27,7 @@ public class WebViewMainActivity extends AppCompatActivity implements Demo {
     private boolean mStop = false;
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private TextView mTextView;
+    private volatile static boolean flag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,10 @@ public class WebViewMainActivity extends AppCompatActivity implements Demo {
                 }
             }
         });
+
     }
+
+    List<Object> mObjects = new ArrayList<>();
 
     private String getAverage(List<Record> records, boolean reuseWebView) {
         int count = records.size();
@@ -103,6 +107,21 @@ public class WebViewMainActivity extends AppCompatActivity implements Demo {
         }
 
     }
+
+    public void onClick0(View view) {
+        if (view != null)
+            flag = !flag;
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (flag) {
+                    mObjects.add(new String("454458666666666666666666666666666646874638"));
+                    onClick0(null);
+                }
+            }
+        }, 0);
+    }
+
 
     static class Record implements Parcelable {
         long start, end, duration;

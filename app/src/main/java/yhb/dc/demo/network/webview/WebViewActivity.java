@@ -64,10 +64,10 @@ public class WebViewActivity extends AppCompatActivity {
             mFrameLayout.addView(LayoutInflater.from(this).inflate(R.layout.include_web_view, mFrameLayout, false), 0);
         }
 
-        long end = System.currentTimeMillis();
-        Intent intent = new Intent().putExtra(EXTRA_RECORD, new WebViewMainActivity.Record(start, end, end - start, ""));
-        WebViewActivity.this.setResult(RESULT_OK, intent);
-        WebViewActivity.this.finish();
+//        long end = System.currentTimeMillis();
+//        Intent intent = new Intent().putExtra(EXTRA_RECORD, new WebViewMainActivity.Record(start, end, end - start, ""));
+//        WebViewActivity.this.setResult(RESULT_OK, intent);
+//        WebViewActivity.this.finish();
 
         mWebView = findViewById(R.id.web_view);
 
@@ -97,7 +97,7 @@ public class WebViewActivity extends AppCompatActivity {
             }
         });
 
-        mEditText.setText("m.jd.com");
+        mEditText.setText("https://support.qq.com/product/25114?d-wx-push=1");
 
         loadUrl();
     }
@@ -107,6 +107,8 @@ public class WebViewActivity extends AppCompatActivity {
         if (!url.startsWith("http") && !url.startsWith("file") && !url.startsWith("content") && !url.startsWith("ftp")) {
             url = "http://" + url;
         }
+
+
 
         if (URLUtil.isValidUrl(url)) {
             mWebView.loadUrl(url);
