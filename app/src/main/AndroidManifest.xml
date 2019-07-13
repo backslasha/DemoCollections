@@ -67,7 +67,7 @@
         <activity android:name=".demo.customview.custom_view.CustomViewMainActivity" />
 
         <!-- demo of animation -->
-        <activity android:name=".demo.tranistion.AnimationMainActivity" />
+        <activity android:name=".demo.recyclerview.RecyclerViewActivity" />
 
         <!-- demo od animated vector drawable -->
         <activity android:name=".demo.customview.click_effect.CommonButtonClickEffectActivity" />

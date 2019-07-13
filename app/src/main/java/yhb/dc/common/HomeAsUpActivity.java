@@ -28,7 +28,9 @@ public abstract class HomeAsUpActivity extends AppCompatActivity {
 
     }
 
-    protected abstract Toolbar offerToolbar();
+    protected  Toolbar offerToolbar(){
+        return null;
+    }
 
 
     @Override

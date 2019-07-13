@@ -1,14 +1,16 @@
 package yhb.dc.demo.fragment.fragment_dialog;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 /**
@@ -25,24 +27,54 @@ public class CustomDialogFragment extends DialogFragment {
         fragment.setArguments(args);
         return fragment;
     }
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return null;
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return new EditText(getActivity());
+    }
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Window window = getDialog().getWindow();
+        if (window != null) {
+            WindowManager.LayoutParams lp = window.getAttributes();
+            lp.gravity = Gravity.BOTTOM;
+            lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            window.setAttributes(lp);
+        }
     }
 
     @NonNull
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        return new AlertDialog.Builder(getActivity())
-                .setView(new EditText(getActivity()))
-                .setCancelable(true)
-                .setMessage("Stupid")
-                .create();
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+//            Window window = dialog.getWindow();
+//            if (window != null) {
+//                WindowManager.LayoutParams lp = window.getAttributes();
+//                lp.gravity = Gravity.BOTTOM;
+//                lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
+//                lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
+//                window.setAttributes(lp);
+//            }
+        return dialog;
     }
 
-    /* Note：
-     * onCreateDialog 和 onCreateView 方法不能同时返回非 null 实例，否则会报错
-     */
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 }
