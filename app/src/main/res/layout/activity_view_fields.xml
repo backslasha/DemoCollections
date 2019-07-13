@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".demo.demo_view.view_fields.ViewFieldsActivity">
+    tools:context=".demo.customview.view_properties.ViewFieldsActivity">
 
     <FrameLayout
         android:id="@+id/frame_layout_view_parent"

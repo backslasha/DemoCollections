@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context=".demo.demo_view.canvas.CanvasActivity">
+    tools:context=".demo.customview.canvas.CanvasActivity">
 
     <Spinner
         android:id="@+id/spinner"

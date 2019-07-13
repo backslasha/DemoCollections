@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="yhb.dc.demo.demo_fragment.fragment_dialog.DialogFragmentActivity">
+    tools:context="yhb.dc.demo.fragment.fragment_dialog.DialogFragmentActivity">
 
     <Button
         android:id="@+id/button3"

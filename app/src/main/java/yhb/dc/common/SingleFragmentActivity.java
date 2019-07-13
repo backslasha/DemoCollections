@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 import yhb.dc.R;
-import yhb.dc.demo.demo_fragment.fragment_nest.TabFragment;
+import yhb.dc.demo.fragment.fragment_nest.TabFragment;
 
 /**
  * 单 Fragment 布局的 Activity 可以继承此类

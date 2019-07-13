@@ -4,5 +4,5 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:text="@string/hello_blank_fragment"
-    tools:context="yhb.dc.demo.demo_fragment.fragment_nest.NestedFragment" />
+    tools:context="yhb.dc.demo.fragment.fragment_nest.NestedFragment" />
 

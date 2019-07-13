@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="yhb.dc.demo.demo_fragment.fragment_nest.TabFragment">
+    tools:context="yhb.dc.demo.fragment.fragment_nest.TabFragment">
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"

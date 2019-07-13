@@ -64,26 +64,26 @@
         </activity>
 
         <!-- demo of custom views -->
-        <activity android:name=".demo.demo_view.custom_view.CustomViewMainActivity" />
+        <activity android:name=".demo.customview.custom_view.CustomViewMainActivity" />
 
         <!-- demo of animation -->
         <activity android:name=".demo.tranistion.AnimationMainActivity" />
 
         <!-- demo od animated vector drawable -->
-        <activity android:name=".demo.demo_view.click_effect.CommonButtonClickEffectActivity" />
-        <activity android:name=".demo.demo_view.canvas.CanvasActivity" />
+        <activity android:name=".demo.customview.click_effect.CommonButtonClickEffectActivity" />
+        <activity android:name=".demo.customview.canvas.CanvasActivity" />
         <activity android:name=".demo.handler_thread.HandlerThreadActivity" />
-        <activity android:name=".demo.demo_fragment.fragment_nest.TabFragmentActivity" />
-        <activity android:name=".demo.demo_fragment.fragment_commit.FragmentCommitActivity" />
+        <activity android:name=".demo.fragment.fragment_nest.TabFragmentActivity" />
+        <activity android:name=".demo.fragment.fragment_commit.FragmentCommitActivity" />
         <activity android:name=".demo.aidl.ServiceHolderActivity" />
 
         <service
             android:name=".demo.aidl.LocalService"
             android:process=":test" />
 
-        <activity android:name=".demo.demo_view.view_fields.ViewFieldsActivity" />
-        <activity android:name=".demo.demo_fragment.fragment_callback.FragmentCallbackActivity" />
-        <activity android:name=".demo.demo_fragment.fragment_dialog.DialogFragmentActivity" />
+        <activity android:name=".demo.customview.view_properties.ViewFieldsActivity" />
+        <activity android:name=".demo.fragment.fragment_callback.FragmentCallbackActivity" />
+        <activity android:name=".demo.fragment.fragment_dialog.DialogFragmentActivity" />
         <activity android:name=".demo.notification.NotificationActivity" />
 
         <receiver android:name=".demo.notification.EchoBroadcastReceiver" />

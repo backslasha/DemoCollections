@@ -4,7 +4,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="yhb.dc.demo.demo_fragment.fragment_commit.FragmentCommitActivity">
+    tools:context="yhb.dc.demo.fragment.fragment_commit.FragmentCommitActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
