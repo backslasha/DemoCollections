@@ -13,6 +13,8 @@ import android.util.Log;
 
 public abstract class LifeCycleActivity extends AppCompatActivity {
 
+    protected String TAG;
+
     @Override
     public void onAttachFragment(Fragment childFragment) {
         super.onAttachFragment(childFragment);
@@ -22,6 +24,7 @@ public abstract class LifeCycleActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        TAG = getName();
         super.onCreate(savedInstanceState);
         log("onCreate(savedInstanceState): " + savedInstanceState);
     }
@@ -63,9 +66,24 @@ public abstract class LifeCycleActivity extends AppCompatActivity {
         log("onDestroy()");
     }
 
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        log("onAttachedToWindow()");
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        log("onDetachedFromWindow()");
+    }
+
     private void log(String msg) {
         Log.d(this.getClass().getSimpleName(), getName() + ": " + msg);
     }
 
-    abstract protected String getName();
+    protected String getName() {
+        return this.getClass().getCanonicalName();
+    }
 }
