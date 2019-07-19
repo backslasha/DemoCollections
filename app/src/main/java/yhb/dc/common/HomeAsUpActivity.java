@@ -9,7 +9,7 @@ import android.view.MenuItem;
  * 如果子类布局文件中存在 mToolbar，那么启用 HomeAsUp 功能（返回键结束当前页面）
  * 需要对 mToolbar 进行设置时，重写 setupToolbar(Toolbar mToolbar) 即可
  */
-public abstract class HomeAsUpActivity extends AppCompatActivity {
+public abstract class HomeAsUpActivity extends DemoBaseActivity {
 
     private Toolbar mToolbar;
 

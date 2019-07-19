@@ -11,7 +11,7 @@ import android.util.Log;
  * 继承此类的的 Fragment 会自动打印 log
  */
 
-public abstract class LifeCycleActivity extends AppCompatActivity {
+public abstract class LifeCycleActivity extends DemoBaseActivity {
 
     protected String TAG;
 
