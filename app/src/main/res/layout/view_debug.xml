@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="200dp"
+    android:background="@color/pink_translucent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:ignore="HardcodedText"
+    tools:parentTag="android.widget.LinearLayout">
+
+    <EditText
+        android:id="@+id/edt_debug"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:gravity="center"
+        android:hint="输入控件 ID"
+        android:inputType="text"
+        android:padding="5dp"
+        tools:ignore="Autofill,LabelFor" />
+
+
+    <Button
+        android:id="@+id/btn_debug"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="查询" />
+
+    <TextView
+        android:id="@+id/tv_debug"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="4dp"
+        android:text="@string/app_name"
+        android:textColor="@color/green"
+        android:textSize="12sp"
+        android:textStyle="normal" />
+
+</merge>

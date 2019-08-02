@@ -15,7 +15,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import yhb.dc.R;
 import yhb.dc.common.Demo;
 import yhb.dc.common.DemoBaseActivity;
-import yhb.dc.demo.customview.custom_view.obselete.CarouselView;
 
 public class CarouselActivity extends DemoBaseActivity implements Demo {
 

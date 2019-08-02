@@ -6,6 +6,9 @@ import yhb.dc.demo.fragment.fragment_dialog.WebDialog
 
 abstract class DemoBaseActivity : AppCompatActivity() {
 
+    open val TAG: String by lazy {
+        javaClass.simpleName
+    }
 
     open fun descriptionUrl(): String? {
         return null

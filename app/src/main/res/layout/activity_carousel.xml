@@ -6,7 +6,7 @@
     tools:context=".demo.customview.custom_view.carousel.CarouselActivity"
     android:orientation="vertical">
 
-    <yhb.dc.demo.customview.custom_view.obselete.CarouselView
+    <yhb.dc.demo.customview.custom_view.carousel.CarouselView
         android:id="@+id/carousel_vp"
         android:layout_width="match_parent"
         android:layout_height="50dp" />

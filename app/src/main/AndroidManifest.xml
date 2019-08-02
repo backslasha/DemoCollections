@@ -17,7 +17,8 @@
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".demo.customview.custom_view.carousel.CarouselActivity"></activity>
+        <activity android:name=".demo.customview.custom_view.debug.DebugActivity"></activity>
+        <activity android:name=".demo.customview.custom_view.carousel.CarouselActivity" />
         <activity android:name=".common.DemoBaseActivity" />
         <activity
             android:name=".demo.activity.TranslucentActivity"

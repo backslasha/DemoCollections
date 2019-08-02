@@ -39,11 +39,14 @@ public class ExplainDialog extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         TextView textView = new TextView(getActivity());
-        textView.setPadding(100, 100, 100, 100);
+        textView.setPadding(30, 30, 30, 30);
         textView.setGravity(Gravity.CENTER_VERTICAL);
         textView.setText(mText);
         textView.setTextSize(12);
         textView.setTextIsSelectable(true);
+        textView.setVerticalScrollBarEnabled(true);
+        textView.setHorizontallyScrolling(true);
+        textView.setHorizontalScrollBarEnabled(true);
         return textView;
     }
 

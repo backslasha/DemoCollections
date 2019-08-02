@@ -7,7 +7,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <yhb.dc.demo.customview.custom_view.obselete.HackViewPager
+        <yhb.dc.demo.customview.custom_view.carousel.HackViewPager
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

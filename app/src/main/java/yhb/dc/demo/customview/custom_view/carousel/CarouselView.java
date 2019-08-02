@@ -1,4 +1,4 @@
-package yhb.dc.demo.customview.custom_view.obselete;
+package yhb.dc.demo.customview.custom_view.carousel;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
