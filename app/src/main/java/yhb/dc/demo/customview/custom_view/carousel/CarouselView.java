@@ -16,26 +16,24 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import org.jetbrains.annotations.NotNull;
 
 import yhb.dc.R;
 
-
-public class CarouselView extends FrameLayout implements View.OnTouchListener {
+public class CarouselView extends RelativeLayout implements View.OnTouchListener {
 
     public static final String TAG = "CarouselView";
 
-    private final static int DOT_SIZE_DIP = 6;
-    private final static int DOT_SELECTED_BG = R.drawable.banner_indicator_selected;
-    private final static int DOT_NORMAL_BG = R.drawable.banner_indicator_normal;
-    private final static int PAGE_COUNT_RATIO = 1000; // viewpager page count 翻倍倍数
-    private final static int INTERVAL = 2000;
-    private final static int DOT_MARGIN_HORIZONTAL_DIP = 3; // 圆点左右间距
-    private final static int DOT_MARGIN_VERTICAL_DIP = 5; // 圆点上下间距
+    private final static int PAGE_COUNT_RATIO = 10; // viewpager page count 翻倍倍数
+    private final static int DOT_SIZE_DIP = 5;
+    private final static int DOT_SELECTED_BG = R.drawable.carousel_indicator_selected;
+    private final static int DOT_NORMAL_BG = R.drawable.carousel_indicator_normal;
+    private final static int INTERVAL = 1 * 1000;
+    private final static int DOT_MARGIN_HORIZONTAL_DIP = 3; // 圆点间距
 
     private HackViewPager mViewPager;
     private CarouselPagerAdapter mPagerAdapter;
@@ -46,7 +44,6 @@ public class CarouselView extends FrameLayout implements View.OnTouchListener {
     private int mSelectedIndex = -1;
     private boolean mPlaying = false;
     private ViewProvider mViewProvider;
-    private OnItemSelectedListener mOnItemSelectedListener;
     private Runnable mPageRunner = new Runnable() {
         @Override
         public void run() {
@@ -71,7 +68,7 @@ public class CarouselView extends FrameLayout implements View.OnTouchListener {
 
     @SuppressLint("ClickableViewAccessibility")
     private void setupView() {
-        View.inflate(getContext(), R.layout.view_banner_page, this);
+        View.inflate(getContext(), R.layout.view_carousel, this);
         mViewPager = findViewById(R.id.view_pager);
         mIndicator = findViewById(R.id.indicator_container);
         mHandler = new Handler(Looper.getMainLooper());
@@ -81,20 +78,16 @@ public class CarouselView extends FrameLayout implements View.OnTouchListener {
             @Override
             public void onPageSelected(int position) {
                 mSelectedIndex = position;
-                if (mOnItemSelectedListener != null) {
-                    mOnItemSelectedListener.onItemSelected(
-                            mPagerAdapter.getDisplayViewByDataPosition(mSelectedIndex % mViewProvider.getCount()), mSelectedIndex % mViewProvider.getCount());
+                if (mViewProvider == null || mViewProvider.getCount() == 0) {
+                    return;
                 }
-                syncIndicators(mSelectedIndex % mViewProvider.getCount());
-            }
-
-            private void syncIndicators(int index) {
+                int dataPosition = mSelectedIndex % mViewProvider.getCount();
                 if (mDotViews == null || mDotViews.length == 0) {
                     return;
                 }
-                mDotViews[index].setBackgroundResource(DOT_SELECTED_BG);
+                mDotViews[dataPosition].setBackgroundResource(DOT_SELECTED_BG);
                 for (int i = 0; i < mDotViews.length; i++) {
-                    if (index != i) {
+                    if (dataPosition != i) {
                         mDotViews[i].setBackgroundResource(DOT_NORMAL_BG);
                     }
                 }
@@ -110,9 +103,8 @@ public class CarouselView extends FrameLayout implements View.OnTouchListener {
                     if (mSelectedIndex == mPagerAdapter.getCount() - 1) {
                         int dataPosition = mSelectedIndex % mViewProvider.getCount();
                         int resetPosition = getIntiPosition() + dataPosition;
+                        Log.d(TAG, "mViewPager.setCurrentItem(" + resetPosition + ", false)");
                         mViewPager.setCurrentItem(resetPosition, false);
-                        Log.d(TAG, "reset position from " + mSelectedIndex + " to position " +
-                                (getIntiPosition() + dataPosition) + " without animation.");
                         mSelectedIndex = resetPosition;
                     }
                 }
@@ -164,45 +156,59 @@ public class CarouselView extends FrameLayout implements View.OnTouchListener {
         if (mViewProvider.getCount() == 0) {
             return 0;
         }
-        return PAGE_COUNT_RATIO / 2 * mViewProvider.getCount();
+        // 保证 page 初始化页对应的 dataPosition 为 0
+        int mid = PAGE_COUNT_RATIO * mViewProvider.getCount() / 2;
+        if (mid % mViewProvider.getCount() != 0) {
+            mid += (mViewProvider.getCount() - mid % mViewProvider.getCount());
+        }
+        return mid;
     }
 
     public void setViewProvider(ViewProvider viewProvider) {
-        mViewProvider = viewProvider;
         if (viewProvider == null) {
+            mViewProvider = null;
             stopPlay();
-            mPagerAdapter.clearViewCache();
             mPagerAdapter.notifyDataSetChanged();
             mViewPager.setPagingEnabled(false);
+            layoutIndicator();
+        } else if (mViewProvider == viewProvider) {
+            mPagerAdapter.notifyDataSetChanged();
+            layoutIndicator();
         } else {
+            mViewProvider = viewProvider;
             if (mPagerAdapter == null) {
                 mPagerAdapter = new CarouselPagerAdapter();
             }
+            final boolean oldPlaying = mPlaying;
+            stopPlay();
+            mPagerAdapter.clearViewCache();
             mViewPager.setPagingEnabled(true);
             mViewPager.setAdapter(mPagerAdapter);
             mViewPager.setCurrentItem(getIntiPosition());
             mPagerAdapter.notifyDataSetChanged();
             layoutIndicator();
+            if (oldPlaying) {
+                startPlay();
+            }
         }
 
     }
 
     private void layoutIndicator() {
         mIndicator.removeAllViews();
-        int dotCount = mViewProvider.getCount();
-        mDotViews = new ImageView[dotCount];
-        if (dotCount <= 1) {
+        boolean empty = mViewProvider == null || mViewProvider.getCount() <= 1;
+        if (empty) {
             mIndicator.setVisibility(GONE);
             return;
         }
+        int dotCount = mViewProvider.getCount();
+        mDotViews = new ImageView[dotCount];
+        mIndicator.setVisibility(VISIBLE);
         float size = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DOT_SIZE_DIP,
                 getResources().getDisplayMetrics());
 
         int marginX = (int) (DOT_MARGIN_HORIZONTAL_DIP
                 * Resources.getSystem().getDisplayMetrics().density);
-        int marginY = (int) (DOT_MARGIN_VERTICAL_DIP
-                * Resources.getSystem().getDisplayMetrics().density);
-
         for (int i = 0; i < dotCount; i++) {
             ImageView dotView;
             LinearLayout.LayoutParams layoutParams
@@ -222,15 +228,9 @@ public class CarouselView extends FrameLayout implements View.OnTouchListener {
             if (i == dotCount - 1) {
                 layoutParams.rightMargin = 0;
             }
-            layoutParams.topMargin = marginY;
-            layoutParams.bottomMargin = marginY;
             mDotViews[i] = dotView;
             mIndicator.addView(mDotViews[i], layoutParams);
         }
-    }
-
-    public void setOnItemSelectedListener(OnItemSelectedListener onItemSelectedListener) {
-        mOnItemSelectedListener = onItemSelectedListener;
     }
 
     public interface ViewProvider {
@@ -239,10 +239,6 @@ public class CarouselView extends FrameLayout implements View.OnTouchListener {
 
         int getCount();
 
-    }
-
-    public interface OnItemSelectedListener {
-        void onItemSelected(View view, int position);
     }
 
     private class CarouselPagerAdapter extends PagerAdapter {
@@ -269,11 +265,13 @@ public class CarouselView extends FrameLayout implements View.OnTouchListener {
             int dataPosition = position % mViewProvider.getCount();
             View view = getOrCreateByDataPosition(dataPosition);
             container.addView(view, view.getLayoutParams());
+            Log.d(TAG, "container.addView(view, view.getLayoutParams()) on pos " + position + " ->" + view);
             return view;
         }
 
         @Override
         public void destroyItem(@NotNull ViewGroup container, int position, @NotNull Object object) {
+            Log.d(TAG, "container.removeView((View) object) on pos " + position + " ->" + object);
             container.removeView((View) object);
         }
 
@@ -293,15 +291,32 @@ public class CarouselView extends FrameLayout implements View.OnTouchListener {
             View view = mCache.get(dataPosition);
             if (view == null) {
                 view = mViewProvider.createView(dataPosition);
+                Log.d(TAG, "create view for position: " + dataPosition + ", now mCache.size=" + mCache.size() + ", mCache0.size=" + mCache0.size());
                 mCache.put(dataPosition, view);
             } else if (view.getParent() != null) {
+                // 此分支考虑两种情况：
+                // 1. 只有两个 Page 时，当前现实的 Page 左边和右边从逻辑上来说，是同一个控件
+                //    此时 instantiateItem， mCache 中取得的 View 已经被使用;
+                // 2. 当滑动到 ViewPager 的最后一个页面（极限情况，滑动了 1000*count 页） 时，需要重置到 init position
+                //    此时 instantiateItem，mCache 中取得的 View 已经被使用。
+                // 对这两种情况需要重新 createView() 生成另一个实例
+                // mCache0 用于对冲突实例的缓存
                 view = mCache0.get(dataPosition);
-                if (view != null) {
+                if (view != null && view.getParent() == null) {
+                    Log.d(TAG, "found view from mCache0 for position: " + dataPosition + ", now mCache.size=" + mCache.size() + ", mCache0.size=" + mCache0.size());
                     return view;
-                } else {
+                } else if (view == null) {
                     view = mViewProvider.createView(dataPosition);
                     mCache0.put(dataPosition, view);
+                    Log.d(TAG, "create view for position: " + dataPosition + ", now mCache.size=" + mCache.size() + ", mCache0.size=" + mCache0.size());
+                } else {
+                    // 此分支考虑上述两种情况同时成立时，mCache、mCache0 中两个缓存实例已经同时被使用了
+                    // 此时 instantiateItem，需要第三个实例，对该实例不进行 Cache
+                    Log.d(TAG, "create view for position: " + dataPosition + ", now mCache.size=" + mCache.size() + ", mCache0.size=" + mCache0.size());
+                    return mViewProvider.createView(dataPosition);
                 }
+            } else {
+                Log.d(TAG, "found view from mCache for position: " + dataPosition + ", now mCache.size=" + mCache.size() + ", mCache0.size=" + mCache0.size());
             }
             return view;
         }
@@ -309,14 +324,6 @@ public class CarouselView extends FrameLayout implements View.OnTouchListener {
         void clearViewCache() {
             mCache.clear();
             mCache0.clear();
-        }
-
-        private View getDisplayViewByDataPosition(int dataPosition) {
-            View view = mCache.get(dataPosition);
-            if (view == null || view.getParent() == null) {
-                view = mCache0.get(dataPosition);
-            }
-            return view;
         }
     }
 

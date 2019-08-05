@@ -77,16 +77,10 @@ public class CarouselActivity extends DemoBaseActivity implements Demo {
 
             @Override
             public int getCount() {
-                return 5;
+                return 3;
             }
         });
         mCarouselView.startPlay();
-        mCarouselView.setOnItemSelectedListener(new CarouselView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(View view, int position) {
-                Toast.makeText(CarouselActivity.this, "selected : " + view, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     public void onClick1(View view) {
