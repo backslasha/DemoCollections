@@ -1,42 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/debug_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="200dp"
-    android:background="@color/pink_translucent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
     tools:ignore="HardcodedText"
-    tools:parentTag="android.widget.LinearLayout">
+    tools:parentTag="android.support.constraint.ConstraintLayout">
 
     <EditText
         android:id="@+id/edt_debug"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="1"
         android:background="@null"
         android:gravity="center"
         android:hint="输入控件 ID"
         android:inputType="text"
-        android:padding="5dp"
-        tools:ignore="Autofill,LabelFor" />
+        app:layout_constraintEnd_toStartOf="@+id/btn_query"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="Autofill,LabelFor,RelativeOverlap" />
 
-
-    <Button
-        android:id="@+id/btn_debug"
+    <TextView
+        android:id="@+id/btn_clean"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="查询" />
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="8dp"
+        android:background="@android:color/white"
+        android:padding="4dp"
+        android:text="清空"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/btn_query"
+        app:layout_constraintTop_toTopOf="@+id/edt_debug" />
+
+    <TextView
+        android:id="@+id/btn_query"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="8dp"
+        android:background="@android:color/white"
+        android:padding="4dp"
+        android:text="查询"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/btn_toggle"
+        app:layout_constraintTop_toTopOf="@+id/edt_debug" />
+
+    <TextView
+        android:id="@+id/btn_toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:background="@android:color/white"
+        android:padding="4dp"
+        android:tag="true"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btn_query"
+        tools:text="折叠" />
 
     <TextView
         android:id="@+id/tv_debug"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         android:layout_weight="1"
-        android:padding="4dp"
+        android:padding="8dp"
         android:text="@string/app_name"
-        android:textColor="@color/green"
-        android:textSize="12sp"
-        android:textStyle="normal" />
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edt_debug" />
+
+    <android.support.constraint.Group
+        android:id="@+id/group_debug"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="edt_debug,btn_query,tv_debug,btn_clean" />
+
 
 </merge>

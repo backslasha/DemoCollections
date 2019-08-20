@@ -7,4 +7,5 @@
     <color name="green">#ff00ff00</color>
     <color name="pink">#ffb6c1</color>
     <color name="pink_translucent">#33ffb6c1</color>
+    <color name="dark_translucent">#77000000</color>
 </resources>
