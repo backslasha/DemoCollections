@@ -4,26 +4,24 @@ import android.animation.LayoutTransition
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Rect
-import android.support.constraint.ConstraintLayout
 import android.support.v7.app.AppCompatActivity
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.AttributeSet
-import android.view.LayoutInflater
-import android.view.View.OnClickListener
-import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.FrameLayout
-import android.widget.Toast
+import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.view_debug.view.*
 import yhb.dc.R
-import android.view.View as View1
 
-
-class DebugView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : ConstraintLayout(context, attrs, defStyleAttr) {
+class DebugView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : RelativeLayout(context, attrs, defStyleAttr) {
 
 
     companion object {
@@ -32,8 +30,8 @@ class DebugView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 
     private var mPadding: Rect
     private val mActivity: AppCompatActivity = context as AppCompatActivity
-    private val mBorder: android.view.View by lazy {
-        val view = android.view.View(context)
+    private val mBorder: View by lazy {
+        val view = View(context)
         view.tag = TAG_DEBUG
         view.setBackgroundResource(R.drawable.shape_frame)
         view
@@ -46,7 +44,7 @@ class DebugView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
             R.id.btn_query -> {
                 val name = edt_debug.text.toString()
                 val id = resources.getIdentifier(name, "id", getContext().packageName)
-                val target = mActivity.findViewById<View1>(id)
+                val target = mActivity.findViewById<View>(id)
 
                 if (target == null) {
                     tv_debug.text = "null"
@@ -79,7 +77,6 @@ class DebugView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         btn_clean.setOnClickListener(mOnClickListener)
         btn_toggle.setOnClickListener(mOnClickListener)
         tv_debug.movementMethod = LinkMovementMethod.getInstance()
-        setBackgroundColor(resources.getColor(R.color.dark_translucent))
         mPadding = Rect(paddingLeft, paddingTop, paddingRight, paddingBottom)
         layoutTransition = LayoutTransition()
 
@@ -92,7 +89,7 @@ class DebugView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         }
     }
 
-    private fun computeDetailInfo(target: android.view.View): SpannableStringBuilder {
+    private fun computeDetailInfo(target: View): SpannableStringBuilder {
         val l = (target.layoutParams as MarginLayoutParams).leftMargin
         val r = (target.layoutParams as MarginLayoutParams).rightMargin
         val t = (target.layoutParams as MarginLayoutParams).topMargin
@@ -101,30 +98,29 @@ class DebugView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 
         val builder = SpannableStringBuilder()
         builder.append("result=${target.javaClass.simpleName + "(${getIdStr(target)})"}\n")
-                .append("parent=${target.parent?.javaClass?.simpleName + "(${getIdStr(target.parent as android.view.View)})"}\n")
+                .append("parent=${target.parent?.javaClass?.simpleName + "(${getIdStr(target.parent as View)})"}\n")
 
         builder.append("visibility=${when (target.visibility) {
-            View1.GONE -> "GONE" + " -> " + "\${VISIBLE}"
-            View1.VISIBLE -> "VISIBLE" + " -> " + "\${GONE}"
-            View1.INVISIBLE -> "INVISIBLE" + " -> " + "\${VISIBLE}"
+            View.GONE -> "GONE" + " -> " + "\${VISIBLE}"
+            View.VISIBLE -> "VISIBLE" + " -> " + "\${GONE}"
+            View.INVISIBLE -> "INVISIBLE" + " -> " + "\${VISIBLE}"
             else -> "UNKNOWN"
         }}\n")
 
-
         addVisibilitySpan(builder, "\${VISIBLE}") {
-            Toast.makeText(context, "set target visible!", Toast.LENGTH_SHORT).show()
-            target.visibility = android.view.View.VISIBLE
-            computeDetailInfo(target).let {
-                tv_debug.text = it
-            }
-            computeLocation(target).let {
-                drawBorder(it[0], it[1], target.width, target.height)
-            }
+            target.visibility = View.VISIBLE
+            // 设置完 target 的 visibility 后，直接 addView(mBorder) 的话，成功但是视图没有显示出来，layoutCapture 能看到，
+            // 并且 mBorder 的 LayoutParams 信息正常，应该和 layout 的机制有关系，后续验证
+            target.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    btn_query.performClick()
+                    target.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                }
+            })
         }
 
         addVisibilitySpan(builder, "\${GONE}") {
-            Toast.makeText(context, "set target gone!", Toast.LENGTH_SHORT).show()
-            target.visibility = android.view.View.GONE
+            target.visibility = View.GONE
             computeDetailInfo(target).let {
                 tv_debug.text = it
             }
@@ -153,7 +149,7 @@ class DebugView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         if (indexOf > 0) {
             builder.setSpan(
                     object : ClickableSpan() {
-                        override fun onClick(widget: android.view.View?) {
+                        override fun onClick(widget: View?) {
                             onClick?.invoke()
                         }
                     },
@@ -165,7 +161,7 @@ class DebugView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     }
 
 
-    private fun computeLocation(target: android.view.View): IntArray {
+    private fun computeLocation(target: View): IntArray {
         val out = IntArray(2)
         target.getLocationOnScreen(out)
         return out
@@ -184,8 +180,8 @@ class DebugView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         }
     }
 
-    private fun getIdStr(view: android.view.View?): String {
-        return if (view == null || view.id == View1.NO_ID) {
+    private fun getIdStr(view: View?): String {
+        return if (view == null || view.id == View.NO_ID) {
             "no-id"
         } else {
             view.resources.getResourceName(view.id)
@@ -205,17 +201,17 @@ class DebugView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 
     private fun shrinkLayout() {
         btn_toggle.text = "展开"
-        group_debug.visibility = android.view.View.GONE
+        group_debug.visibility = View.GONE
         this.layoutParams = this.layoutParams ?: LayoutParams(0, 0)
         this.layoutParams.height = WRAP_CONTENT
-        this.layoutParams.width = WRAP_CONTENT
+        this.layoutParams.width = MATCH_PARENT
         this.layoutParams = this.layoutParams
         this.setPadding(0, 0, 0, 0)
     }
 
     private fun expandLayout() {
         btn_toggle.text = "折叠"
-        group_debug.visibility = android.view.View.VISIBLE
+        group_debug.visibility = View.VISIBLE
         this.layoutParams = this.layoutParams ?: LayoutParams(0, 0)
         this.layoutParams.height = MATCH_PARENT
         this.layoutParams.width = MATCH_PARENT

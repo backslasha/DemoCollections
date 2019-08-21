@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.LinkedList;
 
 import kotlin.jvm.functions.Function0;
@@ -24,6 +26,12 @@ public class DebugActivity extends DemoBaseActivity implements Demo {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debug);
+        findViewById(R.id.tv_standard).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DebugActivity.this.onClick(v);
+            }
+        });
     }
 
     public void onClick(View view) {
@@ -50,6 +58,7 @@ public class DebugActivity extends DemoBaseActivity implements Demo {
         });
         openDescription();
         mBuilder = new StringBuilder();
+
 
 
 
