@@ -2,6 +2,7 @@ package yhb.dc.demo.fragment.fragment_dialog;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import yhb.dc.R;
@@ -16,6 +17,15 @@ public class DialogFragmentActivity extends AppCompatActivity  implements Demo {
     }
 
     public void callDialog(View view) {
-        CustomDialogFragment.newInstance().show(getSupportFragmentManager(), "dialog");
+        BottomDialogFixed.newInstance().show(getSupportFragmentManager(), "dialog");
+    }
+    public void callDialog0(View view) {
+        BottomDialogWithBug.newInstance().show(getSupportFragmentManager(), "dialog");
+    }
+
+    @Override
+    public void onEnterAnimationComplete() {
+        super.onEnterAnimationComplete();
+        Log.d("BottomDialogFixed", "onEnterAnimationComplete");
     }
 }

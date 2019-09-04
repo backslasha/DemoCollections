@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,8 @@ import android.widget.EditText;
  */
 
 public class CustomDialogFragment extends DialogFragment {
+
+    private static final String TAG = CustomDialogFragment.class.getSimpleName();
 
     public static CustomDialogFragment newInstance() {
         
@@ -36,7 +39,7 @@ public class CustomDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return new EditText(getActivity());
+        return inflater.inflate(android.R.layout.activity_list_item, container, false);
     }
 
 
@@ -65,6 +68,8 @@ public class CustomDialogFragment extends DialogFragment {
 //                lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
 //                window.setAttributes(lp);
 //            }
+        Log.d(TAG, dialog.findViewById(android.R.id.text1) + "");
+
         return dialog;
     }
 
