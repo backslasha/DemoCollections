@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/rl_root"
+    android:animateLayoutChanges="true"
+    android:layout_height="400dp">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/tv_container1"
+        android:layout_alignBottom="@id/iv_standard"
+        android:background="@drawable/bg_user_card_dialog" />
+
+    <FrameLayout
+        android:id="@+id/tv_container1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/tv_container2"
+        android:animateLayoutChanges="true" />
+
+    <FrameLayout
+        android:id="@+id/tv_container2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/tv_container3"
+        android:animateLayoutChanges="true">
+
+        <include
+            android:id="@+id/tv_standard"
+            layout="@layout/item_stardard_text_view"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/tv_container3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/iv_standard"
+        android:animateLayoutChanges="true" />
+
+    <include
+        android:id="@+id/iv_standard"
+        layout="@layout/item_stardard_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+
+</RelativeLayout>

@@ -3,16 +3,9 @@ package yhb.dc.demo.customview.custom_view.carousel;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 import yhb.dc.R;
 import yhb.dc.common.Demo;

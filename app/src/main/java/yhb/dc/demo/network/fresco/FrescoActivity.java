@@ -120,7 +120,7 @@ public class FrescoActivity extends AppCompatActivity implements Demo {
             };
 
             mRecyclerView = rootView.findViewById(R.id.recyclerView);
-            mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL){
+            mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL) {
 
             });
             mRecyclerView.setAdapter(mCommonAdapter);
@@ -131,7 +131,11 @@ public class FrescoActivity extends AppCompatActivity implements Demo {
         public void loadMore10Item() {
             List<String> uris = new ArrayList<>();
             for (int i = 0; i < 10; i++) {
-                uris.add("https://bing.ioliu.cn/v1?w=1200&h=1920&d=" + index++);
+                if (i == 0) {
+                    uris.add("http://img.like.video/asia_live/4h2/0Dlg1t.png");
+                } else {
+                    uris.add("https://bing.ioliu.cn/v1?w=1200&h=1920&d=" + index++);
+                }
             }
             mCommonAdapter.notifyDataSetChanged(uris, CommonAdapter.Op.APPEND);
         }

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/cl_root"
+    android:animateLayoutChanges="true"
+    android:background="@drawable/bg_user_card_dialog"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/tv_container1"
+        android:layout_width="match_parent"
+        app:layout_constraintBottom_toTopOf="@id/tv_container2"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true" />
+
+    <FrameLayout
+        android:id="@+id/tv_container2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/tv_container3"
+        android:animateLayoutChanges="true">
+
+        <include
+            android:id="@+id/tv_standard"
+            layout="@layout/item_stardard_text_view"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/tv_container3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        app:layout_constraintBottom_toTopOf="@id/iv_standard" />
+
+    <include
+        android:id="@+id/iv_standard"
+        layout="@layout/item_stardard_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
+
