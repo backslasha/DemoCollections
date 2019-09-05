@@ -4,6 +4,7 @@ import android.animation.LayoutTransition
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Rect
+import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
@@ -33,7 +34,7 @@ class DebugView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     private val mBorder: View by lazy {
         val view = View(context)
         view.tag = TAG_DEBUG
-        view.setBackgroundResource(R.drawable.shape_frame)
+        view.setBackgroundResource(R.drawable.shape_debug_frame)
         view
     }
 
@@ -79,14 +80,7 @@ class DebugView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         tv_debug.movementMethod = LinkMovementMethod.getInstance()
         mPadding = Rect(paddingLeft, paddingTop, paddingRight, paddingBottom)
         layoutTransition = LayoutTransition()
-
-        btn_toggle.tag = "true" == (btn_toggle.tag as String).toLowerCase()
-        val statusExpanded = btn_toggle.tag as Boolean
-        if (statusExpanded) {
-            expandLayout()
-        } else {
-            shrinkLayout()
-        }
+        shrinkLayout()
     }
 
     private fun computeDetailInfo(target: View): SpannableStringBuilder {
@@ -112,9 +106,14 @@ class DebugView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
             // 设置完 target 的 visibility 后，直接 addView(mBorder) 的话，成功但是视图没有显示出来，layoutCapture 能看到，
             // 并且 mBorder 的 LayoutParams 信息正常，应该和 layout 的机制有关系，后续验证
             target.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+                @SuppressLint("ObsoleteSdkInt")
                 override fun onGlobalLayout() {
                     btn_query.performClick()
-                    target.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        target.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    } else {
+                        target.viewTreeObserver.removeGlobalOnLayoutListener(this)
+                    }
                 }
             })
         }
@@ -189,33 +188,31 @@ class DebugView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     }
 
     private fun toggle() {
-        val closed = !(btn_toggle.tag as Boolean)
+        val closed = group_debug.visibility == View.GONE
         if (closed) {
             expandLayout()
-            btn_toggle.tag = true
         } else {
             shrinkLayout()
-            btn_toggle.tag = false
         }
     }
 
     private fun shrinkLayout() {
         btn_toggle.text = "展开"
         group_debug.visibility = View.GONE
-        this.layoutParams = this.layoutParams ?: LayoutParams(0, 0)
-        this.layoutParams.height = WRAP_CONTENT
-        this.layoutParams.width = MATCH_PARENT
-        this.layoutParams = this.layoutParams
+        val lp = this.layoutParams ?: LayoutParams(0, 0)
+        lp.height = WRAP_CONTENT
+        lp.width = MATCH_PARENT
+        this.layoutParams = lp
         this.setPadding(0, 0, 0, 0)
     }
 
     private fun expandLayout() {
         btn_toggle.text = "折叠"
         group_debug.visibility = View.VISIBLE
-        this.layoutParams = this.layoutParams ?: LayoutParams(0, 0)
-        this.layoutParams.height = MATCH_PARENT
-        this.layoutParams.width = MATCH_PARENT
-        this.layoutParams = this.layoutParams
+        val lp = this.layoutParams ?: LayoutParams(0, 0)
+        lp.height = WRAP_CONTENT
+        lp.width = MATCH_PARENT
+        this.layoutParams = lp
         this.setPadding(mPadding.left, mPadding.top, mPadding.right, mPadding.bottom)
     }
 
