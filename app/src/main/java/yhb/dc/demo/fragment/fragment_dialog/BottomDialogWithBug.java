@@ -72,7 +72,7 @@ public class BottomDialogWithBug extends DialogFragment {
         addViews(dialog);
     }
 
-    private CountBatch mCountBatch;
+    private UITaskBatch mCountBatch;
 
     private void addViews(Dialog dialog) {
 
@@ -84,7 +84,7 @@ public class BottomDialogWithBug extends DialogFragment {
         f2.getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
         f3.getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
 
-        fl.postDelayed(() -> mCountBatch.batchRun(() -> {
+        fl.postDelayed(() -> mCountBatch.delayAndBatch(() -> {
             TextView tv = (TextView) fl.getChildAt(0);
             if (tv != null) {
                 tv.setText("卧槽1");
@@ -92,7 +92,7 @@ public class BottomDialogWithBug extends DialogFragment {
             }
         }), 0);
 
-        f2.postDelayed(() -> mCountBatch.batchRun(() -> {
+        f2.postDelayed(() -> mCountBatch.delayAndBatch(() -> {
             TextView tv = (TextView) f2.getChildAt(0);
             if (tv != null) {
                 tv.setText("卧槽2");
@@ -106,7 +106,7 @@ public class BottomDialogWithBug extends DialogFragment {
                 tv.setText("00000000000000000000000\n00000000000000000000000\n00000000000000000000\n0000000000000000000\n00000000000000000\n00000000000000");
             }
         }, 1000);
-        mCountBatch = new CountBatch(2, 1500);
+        mCountBatch = new UITaskBatch(2, 1500);
 
         Log.d(TAG, "addViews");
     }
