@@ -6,10 +6,12 @@ import android.view.View;
 import android.widget.Toast;
 
 import yhb.dc.R;
+
 import yhb.dc.common.Demo;
 import yhb.dc.common.LifeCycleActivity;
 
-public class LaunchModeMainActivity extends LifeCycleActivity implements View.OnClickListener, Demo {
+@Demo
+public class LaunchModeMainActivity extends LifeCycleActivity implements View.OnClickListener {
 
     private static final String TAG = "MainActivity";
 

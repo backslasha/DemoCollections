@@ -18,9 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import yhb.dc.R;
-import yhb.dc.common.Demo;
 
-public class CanvasActivity extends AppCompatActivity implements Demo {
+
+public class CanvasActivity extends AppCompatActivity  {
 
     private android.support.v7.widget.Toolbar mToolbar;
     private Spinner mSpinner;

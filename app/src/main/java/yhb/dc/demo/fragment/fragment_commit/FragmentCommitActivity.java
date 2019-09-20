@@ -4,10 +4,9 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 
 import yhb.dc.R;
-import yhb.dc.common.Demo;
 import yhb.dc.common.LifeCycleActivity;
 
-public class FragmentCommitActivity extends LifeCycleActivity implements Demo {
+public class FragmentCommitActivity extends LifeCycleActivity  {
 
     private Fragment mFragment1, mFragment2;
 

@@ -4,12 +4,10 @@ import android.os.Bundle
 import android.view.View
 
 import yhb.dc.R
-import yhb.dc.common.Demo
-import yhb.dc.common.LifeCycleActivity
-import yhb.dc.demo.fragment.fragment_dialog.ExplainDialog
-import yhb.dc.demo.fragment.fragment_dialog.WebDialog
 
-class TranslucentActivity : LifeCycleActivity(), Demo {
+import yhb.dc.common.LifeCycleActivity
+
+class TranslucentActivity : LifeCycleActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

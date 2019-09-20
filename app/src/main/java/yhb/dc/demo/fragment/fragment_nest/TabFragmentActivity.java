@@ -6,10 +6,9 @@ import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 
 import yhb.dc.R;
-import yhb.dc.common.Demo;
 import yhb.dc.common.LifeCycleActivity;
 
-public class TabFragmentActivity extends LifeCycleActivity implements TabFragment.OnFragmentInteractionListener, Demo {
+public class TabFragmentActivity extends LifeCycleActivity implements TabFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

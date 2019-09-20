@@ -31,9 +31,8 @@ import java.util.List;
 import yhb.dc.R;
 import yhb.dc.common.CommonAdapter;
 import yhb.dc.common.CommonViewHolder;
-import yhb.dc.common.Demo;
 
-public class FrescoActivity extends AppCompatActivity implements Demo {
+public class FrescoActivity extends AppCompatActivity  {
 
     private static int index = 0;
     private SectionsPagerAdapter mSectionsPagerAdapter;

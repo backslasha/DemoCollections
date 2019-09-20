@@ -12,9 +12,9 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import yhb.dc.R;
-import yhb.dc.common.Demo;
 
-public class HandlerThreadActivity extends AppCompatActivity  implements Demo {
+
+public class HandlerThreadActivity extends AppCompatActivity   {
 
     private TextView textView;
     private Handler mHandler;

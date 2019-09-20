@@ -24,7 +24,8 @@ import yhb.dc.common.CommonViewHolder;
 import yhb.dc.common.Demo;
 import yhb.dc.common.HomeAsUpActivity;
 
-public class RecyclerViewActivity extends HomeAsUpActivity implements View.OnClickListener, Demo {
+@Demo
+public class RecyclerViewActivity extends HomeAsUpActivity implements View.OnClickListener {
 
 
     private StaggeredGridLayoutManager mStaggeredGridLayoutManager;

@@ -16,9 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import yhb.dc.R;
-import yhb.dc.common.Demo;
 
-public class WebViewMainActivity extends AppCompatActivity implements Demo {
+public class WebViewMainActivity extends AppCompatActivity  {
 
     public static final String EXTRA_RECORD = "extra_record";
     private static final String TAG = "WebViewClient#Record";

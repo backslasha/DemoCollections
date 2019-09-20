@@ -21,7 +21,8 @@ import yhb.dc.common.Demo;
 
 import static android.view.Gravity.CENTER;
 
-public class WindowActivity extends AppCompatActivity implements Demo {
+@Demo
+public class WindowActivity extends AppCompatActivity  {
 
     private WindowManager mWindowManager;
 

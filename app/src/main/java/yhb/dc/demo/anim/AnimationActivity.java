@@ -7,10 +7,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 
 import yhb.dc.R;
-import yhb.dc.common.Demo;
 import yhb.dc.common.DemoBaseActivity;
 
-public class AnimationActivity extends DemoBaseActivity implements Demo {
+public class AnimationActivity extends DemoBaseActivity  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

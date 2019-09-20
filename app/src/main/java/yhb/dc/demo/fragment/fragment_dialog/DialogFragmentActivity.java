@@ -6,9 +6,8 @@ import android.util.Log;
 import android.view.View;
 
 import yhb.dc.R;
-import yhb.dc.common.Demo;
 
-public class DialogFragmentActivity extends AppCompatActivity  implements Demo {
+public class DialogFragmentActivity extends AppCompatActivity   {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

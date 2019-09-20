@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import yhb.dc.R;
-import yhb.dc.common.Demo;
 
 import static yhb.dc.demo.network.webview.WebViewMainActivity.EXTRA_RECORD;
 

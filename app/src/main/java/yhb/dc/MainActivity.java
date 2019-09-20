@@ -63,13 +63,7 @@ public class MainActivity extends LifeCycleActivity {
 
 
     private boolean isDemo(Class<? extends Activity> activityClass) {
-        Class<?>[] interfaces = activityClass.getInterfaces();
-        for (Class<?> anInterface : interfaces) {
-            if (Demo.class.equals(anInterface)) {
-                return true;
-            }
-        }
-        return false;
+        return activityClass.getAnnotation(Demo.class) != null;
     }
 
 }
