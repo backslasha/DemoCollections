@@ -11,11 +11,11 @@ import yhb.dc.common.ThreadUtils;
 
 /**
  * 用来批量收集若干个 Runnable 并一起执行，允许设置最快执行时间间隔
- *  使用 构造方法参数 {@link UITaskBatch#minCount} 指定要执行最少的 Runnable 个数
- *  使用 构造方法参数 {@link UITaskBatch#minDelay} 指定要执行最少延迟多少毫秒，未到指定延迟时间不执行
- *  使用 {@link UITaskBatch#delayAndBatch(Runnable)} 收集需要延迟、批处理的 Runnable
- *  使用 {@link UITaskBatch#cancelAll()} 取消所有已经加入的 Runnable
- *
+ * 使用 构造方法参数 {@link UITaskBatch#minCount} 指定要执行最少的 Runnable 个数
+ * 使用 构造方法参数 {@link UITaskBatch#minDelay} 指定要执行最少延迟多少毫秒，未到指定延迟时间不执行
+ * 使用 {@link UITaskBatch#delayAndBatch(Runnable)} 收集需要延迟、批处理的 Runnable
+ * 使用 {@link UITaskBatch#cancelAll()} 取消所有已经加入的 Runnable
+ * <p>
  * 一个实例只会触发一次批处理，后续加入的 runnable 将直接执行
  */
 public class UITaskBatch {
@@ -50,6 +50,7 @@ public class UITaskBatch {
             Log.d(TAG, "batch already executed! execute task directly -> " + runnable);
             return;
         }
+        Log.d(TAG, "before add runnable -> " + runnable + ", now task count=" + minCount + ", delay=" + minDelay);
         delayTasks.add(runnable);
         Log.d(TAG, "add runnable -> " + runnable + ", now task count=" + minCount + ", delay=" + minDelay);
         if (!scheduled && delayTasks.size() >= minCount) {
@@ -61,7 +62,7 @@ public class UITaskBatch {
     /**
      * 取消所有已添加的 runnable
      */
-    public void cancelAll() {
+    public synchronized void cancelAll() {
         ThreadUtils.removeCallbacks(batchRunnable);
         batchRunnable = null;
         batchExecuted = true;
@@ -72,15 +73,18 @@ public class UITaskBatch {
         long elapsed = System.currentTimeMillis() - initialTime;
         long delay = Math.max(0, minDelay - elapsed);
         batchRunnable = () -> {
-            Log.d(TAG, "batch start with task count=" + minCount + ", delay=" + minDelay
-                    + ", elapsed=" + DateUtils.formatElapsedTime((System.currentTimeMillis() - initialTime) / 1000));
-            for (Runnable delayTask : delayTasks) {
-                delayTask.run();
-                Log.d(TAG, "execute task -> " + delayTask);
+            synchronized (UITaskBatch.this) {
+                Log.d(TAG, "batch start with task count=" + minCount + ", delay=" + minDelay
+                        + ", elapsed=" + DateUtils.formatElapsedTime((System.currentTimeMillis() - initialTime) / 1000));
+                for (Runnable delayTask : delayTasks) {
+                    delayTask.run();
+                    Log.d(TAG, "execute task -> " + delayTask);
+                }
+                batchRunnable = null;
+                batchExecuted = true;
+                delayTasks.clear();
+                Log.d(TAG, "batch executed, elapsed=" + DateUtils.formatElapsedTime((System.currentTimeMillis() - initialTime) / 1000));
             }
-            batchRunnable = null;
-            batchExecuted = true;
-            delayTasks.clear();
         };
         ThreadUtils.runOnUiThread(batchRunnable, delay);
     }

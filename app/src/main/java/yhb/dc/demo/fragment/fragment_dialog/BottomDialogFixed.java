@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import yhb.dc.R;
+import yhb.dc.common.ThreadUtils;
 
 public class BottomDialogFixed extends DialogFragment {
 
@@ -85,23 +86,74 @@ public class BottomDialogFixed extends DialogFragment {
         f2.getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
         f3.getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
 
-        fl.postDelayed(() -> mCountBatch.delayAndBatch(() -> {
-            TextView tv = (TextView) fl.getChildAt(0);
-            if (tv != null) {
-                tv.setText("卧槽1");
-                tv.setOnClickListener(v -> f3.addView(LayoutInflater.from(getContext()).inflate(R.layout.item_stardard_text_view, fl, false)));
+        mCountBatch = new UITaskBatch(1, 500);
+        mCountBatch.delayAndBatch(new Runnable(){
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                TextView tv = (TextView) fl.getChildAt(0);
+                if (tv != null) {
+                    tv.setText("卧槽1");
+                    tv.setOnClickListener(v -> f3.addView(LayoutInflater.from(BottomDialogFixed.this.getContext()).inflate(R.layout.item_stardard_text_view, fl, false)));
+                }
             }
-        }), 0);
 
-        f2.postDelayed(() -> mCountBatch.delayAndBatch(() -> {
-            TextView tv = (TextView) f2.getChildAt(0);
-            if (tv != null) {
-                tv.setText("卧槽2");
-                tv.setVisibility(View.VISIBLE);
+            @Override
+            public String toString() {
+                return Thread.currentThread().getName() + " -> 卧槽1";
             }
-        }), 500);
+        });
+        mCountBatch.delayAndBatch(new Runnable(){
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                TextView tv = (TextView) fl.getChildAt(0);
+                if (tv != null) {
+                    tv.setText("卧槽1");
+                    tv.setOnClickListener(v -> f3.addView(LayoutInflater.from(BottomDialogFixed.this.getContext()).inflate(R.layout.item_stardard_text_view, fl, false)));
+                }
+            }
 
-        mCountBatch = new UITaskBatch(2, 1500);
+            @Override
+            public String toString() {
+                return Thread.currentThread().getName() + " -> 卧槽2";
+            }
+        });
+
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                mCountBatch.delayAndBatch(new Runnable() {
+                    @Override
+                    public void run() {
+                        TextView tv = (TextView) f2.getChildAt(0);
+                        if (tv != null) {
+                            tv.setText("卧槽2");
+                            tv.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+                    @Override
+                    public String toString() {
+                        return Thread.currentThread().getName() + " -> 卧槽3";
+                    }
+                });
+            }
+        }.start();
+
 
     }
 }
