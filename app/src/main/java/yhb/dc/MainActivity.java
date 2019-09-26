@@ -33,10 +33,23 @@ public class MainActivity extends LifeCycleActivity {
             PackageInfo packageInfo = packageManager.getPackageInfo(
                     this.getPackageName(), PackageManager.GET_ACTIVITIES
             );
+            Class autoJumpTo = null;
             for (ActivityInfo activityInfo : packageInfo.activities) {
                 Class<? extends Activity> activityClass = (Class<? extends Activity>) Class.forName(activityInfo.name);
-                if (isDemo(activityClass))
-                    activities.add(activityClass);
+
+                Demo annotation = activityClass.getAnnotation(Demo.class);
+                if (annotation == null) {
+                    continue;
+                }
+                activities.add(activityClass);
+                if (annotation.autoJumpIn()) {
+                    autoJumpTo = activityClass;
+                }
+            }
+
+            if (autoJumpTo != null) {
+                Intent intent = new Intent(this, autoJumpTo);
+                startActivity(intent);
             }
 
         } catch (PackageManager.NameNotFoundException | ClassNotFoundException e) {
@@ -61,9 +74,5 @@ public class MainActivity extends LifeCycleActivity {
         });
     }
 
-
-    private boolean isDemo(Class<? extends Activity> activityClass) {
-        return activityClass.getAnnotation(Demo.class) != null;
-    }
 
 }
