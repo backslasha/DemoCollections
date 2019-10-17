@@ -6,8 +6,10 @@ import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 
 import yhb.dc.R;
+import yhb.dc.common.Demo;
 import yhb.dc.common.LifeCycleActivity;
 
+@Demo(autoJumpIn = true)
 public class TabFragmentActivity extends LifeCycleActivity implements TabFragment.OnFragmentInteractionListener {
 
     @Override
@@ -19,7 +21,7 @@ public class TabFragmentActivity extends LifeCycleActivity implements TabFragmen
         if (fragment == null) {
             fragmentManager
                     .beginTransaction()
-                    .add(R.id.container, TabFragment.newInstance("1", "w"), null)
+                    .add(R.id.container, TabFragment.newInstance(), null)
                     .commitAllowingStateLoss();
             fragmentManager.executePendingTransactions();
         }

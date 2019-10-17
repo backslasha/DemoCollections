@@ -2,6 +2,7 @@ package yhb.dc.demo.fragment.fragment_nest;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.ArrayList;
@@ -11,8 +12,11 @@ import java.util.List;
  * Created by yhb on 18-4-21.
  */
 
-public class TabFragmentStatePagerAdapter extends FragmentStatePagerAdapter {
+public class TabFragmentStatePagerAdapter extends FragmentPagerAdapter {
 
+    private static final String[] TITLE = {
+            "Long title","short","long long title","s","short","Long title","short","long long title","s","short","Long title","short","long long title","s","short"
+    };
     private List<NestedFragment> mFragments = new ArrayList<>();
 
     public TabFragmentStatePagerAdapter(FragmentManager fm) {
@@ -21,14 +25,14 @@ public class TabFragmentStatePagerAdapter extends FragmentStatePagerAdapter {
     }
 
     private void addFragments() {
-        for (int i = 1; i <= 4; i++) {
-            mFragments.add(NestedFragment.newInstance("第 " + i + " 个 Fragment"));
+        for (int i = 1; i < TITLE.length; i++) {
+            mFragments.add(NestedFragment.newInstance(TITLE[i]));
         }
     }
 
     @Override
     public Fragment getItem(int position) {
-        return mFragments.get(position);
+        return NestedFragment.newInstance("第 "+position+"个tab");
     }
 
     @Override
