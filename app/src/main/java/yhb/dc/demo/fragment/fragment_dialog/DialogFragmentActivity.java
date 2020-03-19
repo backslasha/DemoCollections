@@ -6,7 +6,9 @@ import android.util.Log;
 import android.view.View;
 
 import yhb.dc.R;
+import yhb.dc.common.Demo;
 
+@Demo
 public class DialogFragmentActivity extends AppCompatActivity   {
 
     @Override

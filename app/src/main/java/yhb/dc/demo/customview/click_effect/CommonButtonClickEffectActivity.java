@@ -8,8 +8,9 @@ import android.view.View;
 import android.widget.ImageView;
 
 import yhb.dc.R;
+import yhb.dc.common.Demo;
 
-
+@Demo
 public class CommonButtonClickEffectActivity extends AppCompatActivity   {
 
     @Override

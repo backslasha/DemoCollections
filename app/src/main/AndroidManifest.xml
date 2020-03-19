@@ -16,8 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true"
-        tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".demo.anim.AnimationActivity"></activity>
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning"
+        tools:targetApi="m">
+        <activity android:name=".demo.anim.AnimationActivity" />
         <activity android:name=".demo.customview.custom_view.debug.DebugActivity" />
         <activity android:name=".demo.customview.custom_view.carousel.CarouselActivity" />
         <activity android:name=".common.DemoBaseActivity" />

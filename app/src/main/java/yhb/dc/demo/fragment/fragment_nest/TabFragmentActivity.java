@@ -9,7 +9,7 @@ import yhb.dc.R;
 import yhb.dc.common.Demo;
 import yhb.dc.common.LifeCycleActivity;
 
-@Demo(autoJumpIn = true)
+@Demo()
 public class TabFragmentActivity extends LifeCycleActivity implements TabFragment.OnFragmentInteractionListener {
 
     @Override

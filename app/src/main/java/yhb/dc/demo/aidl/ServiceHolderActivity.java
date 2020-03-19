@@ -3,16 +3,16 @@ package yhb.dc.demo.aidl;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.Locale;
-
 import yhb.dc.R;
+import yhb.dc.common.Demo;
 
+@Demo
 public class ServiceHolderActivity extends AppCompatActivity  {
 
     private IBookManger mBookManger;

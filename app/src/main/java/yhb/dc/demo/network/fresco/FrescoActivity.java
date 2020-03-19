@@ -31,7 +31,9 @@ import java.util.List;
 import yhb.dc.R;
 import yhb.dc.common.CommonAdapter;
 import yhb.dc.common.CommonViewHolder;
+import yhb.dc.common.Demo;
 
+@Demo
 public class FrescoActivity extends AppCompatActivity  {
 
     private static int index = 0;

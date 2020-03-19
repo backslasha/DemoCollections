@@ -9,6 +9,9 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import java.util.Arrays;
+import java.util.List;
+
 import yhb.dc.R;
 
 /**
@@ -48,34 +51,30 @@ public class FieldView extends FrameLayout {
 
         mTextView = findViewById(R.id.text_view_value);
 
-        add.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mField.mValue += 10;
-                invalidateValue(mField.mValue);
-            }
+        add.setOnClickListener(v -> {
+            mField.mValue += 10;
+            invalidateValue(mField.mValue);
         });
 
-        minus.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mField.mValue -= 10;
-                invalidateValue(mField.mValue);
-            }
+        minus.setOnClickListener(v -> {
+            mField.mValue -= 10;
+            invalidateValue(mField.mValue);
         });
 
     }
 
 
     static class Field {
-        public float mValue;
+        float mValue;
+        List<Field> mRelativeFields;
 
-        public Field(String name, float value) {
+        Field(String name, float value, Field... relativeFields) {
             mValue = value;
             mName = name;
+            mRelativeFields = Arrays.asList(relativeFields);
         }
 
-        final public String mName;
+        final String mName;
 
     }
 

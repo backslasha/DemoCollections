@@ -7,16 +7,15 @@ import android.view.ViewGroup;
 
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.util.LinkedList;
 
-import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function2;
 import yhb.dc.R;
+import yhb.dc.common.Demo;
 import yhb.dc.common.DemoBaseActivity;
 
+@Demo
 public class DebugActivity extends DemoBaseActivity  {
 
     private StringBuilder mBuilder = new StringBuilder();

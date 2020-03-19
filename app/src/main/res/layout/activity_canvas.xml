@@ -11,34 +11,6 @@
     <Spinner
         android:id="@+id/spinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></Spinner>
-
-
-    <!--<yhb.dc.demo.demo_view.canvasnvas.CanvasView&ndash;&gt;-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:background="#22000000" />-->
-
-    <!--<yhb.dc.demo.demo_view.canvasnvas.ShaderView&ndash;&gt;-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:background="#22000000" />-->
-
-    <!--<yhb.dc.demo.demo_view.canvasnvas.BrickView&ndash;&gt;-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:background="#22000000" />-->
-
-    <!--<yhb.dc.demo.demo_view.canvasnvas.BitmapMeshView&ndash;&gt;-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent" />-->
-
-    <!--<yhb.dc.demo.demo_view.canvasnvas.PathView&ndash;&gt;-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent" />-->
-
-    <!--<yhb.dc.demo.demo_view.canvasnvas.ClipPathView&ndash;&gt;-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent" />-->
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

@@ -9,12 +9,13 @@ import android.view.WindowManager;
 
 import yhb.dc.R;
 
+import yhb.dc.common.Demo;
 import yhb.dc.demo.customview.custom_view.widget.BubbleLayout;
 
 /**
  * Created by yhb on 18-3-15.
  */
-
+@Demo
 public class CustomViewMainActivity extends AppCompatActivity  {
 
     private BubbleLayout mBubbleLayout;

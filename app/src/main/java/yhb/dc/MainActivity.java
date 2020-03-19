@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,6 @@ import yhb.dc.common.Demo;
 import yhb.dc.common.LifeCycleActivity;
 
 public class MainActivity extends LifeCycleActivity {
-    private RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +33,8 @@ public class MainActivity extends LifeCycleActivity {
             );
             Class autoJumpTo = null;
             for (ActivityInfo activityInfo : packageInfo.activities) {
-                Class<? extends Activity> activityClass = (Class<? extends Activity>) Class.forName(activityInfo.name);
-
+                @SuppressWarnings("unchecked") Class<? extends Activity> activityClass
+                        = (Class<? extends Activity>) Class.forName(activityInfo.name);
                 Demo annotation = activityClass.getAnnotation(Demo.class);
                 if (annotation == null) {
                     continue;
@@ -56,19 +54,15 @@ public class MainActivity extends LifeCycleActivity {
             e.printStackTrace();
         }
 
-        mRecyclerView = findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(new CommonAdapter<Class<? extends Activity>>(R.layout.item_activity, activities) {
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(new CommonAdapter<Class<? extends Activity>>(R.layout.item_activity, activities) {
             @Override
             public void convert(CommonViewHolder holder, final Class<? extends Activity> entity) {
                 holder.setText(R.id.text_view_activity_name, entity.getSimpleName());
-                holder.bindOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(MainActivity.this, entity);
-                        startActivity(intent);
-                    }
+                holder.bindOnClickListener(v -> {
+                    Intent intent = new Intent(MainActivity.this, entity);
+                    startActivity(intent);
                 });
             }
         });

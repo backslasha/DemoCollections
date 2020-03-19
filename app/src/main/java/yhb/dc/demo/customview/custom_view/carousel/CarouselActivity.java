@@ -8,8 +8,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import yhb.dc.R;
+import yhb.dc.common.Demo;
 import yhb.dc.common.DemoBaseActivity;
 
+@Demo
 public class CarouselActivity extends DemoBaseActivity  {
 
     private CarouselView mCarouselView;
