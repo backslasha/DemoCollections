@@ -18,6 +18,7 @@
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning"
         tools:targetApi="m">
+        <activity android:name=".demo.customview.custom_view.CustomViewDisplayActivity"></activity>
         <activity android:name=".demo.anim.AnimationActivity" />
         <activity android:name=".demo.customview.custom_view.debug.DebugActivity" />
         <activity android:name=".demo.customview.custom_view.carousel.CarouselActivity" />

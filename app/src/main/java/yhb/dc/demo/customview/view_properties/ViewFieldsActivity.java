@@ -22,7 +22,6 @@ import yhb.dc.common.CommonAdapter;
 import yhb.dc.common.CommonViewHolder;
 import yhb.dc.common.Demo;
 
-@Demo(autoJumpIn = true)
 public class ViewFieldsActivity extends AppCompatActivity implements FieldView.OnValueChangeListener {
 
     private RecyclerView mRecyclerView;
