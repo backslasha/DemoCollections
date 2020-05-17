@@ -68,8 +68,8 @@ public class DebugActivity extends DemoBaseActivity  {
             return;
         }
 
-        Log.d(getTAG(), root.getClass().getSimpleName() + " getZ()=" + root.getTranslationZ());
-        Log.d(getTAG(), root.getClass().getSimpleName() + " getZ()=" + root.getZ());
+        Log.d(getDebugTag(), root.getClass().getSimpleName() + " getZ()=" + root.getTranslationZ());
+        Log.d(getDebugTag(), root.getClass().getSimpleName() + " getZ()=" + root.getZ());
 
         if (root instanceof ViewGroup) {
             int childCount = ((ViewGroup) root).getChildCount();

@@ -29,4 +29,10 @@
         android:layout_height="wrap_content"
         android:text="singleTop" />
 
+    <Button
+        android:id="@+id/shutdown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="exit" />
+
 </LinearLayout>

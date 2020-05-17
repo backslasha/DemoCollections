@@ -12,7 +12,7 @@ import android.widget.Toast
 import yhb.dc.R
 import yhb.dc.common.Demo
 
-@Demo(autoJumpIn = true)
+@Demo
 class CustomViewDisplayActivity : AppCompatActivity() {
 
     private val spinner by lazy {

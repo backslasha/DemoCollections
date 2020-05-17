@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,12 +42,14 @@ public class ExplainDialog extends DialogFragment {
         TextView textView = new TextView(getActivity());
         textView.setPadding(30, 30, 30, 30);
         textView.setGravity(Gravity.CENTER_VERTICAL);
-        textView.setText(mText);
+        textView.setText(Html.fromHtml(mText));
         textView.setTextSize(12);
+        textView.setSingleLine(false);
+        textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         textView.setTextIsSelectable(true);
         textView.setVerticalScrollBarEnabled(true);
-        textView.setHorizontallyScrolling(true);
-        textView.setHorizontalScrollBarEnabled(true);
+//        textView.setHorizontallyScrolling(true);
+//        textView.setHorizontalScrollBarEnabled(true);
         return textView;
     }
 

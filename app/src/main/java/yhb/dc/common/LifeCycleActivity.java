@@ -3,7 +3,6 @@ package yhb.dc.common;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 /**
@@ -13,7 +12,7 @@ import android.util.Log;
 
 public abstract class LifeCycleActivity extends DemoBaseActivity {
 
-    protected String TAG;
+    protected String debugTag;
 
     @Override
     public void onAttachFragment(Fragment childFragment) {
@@ -24,7 +23,7 @@ public abstract class LifeCycleActivity extends DemoBaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        TAG = getName();
+        debugTag = getName();
         super.onCreate(savedInstanceState);
         log("onCreate(savedInstanceState): " + savedInstanceState);
     }

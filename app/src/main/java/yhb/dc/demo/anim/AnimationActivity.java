@@ -22,7 +22,7 @@ import yhb.dc.R;
 import yhb.dc.common.Demo;
 import yhb.dc.common.DemoBaseActivity;
 
-@Demo(autoJumpIn = true)
+@Demo
 public class AnimationActivity extends DemoBaseActivity {
 
     @Override

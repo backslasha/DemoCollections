@@ -18,7 +18,8 @@
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning"
         tools:targetApi="m">
-        <activity android:name=".demo.customview.custom_view.CustomViewDisplayActivity"></activity>
+        <activity android:name=".demo.launch_mode.ClearTaskDemo" />
+        <activity android:name=".demo.customview.custom_view.CustomViewDisplayActivity" />
         <activity android:name=".demo.anim.AnimationActivity" />
         <activity android:name=".demo.customview.custom_view.debug.DebugActivity" />
         <activity android:name=".demo.customview.custom_view.carousel.CarouselActivity" />
@@ -78,7 +79,7 @@
         <activity android:name=".demo.recyclerview.RecyclerViewActivity" /> <!-- demo od animated vector drawable -->
         <activity android:name=".demo.customview.click_effect.CommonButtonClickEffectActivity" />
         <activity android:name=".demo.customview.canvas.CanvasActivity" />
-        <activity android:name=".demo.handler_thread.HandlerThreadActivity" />
+        <activity android:name=".demo.api.HandlerThreadActivity" />
         <activity android:name=".demo.fragment.fragment_nest.TabFragmentActivity" />
         <activity android:name=".demo.fragment.fragment_commit.FragmentCommitActivity" />
         <activity android:name=".demo.aidl.ServiceHolderActivity" />
@@ -101,6 +102,9 @@
         <activity android:name=".demo.network.webview.WebViewActivity" />
         <activity android:name=".demo.network.webview.WebViewMainActivity" />
         <activity android:name=".demo.window.WindowActivity" />
+        <activity
+            android:name=".demo.launch_mode.ExitClearTaskActivity"
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>
