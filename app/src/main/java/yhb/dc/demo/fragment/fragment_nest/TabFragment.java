@@ -65,7 +65,7 @@ public class TabFragment extends LifeCycleFragment {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        mAdapter = new TabFragmentStatePagerAdapter(getFragmentManager());
+        mAdapter = new TabFragmentPagerAdapter(getFragmentManager());
         viewPager.setAdapter(mAdapter);
     }
 

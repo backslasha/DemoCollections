@@ -12,10 +12,10 @@ import java.util.List;
  * Created by yhb on 18-4-21.
  */
 
-public class TabFragmentStatePagerAdapter extends FragmentPagerAdapter {
+public class TabFragmentStatePagerAdapter extends FragmentStatePagerAdapter {
 
     private static final String[] TITLE = {
-            "Long title","short","long long title","s","short","Long title","short","long long title","s","short","Long title","short","long long title","s","short"
+            "Long title", "short", "long long title", "s", "short", "Long title", "short", "long long title", "s", "short", "Long title", "short", "long long title", "s", "short"
     };
     private List<NestedFragment> mFragments = new ArrayList<>();
 
@@ -26,13 +26,13 @@ public class TabFragmentStatePagerAdapter extends FragmentPagerAdapter {
 
     private void addFragments() {
         for (int i = 1; i < TITLE.length; i++) {
-            mFragments.add(NestedFragment.newInstance(TITLE[i]));
+            mFragments.add(NestedFragment.newInstance("第 " + i + "个tab"));
         }
     }
 
     @Override
     public Fragment getItem(int position) {
-        return NestedFragment.newInstance("第 "+position+"个tab");
+        return mFragments.get(position);
     }
 
     @Override
