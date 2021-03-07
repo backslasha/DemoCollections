@@ -1,4 +1,4 @@
-package yhb.dc.demo.aidl;
+package yhb.dc.demo.aidl.mannu;
 
 import android.os.Parcel;
 import android.os.Parcelable;

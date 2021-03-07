@@ -1,17 +1,15 @@
-package yhb.dc.demo.aidl;
+package yhb.dc.demo.aidl.mannu;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 /**
  * Created by yhb on 18-4-24.
  */
 
-public class LocalService extends Service {
-    @Nullable
+public class RemoteBookService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return new BookManagerImpl();

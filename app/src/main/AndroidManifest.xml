@@ -92,8 +92,11 @@
         <activity android:name=".demo.aidl.ServiceHolderActivity" />
 
         <service
-            android:name=".demo.aidl.LocalService"
-            android:process=":test" />
+            android:name=".demo.aidl.mannu.RemoteBookService"
+            android:process=":bookService" />
+        <service
+            android:name=".demo.aidl.auto.RemoteMusicService"
+            android:process=":musicService" />
 
         <activity android:name=".demo.customview.view_properties.ViewFieldsActivity" />
         <activity android:name=".demo.fragment.fragment_callback.FragmentCallbackActivity" />

@@ -4,11 +4,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
+    android:orientation="vertical"
     tools:context="yhb.dc.demo.aidl.ServiceHolderActivity">
+
+    <TextView
+        android:id="@+id/tv_logger"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="onClick"
-        android:text="STATUE: UNBIND" />
+        android:onClick="onClick02"
+        android:text="STATUE: UNBIND"
+        tools:ignore="HardcodedText" />
+
+
 </LinearLayout>

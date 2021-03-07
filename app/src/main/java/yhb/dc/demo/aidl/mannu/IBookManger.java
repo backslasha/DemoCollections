@@ -1,4 +1,4 @@
-package yhb.dc.demo.aidl;
+package yhb.dc.demo.aidl.mannu;
 
 import android.os.IBinder;
 import android.os.IInterface;

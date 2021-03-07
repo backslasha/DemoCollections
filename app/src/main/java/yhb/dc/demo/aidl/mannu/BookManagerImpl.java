@@ -1,4 +1,4 @@
-package yhb.dc.demo.aidl;
+package yhb.dc.demo.aidl.mannu;
 
 import android.os.Binder;
 import android.os.IBinder;
@@ -19,7 +19,7 @@ public class BookManagerImpl extends Binder implements IBookManger {
     private List<Book> mBooks;
 
     public BookManagerImpl() {
-        this.attachInterface(this, DESCRIPTION);
+        this.attachInterface(this, IBookManger.DESCRIPTION);
         this.mBooks = new ArrayList<>();
     }
 
@@ -27,7 +27,7 @@ public class BookManagerImpl extends Binder implements IBookManger {
         if (obj == null) {
             return null;
         }
-        IInterface iInterface = obj.queryLocalInterface(DESCRIPTION);
+        IInterface iInterface = obj.queryLocalInterface(IBookManger.DESCRIPTION);
         if (iInterface != null && iInterface instanceof IBookManger) {
             return (IBookManger) iInterface;
         }
@@ -58,16 +58,16 @@ public class BookManagerImpl extends Binder implements IBookManger {
     protected boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
         switch (code) {
             case INTERFACE_TRANSACTION:
-                reply.writeString(DESCRIPTION);
+                reply.writeString(IBookManger.DESCRIPTION);
                 return true;
-            case TRANSACTION_getBookList:
-                data.enforceInterface(DESCRIPTION);
+            case IBookManger.TRANSACTION_getBookList:
+                data.enforceInterface(IBookManger.DESCRIPTION);
                 List<Book> result = this.getBookList();
                 reply.writeNoException();
                 reply.writeTypedList(result);
                 return true;
-            case TRANSACTION_addBook:
-                data.enforceInterface(DESCRIPTION);
+            case IBookManger.TRANSACTION_addBook:
+                data.enforceInterface(IBookManger.DESCRIPTION);
                 Book book;
                 if ((0 != data.readInt())) {
                     book = Book.CREATOR.createFromParcel(data);
@@ -94,8 +94,8 @@ public class BookManagerImpl extends Binder implements IBookManger {
             Parcel reply = Parcel.obtain();
             List<Book> result;
             try {
-                data.writeInterfaceToken(DESCRIPTION);
-                mRemote.transact(TRANSACTION_getBookList, data, reply, 0);
+                data.writeInterfaceToken(IBookManger.DESCRIPTION);
+                mRemote.transact(IBookManger.TRANSACTION_getBookList, data, reply, 0);
                 reply.readException();
                 result = reply.createTypedArrayList(Book.CREATOR);
             } finally {
@@ -117,7 +117,7 @@ public class BookManagerImpl extends Binder implements IBookManger {
                 } else {
                     data.writeInt(0);
                 }
-                mRemote.transact(TRANSACTION_addBook, data, reply, 0);
+                mRemote.transact(IBookManger.TRANSACTION_addBook, data, reply, 0);
                 reply.readException();
             } finally {
                 reply.recycle();
@@ -131,7 +131,7 @@ public class BookManagerImpl extends Binder implements IBookManger {
         }
 
         public String getDescription() {
-            return DESCRIPTION;
+            return IBookManger.DESCRIPTION;
         }
     }
 
