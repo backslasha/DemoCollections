@@ -33,6 +33,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="http" android:host="www.haibiao.com" />
+                <data android:scheme="https" android:host="www.haibiao2333.com"/>
+            </intent-filter>
         </activity>
         <activity android:name=".demo.launch_mode.LaunchModeMainActivity" />
         <activity
