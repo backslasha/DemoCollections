@@ -73,7 +73,7 @@ class ServiceHolderActivity : DemoBaseActivity() {
         mTextView!!.append(text)
     }
 
-    override fun descriptionText(): String? {
+    override fun descriptionData(): String? {
         return description
     }
 

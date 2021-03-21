@@ -37,6 +37,7 @@ dependencies {
     implementation 'com.android.support:palette-v7:26.1.0'
     implementation 'com.facebook.fresco:fresco:1.10.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "io.noties.markwon:core:4.6.2"
 
 }
 repositories {

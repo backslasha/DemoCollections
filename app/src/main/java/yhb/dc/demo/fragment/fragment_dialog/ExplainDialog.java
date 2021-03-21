@@ -1,10 +1,10 @@
 package yhb.dc.demo.fragment.fragment_dialog;
 
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +13,13 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import java.io.InputStream;
+
+import io.noties.markwon.Markwon;
+import yhb.dc.common.DemoBaseActivity;
+
+import static yhb.dc.common.UtilsKt.convertStreamToString;
+
 /**
  * Created by yhb on 18-6-12.
  */
@@ -20,20 +27,25 @@ import android.widget.TextView;
 public class ExplainDialog extends DialogFragment {
 
     private static final String ARG_TEXT = "ARG_TEXT";
-    private String mText;
+    private static final String ARG_PARAM_TYPE = "ARG_PARAM_TYPE";
 
-    public static ExplainDialog newInstance(String text) {
+    private String mData;
+    private int mDataType;
+
+    public static ExplainDialog newInstance(String text, int parseType) {
         Bundle args = new Bundle();
         ExplainDialog fragment = new ExplainDialog();
         fragment.setArguments(args);
         args.putString(ARG_TEXT, text);
+        args.putInt(ARG_PARAM_TYPE, parseType);
         return fragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mText = getArguments().getString(ARG_TEXT);
+        mData = getArguments().getString(ARG_TEXT);
+        mDataType = getArguments().getInt(ARG_PARAM_TYPE);
     }
 
     @Nullable
@@ -42,15 +54,35 @@ public class ExplainDialog extends DialogFragment {
         TextView textView = new TextView(getActivity());
         textView.setPadding(30, 30, 30, 30);
         textView.setGravity(Gravity.CENTER_VERTICAL);
-        textView.setText(Html.fromHtml(mText));
         textView.setTextSize(12);
         textView.setSingleLine(false);
         textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         textView.setTextIsSelectable(true);
         textView.setVerticalScrollBarEnabled(true);
-//        textView.setHorizontallyScrolling(true);
-//        textView.setHorizontalScrollBarEnabled(true);
+        textView.setHorizontallyScrolling(false);
+        textView.setHorizontalScrollBarEnabled(false);
+        startRenderText(textView);
         return textView;
+    }
+
+    private void startRenderText(TextView textView) {
+        String renderText = null;
+        if (mDataType == DemoBaseActivity.PARSE_TYPE_TEXT) {
+            renderText = mData;
+        } else if (mDataType == DemoBaseActivity.PARSE_TYPE_ASSET) {
+            final AssetManager am = getContext().getAssets();
+            try {
+                final InputStream inputStream = am.open(mData);
+                renderText = convertStreamToString(inputStream);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if (renderText != null && !renderText.isEmpty()) {
+            // https://noties.io/Markwon/docs/v4/core/getting-started.html#quick-one
+            final Markwon markwon = Markwon.create(getContext());
+            markwon.setMarkdown(textView, renderText);
+        }
     }
 
 

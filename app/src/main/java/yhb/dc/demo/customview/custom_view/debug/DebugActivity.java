@@ -125,7 +125,7 @@ public class DebugActivity extends DemoBaseActivity  {
 
     @Nullable
     @Override
-    public String descriptionText() {
+    public String descriptionData() {
         return mBuilder.toString();
     }
 }

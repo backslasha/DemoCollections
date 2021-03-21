@@ -28,7 +28,7 @@ class TabFragmentActivity : LifeCycleActivity(), OnFragmentInteractionListener {
         return ""
     }
 
-    override fun descriptionText(): String? {
+    override fun descriptionData(): String? {
         return description
     }
 

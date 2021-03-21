@@ -107,6 +107,6 @@ class MainActivity : LifeCycleActivity() {
     }
 
     companion object {
-        private const val debuggingDemoId = Demo.DEMO_ID_WINDOW
+        private const val debuggingDemoId = Demo.DEMO_ID_CLEAR_TASK
     }
 }

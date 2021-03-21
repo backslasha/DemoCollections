@@ -27,7 +27,7 @@ class TranslucentActivity : LifeCycleActivity() {
 
     }
 
-    override fun descriptionUrl(): String? {
+    override fun descriptionData(): String? {
         return "https://app.yinxiang.com/shard/s59/nl/22472101/c2080bb5-95a3-4f16-835a-73f115f7a655"
     }
 

@@ -24,10 +24,16 @@ abstract class DemoBaseActivity : AppCompatActivity() {
         javaClass.simpleName
     }
 
+    companion object {
+        const val PARSE_TYPE_TEXT = 0
+        const val PARSE_TYPE_ASSET = 1
+        const val PARSE_TYPE_URL = 2
+    }
+
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        if (descriptionText() == null && descriptionText() == null) {
+        if (descriptionData() == null && descriptionData() == null) {
             return
         }
         val contentFrame = findViewById<FrameLayout>(android.R.id.content)
@@ -42,24 +48,23 @@ abstract class DemoBaseActivity : AppCompatActivity() {
     }
 
 
-    open fun descriptionUrl(): String? {
+    open fun descriptionData(): String? {
         return null
     }
 
-    open fun descriptionText(): String? {
-        return null
+    open fun descriptionType(): Int {
+        return PARSE_TYPE_TEXT
     }
 
     open fun openDescription() {
-        descriptionUrl()?.let {
-            WebDialog.newInstance(it)
-                    .show(supportFragmentManager, "WebDialog")
-            return
-        }
-
-        descriptionText()?.let {
-            ExplainDialog.newInstance(it)
-                    .show(supportFragmentManager, "ExplainDialog")
+        descriptionData()?.let {
+            when (val type = descriptionType()) {
+                PARSE_TYPE_URL -> WebDialog.newInstance(it)
+                        .show(supportFragmentManager, "WebDialog")
+                PARSE_TYPE_TEXT,
+                PARSE_TYPE_ASSET -> ExplainDialog.newInstance(it, type)
+                        .show(supportFragmentManager, "ExplainDialog")
+            }
         }
     }
 }
@@ -94,7 +99,7 @@ class DraggableActionButton @JvmOverloads constructor(
             }
 
             override fun getViewHorizontalDragRange(child: View?): Int {
-                return if (floatActionButton === child) child.width*2 else 0
+                return if (floatActionButton === child) child.width * 2 else 0
             }
         })
     }
