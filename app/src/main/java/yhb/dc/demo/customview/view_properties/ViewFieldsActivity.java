@@ -21,9 +21,10 @@ import yhb.dc.R;
 import yhb.dc.common.CommonAdapter;
 import yhb.dc.common.CommonViewHolder;
 import yhb.dc.common.Demo;
+import yhb.dc.common.DemoBaseActivity;
 
 @Demo(id = Demo.DEMO_ID_VIEW_POSITION_FIELD, name = "View 的位置属性影响")
-public class ViewFieldsActivity extends AppCompatActivity implements FieldView.OnValueChangeListener {
+public class ViewFieldsActivity extends DemoBaseActivity implements FieldView.OnValueChangeListener {
 
     private RecyclerView mRecyclerView;
     private ImageView mImageView;
@@ -168,4 +169,14 @@ public class ViewFieldsActivity extends AppCompatActivity implements FieldView.O
         return "get" + String.valueOf(name.charAt(0)).toUpperCase() + name.substring(1);
     }
 
+    @Nullable
+    @Override
+    public String descriptionData() {
+        return "document/viewBasic.md";
+    }
+
+    @Override
+    public int descriptionType() {
+        return PARSE_TYPE_ASSET;
+    }
 }

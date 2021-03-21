@@ -2,6 +2,7 @@ package yhb.dc.demo.customview.custom_view;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -16,7 +17,7 @@ import yhb.dc.demo.customview.custom_view.widget.BubbleLayout;
  * Created by yhb on 18-3-15.
  */
 @Demo(id = Demo.DEMO_ID_BUBBLE_LAYOUT)
-public class CustomViewMainActivity extends AppCompatActivity  {
+public class CustomViewMainActivity extends AppCompatActivity {
 
     private BubbleLayout mBubbleLayout;
 
