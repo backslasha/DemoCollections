@@ -15,6 +15,7 @@ import yhb.dc.common.CommonAdapter
 import yhb.dc.common.CommonViewHolder
 import yhb.dc.common.Demo
 import yhb.dc.common.LifeCycleActivity
+import java.lang.ref.WeakReference
 
 class MainActivity : LifeCycleActivity() {
 
@@ -23,12 +24,18 @@ class MainActivity : LifeCycleActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mainRef = WeakReference(this)
         setContentView(R.layout.activity_main)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         activities.addAll(generateDemoList())
         recyclerView = findViewById(R.id.recycler_view)
         refreshList(activities)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mainRef = null
     }
 
     private fun refreshList(demoList: List<Class<out Activity?>>) {
@@ -108,5 +115,6 @@ class MainActivity : LifeCycleActivity() {
 
     companion object {
         private const val debuggingDemoId = Demo.DEMO_ID_CLEAR_TASK
+        var mainRef: WeakReference<MainActivity?>? = null
     }
 }

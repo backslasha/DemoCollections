@@ -5,7 +5,9 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_clear_task_activty.*
+import yhb.dc.MainActivity
 import yhb.dc.R
 import yhb.dc.common.Demo
 import yhb.dc.common.DemoBaseActivity
@@ -28,6 +30,15 @@ class ClearTaskDemo : DemoBaseActivity() {
         setContentView(R.layout.activity_clear_task_activty)
         btn_exit_app.setOnClickListener { ExitClearTaskActivity.finishAndRemoveTask(this@ClearTaskDemo) }
         btn_exit_app2.setOnClickListener { this@ClearTaskDemo.finishAndRemoveTask() }
+        btn_exit_app3.setOnClickListener {
+            val get = MainActivity.mainRef?.get()
+            if (get == null) {
+                Toast.makeText(this, "MainActivity not found.", Toast.LENGTH_SHORT).show()
+            } else {
+                get.finish()
+                Toast.makeText(this, "MainActivity finished.", Toast.LENGTH_SHORT).show()
+            }
+        }
         btn_launch_new.setOnClickListener {
             startActivity(Intent(this@ClearTaskDemo, this@ClearTaskDemo.javaClass)
                     .putExtra(KEY_INFO, num + 1))
