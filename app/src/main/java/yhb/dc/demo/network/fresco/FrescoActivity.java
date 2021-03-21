@@ -33,7 +33,7 @@ import yhb.dc.common.CommonAdapter;
 import yhb.dc.common.CommonViewHolder;
 import yhb.dc.common.Demo;
 
-@Demo
+@Demo(id = Demo.DEMO_ID_FRESCO_USAGE, name = "Fresco 库基本使用")
 public class FrescoActivity extends AppCompatActivity  {
 
     private static int index = 0;

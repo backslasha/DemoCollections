@@ -10,7 +10,7 @@ import yhb.dc.R
 import yhb.dc.common.Demo
 import yhb.dc.common.DemoBaseActivity
 
-@Demo
+@Demo(id = Demo.DEMO_ID_CLEAR_TASK, name = "清空任务栈")
 class ClearTaskDemo : DemoBaseActivity() {
 
     companion object {

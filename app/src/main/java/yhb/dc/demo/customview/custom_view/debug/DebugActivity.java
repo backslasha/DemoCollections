@@ -15,7 +15,6 @@ import yhb.dc.R;
 import yhb.dc.common.Demo;
 import yhb.dc.common.DemoBaseActivity;
 
-@Demo
 public class DebugActivity extends DemoBaseActivity  {
 
     private StringBuilder mBuilder = new StringBuilder();

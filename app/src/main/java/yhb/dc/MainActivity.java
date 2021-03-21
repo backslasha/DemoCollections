@@ -19,6 +19,8 @@ import yhb.dc.common.LifeCycleActivity;
 
 public class MainActivity extends LifeCycleActivity {
 
+    private static final int debuggingDemoId = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +42,7 @@ public class MainActivity extends LifeCycleActivity {
                     continue;
                 }
                 activities.add(activityClass);
-                if (annotation.autoJumpIn()) {
+                if (annotation.id() == debuggingDemoId) {
                     autoJumpTo = activityClass;
                 }
             }
@@ -59,7 +61,10 @@ public class MainActivity extends LifeCycleActivity {
         recyclerView.setAdapter(new CommonAdapter<Class<? extends Activity>>(R.layout.item_activity, activities) {
             @Override
             public void convert(CommonViewHolder holder, final Class<? extends Activity> entity) {
-                holder.setText(R.id.text_view_activity_name, entity.getSimpleName());
+                final Demo annotation = entity.getAnnotation(Demo.class);
+                final String specifiedName = annotation == null ? null : annotation.name();
+                holder.setText(R.id.text_view_activity_name, specifiedName == null || specifiedName.isEmpty()
+                        ? entity.getSimpleName() : specifiedName);
                 holder.bindOnClickListener(v -> {
                     Intent intent = new Intent(MainActivity.this, entity);
                     startActivity(intent);

@@ -21,7 +21,7 @@ import yhb.dc.common.Demo;
 import static android.app.Notification.CATEGORY_PROGRESS;
 import static android.app.Notification.CATEGORY_STATUS;
 
-@Demo
+@Demo(id = Demo.DEMO_ID_NOTIFICATION, name = "notification 基本用法")
 public class NotificationActivity extends AppCompatActivity  {
     private static final int REQUEST_CODE_WHEN_NOTIFICATION_IS_CLICKED = 1;
     private static final int REQUEST_CODE_WHEN_NOTIFICATION_IS_CLEARED = 2;

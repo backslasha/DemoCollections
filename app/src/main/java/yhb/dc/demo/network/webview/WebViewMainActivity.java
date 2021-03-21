@@ -18,7 +18,6 @@ import java.util.List;
 import yhb.dc.R;
 import yhb.dc.common.Demo;
 
-@Demo
 public class WebViewMainActivity extends AppCompatActivity  {
 
     public static final String EXTRA_RECORD = "extra_record";

@@ -15,8 +15,28 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 public @interface Demo {
 
-    /**
-     * @return 启动应用后是否自动跳转到该 Demo
-     */
-    boolean autoJumpIn() default false;
+    int DEMO_ID_WEB_VIEW = 0;
+    int DEMO_ID_CLEAR_TASK = 1;
+    int DEMO_ID_HANDLER_THREAD = 2;
+    int DEMO_ID_AIDL_USAGE = 3;
+    int DEMO_ID_CLICK_EFFECTS = 4;
+    int DEMO_SMS_OBSERVE = 5;
+    int DEMO_ID_CANVAS = 6;
+    int DEMO_ID_BUBBLE_LAYOUT = 8;
+    int DEMO_ID_CUSTOM_VIEW = 9;
+    int DEMO_ID_CAROUSEL = 10;
+    int DEMO_ID_FRAGMENT_COMMUNICATE = 11;
+    int DEMO_ID_FRAGMENT_COMMIT = 12;
+    int DEMO_ID_BOTTOM_DIALOG_BUG = 13;
+    int DEMO_ID_TAB_FRAGMENT_LIFE = 14;
+    int DEMO_ID_ACTIVITY_LAUNCH_MODE = 15;
+    int DEMO_ID_FRESCO_USAGE = 16;
+    int DEMO_ID_NOTIFICATION = 17;
+    int DEMO_ID_COMPLEX_RECYCLER_VIEW = 18;
+    int DEMO_ID_WINDOW = 19;
+    int DEMO_ID_VIEW_POSITION_FIELD = 20;
+
+    int id();
+
+    String name() default "";
 }

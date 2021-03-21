@@ -12,7 +12,7 @@ import android.widget.Toast
 import yhb.dc.R
 import yhb.dc.common.Demo
 
-@Demo
+@Demo(id = Demo.DEMO_ID_CUSTOM_VIEW, name = "自定义 View 练习")
 class CustomViewDisplayActivity : AppCompatActivity() {
 
     private val spinner by lazy {

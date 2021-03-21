@@ -26,7 +26,7 @@ private const val SMS_URI_ALL = "content://sms/"
 private val sProjection = arrayOf("_id", "address", "body", "date")
 private const val tag = "SmsObserverTag"
 
-@Demo
+@Demo(id = Demo.DEMO_SMS_OBSERVE)
 class SmsObserverActivity : AppCompatActivity(), OnGetAndSetPinListener {
     private val mListener = this
 

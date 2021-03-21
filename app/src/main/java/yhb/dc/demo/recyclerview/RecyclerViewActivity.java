@@ -24,7 +24,7 @@ import yhb.dc.common.CommonViewHolder;
 import yhb.dc.common.Demo;
 import yhb.dc.common.HomeAsUpActivity;
 
-@Demo
+@Demo(id = Demo.DEMO_ID_COMPLEX_RECYCLER_VIEW, name = "RecyclerView 嵌套使用")
 public class RecyclerViewActivity extends HomeAsUpActivity implements View.OnClickListener {
 
 

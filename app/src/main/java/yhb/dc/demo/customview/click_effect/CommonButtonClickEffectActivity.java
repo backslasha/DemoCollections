@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import yhb.dc.R;
 import yhb.dc.common.Demo;
 
-@Demo
+@Demo(id = Demo.DEMO_ID_CLICK_EFFECTS, name = "常见的点击效果演示")
 public class CommonButtonClickEffectActivity extends AppCompatActivity   {
 
     @Override

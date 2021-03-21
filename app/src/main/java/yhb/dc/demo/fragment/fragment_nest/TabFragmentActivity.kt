@@ -7,7 +7,7 @@ import yhb.dc.common.Demo
 import yhb.dc.common.LifeCycleActivity
 import yhb.dc.demo.fragment.fragment_nest.TabFragment.OnFragmentInteractionListener
 
-@Demo
+@Demo(id = Demo.DEMO_ID_TAB_FRAGMENT_LIFE, name = "ViewPager 下 Fragment 的生命周期观察")
 class TabFragmentActivity : LifeCycleActivity(), OnFragmentInteractionListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {

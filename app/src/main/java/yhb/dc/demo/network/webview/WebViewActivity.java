@@ -34,7 +34,7 @@ import yhb.dc.common.Demo;
 
 import static yhb.dc.demo.network.webview.WebViewMainActivity.EXTRA_RECORD;
 
-@Demo
+@Demo(id = Demo.DEMO_ID_WEB_VIEW)
 public class WebViewActivity extends AppCompatActivity {
 
     private static final String EXTRA_REUSE_WEB_VIEW = "extra_reuse_web_view";

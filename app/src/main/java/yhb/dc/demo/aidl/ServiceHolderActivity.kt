@@ -19,7 +19,7 @@ import yhb.dc.demo.aidl.auto.IMusicManager
 import yhb.dc.demo.aidl.auto.Music
 import yhb.dc.demo.aidl.auto.RemoteMusicService
 
-@Demo(autoJumpIn = true)
+@Demo(id = Demo.DEMO_ID_AIDL_USAGE, name = "AIDL 使用规则与疑点")
 @SuppressLint("SetTextI18n")
 class ServiceHolderActivity : DemoBaseActivity() {
 
@@ -45,7 +45,9 @@ class ServiceHolderActivity : DemoBaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        unbindService(mMusicConnection)
+        mMusicManager?.let {
+            unbindService(mMusicConnection)
+        }
     }
 
     fun onClick02(view: View?) {

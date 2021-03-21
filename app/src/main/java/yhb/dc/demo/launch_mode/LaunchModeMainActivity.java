@@ -10,7 +10,7 @@ import yhb.dc.R;
 import yhb.dc.common.Demo;
 import yhb.dc.common.LifeCycleActivity;
 
-@Demo
+@Demo(id = Demo.DEMO_ID_ACTIVITY_LAUNCH_MODE, name = "Activity 启动模式")
 public class LaunchModeMainActivity extends LifeCycleActivity implements View.OnClickListener {
 
     private static final String TAG = "MainActivity";

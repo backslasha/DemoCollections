@@ -7,7 +7,7 @@ import yhb.dc.R;
 import yhb.dc.common.Demo;
 import yhb.dc.common.LifeCycleActivity;
 
-@Demo
+@Demo(id = Demo.DEMO_ID_FRAGMENT_COMMIT, name = "commitAllowingStateLoss 方法含义")
 public class FragmentCommitActivity extends LifeCycleActivity  {
 
     private Fragment mFragment1, mFragment2;

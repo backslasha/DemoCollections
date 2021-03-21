@@ -15,7 +15,7 @@ import yhb.dc.demo.customview.custom_view.widget.BubbleLayout;
 /**
  * Created by yhb on 18-3-15.
  */
-@Demo
+@Demo(id = Demo.DEMO_ID_BUBBLE_LAYOUT)
 public class CustomViewMainActivity extends AppCompatActivity  {
 
     private BubbleLayout mBubbleLayout;

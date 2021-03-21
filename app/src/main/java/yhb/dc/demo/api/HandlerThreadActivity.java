@@ -1,10 +1,10 @@
 package yhb.dc.demo.api;
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.MessageQueue;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -12,8 +12,9 @@ import android.widget.TextView;
 import yhb.dc.R;
 import yhb.dc.common.Demo;
 
-@Demo
-public class HandlerThreadActivity extends AppCompatActivity   {
+
+@Demo(id = Demo.DEMO_ID_HANDLER_THREAD, name = "子线程中修改 UI")
+public class HandlerThreadActivity extends AppCompatActivity {
 
     private TextView textView;
     private Handler mHandler;

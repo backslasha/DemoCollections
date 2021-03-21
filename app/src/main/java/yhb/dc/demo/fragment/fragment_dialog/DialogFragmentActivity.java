@@ -8,7 +8,7 @@ import android.view.View;
 import yhb.dc.R;
 import yhb.dc.common.Demo;
 
-@Demo
+@Demo(id = Demo.DEMO_ID_BOTTOM_DIALOG_BUG, name = "BottomDialog 闪跳问题处理")
 public class DialogFragmentActivity extends AppCompatActivity   {
 
     @Override

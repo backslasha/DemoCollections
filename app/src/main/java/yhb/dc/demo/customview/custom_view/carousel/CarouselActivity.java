@@ -11,7 +11,7 @@ import yhb.dc.R;
 import yhb.dc.common.Demo;
 import yhb.dc.common.DemoBaseActivity;
 
-@Demo
+@Demo(id = Demo.DEMO_ID_CAROUSEL, name = "无限轮播实现方案")
 public class CarouselActivity extends DemoBaseActivity  {
 
     private CarouselView mCarouselView;

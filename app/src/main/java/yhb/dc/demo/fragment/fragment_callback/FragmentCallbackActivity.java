@@ -7,8 +7,8 @@ import android.os.Bundle;
 import yhb.dc.R;
 import yhb.dc.common.Demo;
 
-@Demo
-public class FragmentCallbackActivity extends AppCompatActivity   {
+@Demo(id = Demo.DEMO_ID_FRAGMENT_COMMUNICATE, name = "Fragment 间直接通讯")
+public class FragmentCallbackActivity extends AppCompatActivity {
     private Fragment mMainFragment;
 
     @Override

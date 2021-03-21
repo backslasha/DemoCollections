@@ -21,8 +21,8 @@ import yhb.dc.R;
 import yhb.dc.common.Demo;
 
 
-@Demo
-public class CanvasActivity extends AppCompatActivity  {
+@Demo(id = Demo.DEMO_ID_CANVAS)
+public class CanvasActivity extends AppCompatActivity {
 
     private android.support.v7.widget.Toolbar mToolbar;
     private Spinner mSpinner;
@@ -45,8 +45,8 @@ public class CanvasActivity extends AppCompatActivity  {
 
         PageView pageView = new PageView(this, null);
         Bitmap[] bitmaps = new Bitmap[3];
-        int screenWidth = getScreenWidth()/4;
-        int screenHeight = getScreenHeight()/4;
+        int screenWidth = getScreenWidth() / 4;
+        int screenHeight = getScreenHeight() / 4;
         bitmaps[0] = loadBitmap(this, R.drawable.screen, screenWidth, screenHeight);
         bitmaps[1] = loadBitmap(this, R.drawable.screen1, screenWidth, screenHeight);
         bitmaps[2] = loadBitmap(this, R.drawable.screen2, screenWidth, screenHeight);

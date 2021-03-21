@@ -22,6 +22,7 @@ import yhb.dc.common.CommonAdapter;
 import yhb.dc.common.CommonViewHolder;
 import yhb.dc.common.Demo;
 
+@Demo(id = Demo.DEMO_ID_VIEW_POSITION_FIELD, name = "View 的位置属性影响")
 public class ViewFieldsActivity extends AppCompatActivity implements FieldView.OnValueChangeListener {
 
     private RecyclerView mRecyclerView;
@@ -107,7 +108,7 @@ public class ViewFieldsActivity extends AppCompatActivity implements FieldView.O
                 final int valueInt = (int) value;
                 if (isFloat) {
                     method.invoke(mImageView, value);
-                }else {
+                } else {
                     method.invoke(mImageView, valueInt);
                 }
             } catch (IllegalAccessException | InvocationTargetException e) {
