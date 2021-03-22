@@ -1,9 +1,9 @@
 package yhb.dc.demo.fragment.fragment_nest;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +13,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import yhb.dc.R;
 import yhb.dc.common.CommonAdapter;
 import yhb.dc.common.CommonViewHolder;
 import yhb.dc.common.LifeCycleFragment;

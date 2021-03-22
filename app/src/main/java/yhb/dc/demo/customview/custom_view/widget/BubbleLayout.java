@@ -3,7 +3,7 @@ package yhb.dc.demo.customview.custom_view.widget;
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;

@@ -11,9 +11,9 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat.checkSelfPermission
-import android.support.v7.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.appcompat.app.AppCompatActivity
 import android.telephony.SmsMessage
 import android.text.TextUtils
 import android.util.Log

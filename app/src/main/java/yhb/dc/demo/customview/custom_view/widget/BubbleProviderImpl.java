@@ -2,7 +2,7 @@ package yhb.dc.demo.customview.custom_view.widget;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;

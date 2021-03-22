@@ -6,7 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.RadioGroup;
@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import yhb.dc.R;
-import yhb.dc.common.Demo;
 
 public class WebViewMainActivity extends AppCompatActivity  {
 

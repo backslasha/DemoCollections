@@ -1,6 +1,6 @@
 package yhb.dc.demo.fragment.fragment_commit;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.os.Bundle;
 
 import yhb.dc.R;

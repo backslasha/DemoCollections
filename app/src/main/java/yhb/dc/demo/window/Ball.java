@@ -8,7 +8,7 @@ import android.view.WindowManager;
 
 import static android.content.Context.WINDOW_SERVICE;
 
-public class Ball extends android.support.v7.widget.AppCompatButton {
+public class Ball extends androidx.appcompat.widget.AppCompatButton {
     private WindowManager mWindowManager;
 
     public Ball(Context context) {

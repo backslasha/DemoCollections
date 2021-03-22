@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".demo.network.webview.WebViewActivity">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:padding="0dp">
@@ -17,7 +17,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
@@ -32,11 +32,11 @@
                     android:background="@null"
                     android:imeOptions="actionGo"
                     android:singleLine="true" />
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
 
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
     <!--定义一个ProgressBar指示网页的载入情况-->
     <ProgressBar
         android:id="@+id/fragment_photo_page_progress_bar"

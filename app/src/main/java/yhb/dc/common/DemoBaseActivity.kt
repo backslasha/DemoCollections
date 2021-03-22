@@ -2,9 +2,9 @@ package yhb.dc.common
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.design.widget.FloatingActionButton
-import android.support.v4.widget.ViewDragHelper
-import android.support.v7.app.AppCompatActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.customview.widget.ViewDragHelper
+import androidx.appcompat.app.AppCompatActivity
 import android.util.AttributeSet
 import android.util.Log
 import android.view.Gravity
@@ -80,25 +80,25 @@ class DraggableActionButton @JvmOverloads constructor(
     init {
         val floatActionButton = setFloatActionButton()
         viewDragHelper = ViewDragHelper.create(this, 1.0f, object : ViewDragHelper.Callback() {
-            override fun tryCaptureView(child: View?, pointerId: Int): Boolean {
+            override fun tryCaptureView(child: View, pointerId: Int): Boolean {
                 return true
             }
 
-            override fun clampViewPositionVertical(child: View?, top: Int, dy: Int): Int {
+            override fun clampViewPositionVertical(child: View, top: Int, dy: Int): Int {
                 Log.d("DraggableActionButton", "top=$top; dy=$dy")
                 return top
             }
 
-            override fun clampViewPositionHorizontal(child: View?, left: Int, dx: Int): Int {
+            override fun clampViewPositionHorizontal(child: View, left: Int, dx: Int): Int {
                 Log.d("DraggableActionButton", "left=$left; dx=$dx")
                 return left
             }
 
-            override fun getViewVerticalDragRange(child: View?): Int {
+            override fun getViewVerticalDragRange(child: View): Int {
                 return if (floatActionButton === child) child.height else 0
             }
 
-            override fun getViewHorizontalDragRange(child: View?): Int {
+            override fun getViewHorizontalDragRange(child: View): Int {
                 return if (floatActionButton === child) child.width * 2 else 0
             }
         })
@@ -118,12 +118,12 @@ class DraggableActionButton @JvmOverloads constructor(
         return floatActionButton
     }
 
-    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
+    override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
         return viewDragHelper.shouldInterceptTouchEvent(ev)
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
+    override fun onTouchEvent(event: MotionEvent): Boolean {
         viewDragHelper.processTouchEvent(event)
         return false
     }

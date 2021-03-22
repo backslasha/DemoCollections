@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_clear_task_activty.*
 import yhb.dc.MainActivity

@@ -2,7 +2,7 @@ package yhb.dc.demo.fragment.fragment_dialog
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +16,7 @@ import yhb.dc.demo.network.webview.WebViewPool
  * Created by yhb on 18-6-12.
  */
 
-class WebDialog : DialogFragment() {
+class WebDialog : androidx.fragment.app.DialogFragment() {
 
     private lateinit var mProgressBar: ProgressBar
     private lateinit var mWebView: WebView
@@ -24,7 +24,7 @@ class WebDialog : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mUrl = arguments.getString(ARG_URL)
+        mUrl = arguments?.getString(ARG_URL)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -35,7 +35,7 @@ class WebDialog : DialogFragment() {
             mProgressBar
         }())
         ll.addView({
-            mWebView = WebViewPool.getsWebView(activity.applicationContext)
+            mWebView = WebViewPool.getsWebView(activity?.applicationContext)
             setupWebView(mWebView)
             mWebView
         }(), LinearLayout.LayoutParams(
@@ -46,7 +46,7 @@ class WebDialog : DialogFragment() {
     override fun onResume() {
         super.onResume()
         mWebView.loadUrl(mUrl)
-        dialog.window.decorView.setPadding(0, 0, 0, 0)
+        dialog?.window?.decorView?.setPadding(0, 0, 0, 0)
     }
 
 
@@ -74,7 +74,7 @@ class WebDialog : DialogFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val window = dialog.window
+        val window = dialog?.window
         if (window != null) {
             val lp = window.attributes
             lp.width = ViewGroup.LayoutParams.MATCH_PARENT

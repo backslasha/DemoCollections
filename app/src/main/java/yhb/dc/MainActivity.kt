@@ -6,10 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.SearchView
-import android.support.v7.widget.Toolbar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import yhb.dc.common.CommonAdapter
 import yhb.dc.common.CommonViewHolder
@@ -20,7 +20,7 @@ import java.lang.ref.WeakReference
 class MainActivity : LifeCycleActivity() {
 
     private val activities: MutableList<Class<Activity>> = ArrayList()
-    private var recyclerView: RecyclerView? = null
+    private var recyclerView: androidx.recyclerview.widget.RecyclerView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +40,7 @@ class MainActivity : LifeCycleActivity() {
 
     private fun refreshList(demoList: List<Class<out Activity?>>) {
         val recyclerView = recyclerView ?: return
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         recyclerView.adapter = object : CommonAdapter<Class<out Activity>>(R.layout.item_activity, demoList) {
             override fun convert(holder: CommonViewHolder, clazz: Class<out Activity>?) {
                 val entity = clazz ?: return

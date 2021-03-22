@@ -4,8 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.DrawableRes;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +24,7 @@ import yhb.dc.common.Demo;
 @Demo(id = Demo.DEMO_ID_CANVAS)
 public class CanvasActivity extends AppCompatActivity {
 
-    private android.support.v7.widget.Toolbar mToolbar;
+    private androidx.appcompat.widget.Toolbar mToolbar;
     private Spinner mSpinner;
     private List<View> mViews;
 
