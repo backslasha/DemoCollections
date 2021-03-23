@@ -6,11 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import android.view.Menu
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
-import android.view.Menu
 import yhb.dc.common.CommonAdapter
 import yhb.dc.common.CommonViewHolder
 import yhb.dc.common.Demo
@@ -114,7 +112,7 @@ class MainActivity : LifeCycleActivity() {
     }
 
     companion object {
-        private const val debuggingDemoId = Demo.DEMO_ID_CLEAR_TASK
+        private const val debuggingDemoId = Demo.DEMO_ID_ACTIVITY_LAUNCH_MODE
         var mainRef: WeakReference<MainActivity?>? = null
     }
 }

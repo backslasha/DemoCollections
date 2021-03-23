@@ -35,6 +35,7 @@ public @interface Demo {
     int DEMO_ID_COMPLEX_RECYCLER_VIEW = 18;
     int DEMO_ID_WINDOW = 19;
     int DEMO_ID_VIEW_POSITION_FIELD = 20;
+    int DEMO_ID_CAMERA = 21;
 
     int id();
 
