@@ -1,9 +1,13 @@
 package yhb.dc.demo.camera
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import yhb.dc.common.Demo
 import yhb.dc.common.DemoBaseActivity
@@ -17,7 +21,9 @@ import yhb.dc.databinding.ActivityCanmeraBinding
 class CameraActivity : DemoBaseActivity() {
 
     private lateinit var binding: ActivityCanmeraBinding
+    private lateinit var previewView: CameraPreview
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCanmeraBinding.inflate(layoutInflater)
@@ -27,30 +33,31 @@ class CameraActivity : DemoBaseActivity() {
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
                 return@setOnClickListener
             }
-            startPreview()
+            previewView.startPreview()
         }
         binding.buttonStopPreview.setOnClickListener {
-            stopPreview()
+            previewView.stopPreview()
         }
         binding.buttonSwitchCamera.setOnClickListener {
-            mPreview?.toggleCamera()
+            previewView.toggleCamera()
         }
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+        window.statusBarColor = Color.TRANSPARENT
+        previewView =  CameraPreview(this)
+        binding.cameraPreview.addView(previewView)
     }
 
-    private var mPreview: CameraPreview? = null
-    private fun startPreview() {
-        mPreview = CameraPreview(this)
-        binding.cameraPreview.addView(mPreview)
-//        SettingsFragment.passCamera(mPreview.getCameraInstance())
-//        PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
-//        SettingsFragment.setDefault(PreferenceManager.getDefaultSharedPreferences(this))
-//        SettingsFragment.init(PreferenceManager.getDefaultSharedPreferences(this))
-//        binding.buttonSettings.setOnClickListener {
-//            fragmentManager.beginTransaction().replace(R.id.camera_preview, SettingsFragment()).addToBackStack(null).commit()
-//        }
+    companion object{
+        private const val TAG = "CameraActivity"
     }
 
-    private fun stopPreview() {
-        binding.cameraPreview.removeAllViews()
+    override fun onResume() {
+        super.onResume()
+        previewView.startPreview()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        previewView.stopPreview()
     }
 }
