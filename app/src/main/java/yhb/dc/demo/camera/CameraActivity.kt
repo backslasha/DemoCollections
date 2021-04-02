@@ -53,6 +53,11 @@ class CameraActivity : DemoBaseActivity() {
 
     override fun onResume() {
         super.onResume()
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+            return
+        }
         previewView.startPreview()
     }
 
