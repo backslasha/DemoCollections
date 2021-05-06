@@ -69,7 +69,7 @@ class MainActivity : LifeCycleActivity() {
                 val activityClass = Class.forName(activityInfo.name) as Class<Activity>
                 val annotation = activityClass.getAnnotation(Demo::class.java) ?: continue
                 activities.add(activityClass)
-                if (annotation.id == debuggingDemoId) {
+                if (annotation.id == Demo.debuggingDemoId) {
                     autoJumpTo = activityClass
                 }
             }
@@ -112,7 +112,6 @@ class MainActivity : LifeCycleActivity() {
     }
 
     companion object {
-        private const val debuggingDemoId = Demo.DEMO_ID_ACTIVITY_LAUNCH_MODE
         var mainRef: WeakReference<MainActivity?>? = null
     }
 }

@@ -4,9 +4,17 @@
     android:layout_height="match_parent">
 
     <FrameLayout
-        android:id="@+id/camera_preview"
+        android:id="@+id/camera_preview_container"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent">
+
+        <yhb.dc.demo.camera.opengl.Yuv420SurfaceView
+            android:id="@+id/yuv420_surface_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
+
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -21,7 +29,7 @@
             android:id="@+id/button_settings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="设置" />
+            android:text="渲染顺时针旋转(0度)" />
 
         <Button
             android:id="@+id/button_start_preview"
@@ -41,5 +49,14 @@
             android:layout_height="wrap_content"
             android:text="切换摄像头" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_desc"
+        android:layout_alignParentBottom="true"
+    android:layout_marginBottom="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
 </RelativeLayout>
 

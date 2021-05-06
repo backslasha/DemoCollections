@@ -37,6 +37,8 @@ public @interface Demo {
     int DEMO_ID_VIEW_POSITION_FIELD = 20;
     int DEMO_ID_CAMERA = 21;
 
+    int debuggingDemoId = Demo.DEMO_ID_CAMERA;
+
     int id();
 
     String name() default "";
