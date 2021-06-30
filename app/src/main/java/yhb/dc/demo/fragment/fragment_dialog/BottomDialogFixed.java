@@ -3,9 +3,11 @@ package yhb.dc.demo.fragment.fragment_dialog;
 import android.animation.LayoutTransition;
 import android.app.Dialog;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,11 +88,11 @@ public class BottomDialogFixed extends DialogFragment {
         f3.getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
 
         mCountBatch = new UITaskBatch(1, 500);
-        mCountBatch.delayAndBatch(new Runnable(){
+        mCountBatch.delayAndBatch(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -106,11 +108,11 @@ public class BottomDialogFixed extends DialogFragment {
                 return Thread.currentThread().getName() + " -> 卧槽1";
             }
         });
-        mCountBatch.delayAndBatch(new Runnable(){
+        mCountBatch.delayAndBatch(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

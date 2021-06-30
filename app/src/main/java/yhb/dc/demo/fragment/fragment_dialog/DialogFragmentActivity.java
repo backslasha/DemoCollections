@@ -17,11 +17,11 @@ public class DialogFragmentActivity extends AppCompatActivity   {
         setContentView(R.layout.activity_dialog_fragment);
     }
 
-    public void callDialog(View view) {
-        BottomDialogFixed.newInstance().show(getSupportFragmentManager(), "dialog");
-    }
-    public void callDialog0(View view) {
+    public void bugDialog(View view) {
         BottomDialogWithBug.newInstance().show(getSupportFragmentManager(), "dialog");
+    }
+    public void fixedDialog(View view) {
+        BottomDialogFixed.newInstance().show(getSupportFragmentManager(), "dialog");
     }
 
     @Override
