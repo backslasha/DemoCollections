@@ -11,16 +11,15 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat.checkSelfPermission
-import androidx.appcompat.app.AppCompatActivity
 import android.telephony.SmsMessage
 import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_sms_observer.*
-import yhb.dc.R
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat.checkSelfPermission
 import yhb.dc.common.Demo
+import yhb.dc.databinding.ActivitySmsObserverBinding
 
 private const val SMS_URI_ALL = "content://sms/"
 private val sProjection = arrayOf("_id", "address", "body", "date")
@@ -29,20 +28,31 @@ private const val tag = "SmsObserverTag"
 @Demo(id = Demo.DEMO_SMS_OBSERVE)
 class SmsObserverActivity : AppCompatActivity(), OnGetAndSetPinListener {
     private val mListener = this
+    private lateinit var binding: ActivitySmsObserverBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sms_observer)
+        binding = ActivitySmsObserverBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
 
-        val hasNoSendPermission = checkSelfPermission(this, Manifest.permission.SEND_SMS) != PERMISSION_GRANTED
-        val hasNoReadPermission = checkSelfPermission(this, Manifest.permission.READ_SMS) != PERMISSION_GRANTED
-        val hasNoReceivePermission = checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) != PERMISSION_GRANTED
+        val hasNoSendPermission =
+            checkSelfPermission(this, Manifest.permission.SEND_SMS) != PERMISSION_GRANTED
+        val hasNoReadPermission =
+            checkSelfPermission(this, Manifest.permission.READ_SMS) != PERMISSION_GRANTED
+        val hasNoReceivePermission =
+            checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) != PERMISSION_GRANTED
 
         // Here, thisActivity is the current activity
         if (hasNoSendPermission || hasNoReadPermission || hasNoReceivePermission) {
-            ActivityCompat.requestPermissions(this,
-                    arrayOf(Manifest.permission.SEND_SMS, Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS), 0)
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(
+                    Manifest.permission.SEND_SMS,
+                    Manifest.permission.READ_SMS,
+                    Manifest.permission.RECEIVE_SMS
+                ), 0
+            )
         } else {
             // Permission has already been granted
             initReceiverAndObserver()
@@ -50,7 +60,12 @@ class SmsObserverActivity : AppCompatActivity(), OnGetAndSetPinListener {
 
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             0 -> {
                 // If request is cancelled, the result arrays are empty.
@@ -99,7 +114,13 @@ class SmsObserverActivity : AppCompatActivity(), OnGetAndSetPinListener {
             val smsUri = Uri.parse(SMS_URI_ALL)
             val selection = " body is NOT NULL ) GROUP BY ( address "
             try {
-                val cursor: Cursor? = contentResolver.query(smsUri, sProjection, selection, null, " _id DESC " + " LIMIT 1 ")
+                val cursor: Cursor? = contentResolver.query(
+                    smsUri,
+                    sProjection,
+                    selection,
+                    null,
+                    " _id DESC " + " LIMIT 1 "
+                )
                 cursor ?: return
                 val indexBody = cursor.getColumnIndex("body")
                 val indexAddress = cursor.getColumnIndex("address")
@@ -137,7 +158,7 @@ class SmsObserverActivity : AppCompatActivity(), OnGetAndSetPinListener {
                 try {
                     for (i in pdus.indices) {
                         val createFromPdu = SmsMessage
-                                .createFromPdu(pdus[i] as ByteArray) ?: continue
+                            .createFromPdu(pdus[i] as ByteArray) ?: continue
                         smsContents[i] = createFromPdu
                         val part = createFromPdu.messageBody
                         smsGateway = createFromPdu.originatingAddress ?: ""
@@ -154,7 +175,11 @@ class SmsObserverActivity : AppCompatActivity(), OnGetAndSetPinListener {
                     log("error e=$e")
                     return
                 }
-                mListener.onGetAndSetPinFromSms(body.toString(), System.currentTimeMillis(), smsGateway)
+                mListener.onGetAndSetPinFromSms(
+                    body.toString(),
+                    System.currentTimeMillis(),
+                    smsGateway
+                )
             }
         }
     }
@@ -167,9 +192,13 @@ class SmsObserverActivity : AppCompatActivity(), OnGetAndSetPinListener {
         log("unregisterContentObserver suc.")
     }
 
-    override fun onGetAndSetPinFromSms(content: String?, longDate: Long, gateway: String?): Boolean {
+    override fun onGetAndSetPinFromSms(
+        content: String?,
+        longDate: Long,
+        gateway: String?
+    ): Boolean {
         Toast.makeText(this, "收到信息", Toast.LENGTH_SHORT).show()
-        tv_sms_content.text = content
+        binding.tvSmsContent.text = content
         log("onGetAndSetPinFromSms suc, content=$content, gateway=$gateway, longDate=$longDate")
         return true
     }

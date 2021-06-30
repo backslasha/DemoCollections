@@ -4,16 +4,17 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import androidx.annotation.RequiresApi
 import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_clear_task_activty.*
+import androidx.annotation.RequiresApi
 import yhb.dc.MainActivity
-import yhb.dc.R
 import yhb.dc.common.Demo
 import yhb.dc.common.DemoBaseActivity
+import yhb.dc.databinding.ActivityClearTaskActivtyBinding
 
 @Demo(id = Demo.DEMO_ID_CLEAR_TASK, name = "清空任务栈")
 class ClearTaskDemo : DemoBaseActivity() {
+
+    private lateinit var binding: ActivityClearTaskActivtyBinding
 
     companion object {
         const val KEY_INFO = "key_info"
@@ -27,10 +28,11 @@ class ClearTaskDemo : DemoBaseActivity() {
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_clear_task_activty)
-        btn_exit_app.setOnClickListener { ExitClearTaskActivity.finishAndRemoveTask(this@ClearTaskDemo) }
-        btn_exit_app2.setOnClickListener { this@ClearTaskDemo.finishAndRemoveTask() }
-        btn_exit_app3.setOnClickListener {
+        binding = ActivityClearTaskActivtyBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.btnExitApp.setOnClickListener { ExitClearTaskActivity.finishAndRemoveTask(this@ClearTaskDemo) }
+        binding.btnExitApp2.setOnClickListener { this@ClearTaskDemo.finishAndRemoveTask() }
+        binding.btnExitApp3.setOnClickListener {
             val get = MainActivity.mainRef?.get()
             if (get == null) {
                 Toast.makeText(this, "MainActivity not found.", Toast.LENGTH_SHORT).show()
@@ -39,11 +41,13 @@ class ClearTaskDemo : DemoBaseActivity() {
                 Toast.makeText(this, "MainActivity finished.", Toast.LENGTH_SHORT).show()
             }
         }
-        btn_launch_new.setOnClickListener {
-            startActivity(Intent(this@ClearTaskDemo, this@ClearTaskDemo.javaClass)
-                    .putExtra(KEY_INFO, num + 1))
+        binding.btnLaunchNew.setOnClickListener {
+            startActivity(
+                Intent(this@ClearTaskDemo, this@ClearTaskDemo.javaClass)
+                    .putExtra(KEY_INFO, num + 1)
+            )
         }
-        tv_content.text = "I'm the $num Activity."
+        binding.tvContent.text = "I'm the $num Activity."
     }
 
     override fun descriptionData(): String? {
