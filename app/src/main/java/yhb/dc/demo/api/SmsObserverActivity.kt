@@ -116,7 +116,7 @@ class SmsObserverActivity : AppCompatActivity(), OnGetAndSetPinListener {
             }
         }
 
-        override fun onChange(selfChange: Boolean, uri: Uri) {
+        override fun onChange(selfChange: Boolean, uri: Uri?) {
             onChange(selfChange)
         }
     }

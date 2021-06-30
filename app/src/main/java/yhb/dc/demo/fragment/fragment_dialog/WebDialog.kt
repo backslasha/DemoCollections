@@ -45,7 +45,7 @@ class WebDialog : androidx.fragment.app.DialogFragment() {
 
     override fun onResume() {
         super.onResume()
-        mWebView.loadUrl(mUrl)
+        mWebView.loadUrl(mUrl!!)
         dialog?.window?.decorView?.setPadding(0, 0, 0, 0)
     }
 

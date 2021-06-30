@@ -148,7 +148,7 @@ class DebugView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         if (indexOf > 0) {
             builder.setSpan(
                     object : ClickableSpan() {
-                        override fun onClick(widget: View?) {
+                        override fun onClick(widget: View) {
                             onClick?.invoke()
                         }
                     },

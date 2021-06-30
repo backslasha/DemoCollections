@@ -7,7 +7,9 @@
     <uses-permission android:name="android.permission.ACTION_MANAGE_OVERLAY_PERMISSION " />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera" />
+
     <application
         android:name=".common.DcApplication"
         android:allowBackup="true"
@@ -19,6 +21,7 @@
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning"
         tools:targetApi="m">
+        <activity android:name=".demo.camera.api2.Camera2Activity"></activity>
         <activity android:name=".demo.launch_mode.ClearTaskDemo" />
         <activity android:name=".demo.customview.custom_view.CustomViewDisplayActivity" />
         <activity android:name=".demo.anim.AnimationActivity" />
@@ -36,7 +39,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
